@@ -1,0 +1,125 @@
+{
+  "nav": {
+    "home": "Home",
+    "careers": "Careers",
+    "generalPlan": "General Plan",
+    "hiringPlan": "Hiring Plan",
+    "timeline": "Timeline",
+    "language": "Language"
+  },
+  "home": {
+    "title": "Ambitious Tech Project",
+    "subtitle": "We're seeking elite professionals to join our team",
+    "description": "Developing an advanced tech platform that helps store and website owners achieve exceptional growth in Saudi and Arab markets",
+    "joinUs": "Join Us",
+    "joinTeam": "Join Our Team",
+    "viewPositions": "View Positions",
+    "careersTitle": "Join Modonty Team",
+    "careersDescription": "We're looking for talented professionals in development, content, and operations to join our ambitious project",
+    "viewAllPositions": "View All Positions",
+    "aboutProject": "About the Project",
+    "aboutText": "We are a Saudi technology company developing an innovative solution that empowers business owners and e-commerce stores to achieve measurable results and expand their digital presence. We're building an integrated service platform combining advanced technology and AI. We're assembling an exceptional team of developers, content specialists, and digital marketing professionals for a promising project with real growth opportunities.",
+    "whyJoin": "Why Join Us?",
+    "benefits": {
+      "innovative": "Innovative Project",
+      "innovativeDesc": "Real opportunity to contribute to a pioneering project targeting Saudi and Arab markets",
+      "competitive": "Premium Compensation",
+      "competitiveDesc": "Competitive salaries and exceptional benefits with clear growth plan",
+      "growth": "Clear Career Path",
+      "growthDesc": "Real opportunities for growth and professional development with expert team",
+      "startup": "Professional Environment",
+      "startupDesc": "Advanced work culture combining professionalism with flexibility"
+    },
+    "positions": {
+      "title": "Available Positions",
+      "technical": "Technical Positions",
+      "content": "Content Positions",
+      "operations": "Operations Positions",
+      "apply": "Apply",
+      "details": "Details",
+      "filled": "Filled"
+    },
+    "hiringProcess": {
+      "title": "Hiring Process",
+      "step1": "Application",
+      "step1Desc": "Submit your CV and portfolio",
+      "step2": "Initial Interview",
+      "step2Desc": "Brief interview to assess basic skills",
+      "step3": "Practical Test",
+      "step3Desc": "Practical task to evaluate competency",
+      "step4": "Final Interview",
+      "step4Desc": "Interview with management team and contract signing"
+    },
+    "confidential": "Full project details will be shared after contract signing"
+  },
+  "careers": {
+    "title": "Available Positions",
+    "subtitle": "Join Our Exceptional Team",
+    "confidentialityNote": "📌 Full project details will be shared after contract signing",
+    "positions": {
+      "title": "Organizational Structure",
+      "leadership": "Leadership & Management",
+      "technical": "Technical Positions",
+      "content": "Content Positions",
+      "operations": "Operations Positions",
+      "sales": "Sales & Marketing",
+      "filled": "Filled",
+      "fullTime": "Full-time",
+      "projectBased": "Project-based",
+      "vacant": "Vacant",
+      "lookingForYou": "We're looking for you",
+      "applyNow": "Apply Now"
+    },
+    "hiringProcess": {
+      "title": "Hiring Process",
+      "step1": "Application",
+      "step1Desc": "Submit your CV and portfolio",
+      "step2": "Initial Interview",
+      "step2Desc": "Brief interview to assess basic skills",
+      "step3": "Practical Test",
+      "step3Desc": "Practical task to evaluate competency",
+      "step4": "Final Interview",
+      "step4Desc": "Interview with management team and contract signing"
+    }
+  },
+  "general": {
+    "title": "General Plan",
+    "sections": {
+      "evaluation": "Project Evaluation",
+      "competitors": "Competitor Analysis",
+      "structure": "Management Structure",
+      "team": "Team Members",
+      "timeline": "Timeline",
+      "budget": "Budget",
+      "conclusion": "Conclusion"
+    }
+  },
+  "hiring": {
+    "title": "Hiring Plan",
+    "summary": "Team Summary",
+    "positions": "Positions",
+    "salary": "Monthly Salary",
+    "responsibilities": "Responsibilities",
+    "requirements": "Requirements",
+    "interview": "Interview Questions"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "goal": "Goal",
+    "deliverables": "Deliverables",
+    "activities": "Activities",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "readMore": "Read More",
+    "backToHome": "Back to Home",
+    "print": "Print",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
+  }
+}
+
