@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Sparkles, Briefcase, Send } from 'lucide-react';
+import { CheckCircle2, Briefcase, Send } from 'lucide-react';
 import { getTeamPositions } from '@/helpers/extractMetrics';
 
 export default async function CareersPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -98,23 +98,33 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold text-muted-foreground mb-2">
-                          {locale === 'ar' ? 'المتطلبات:' : 'Requirements:'}
-                        </p>
-                        <ul className="space-y-1.5">
+                      <div className="space-y-4">
+                        <ul className="space-y-2">
                           {requirements.map((req, idx) => {
                             const isBonus = req.startsWith('⭐');
-                            const cleanReq = isBonus ? req.substring(2) : req;
+                            const isSection = req.startsWith('---');
+                            const isEmpty = req.trim() === '';
+                            const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+
+                            if (isEmpty) {
+                              return <li key={idx} className="h-2" />;
+                            }
+
+                            if (isSection) {
+                              return (
+                                <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                  <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
+                                    {cleanReq}
+                                  </h4>
+                                </li>
+                              );
+                            }
+
                             return (
-                              <li key={idx} className={`text-sm flex items-start gap-2 ${isBonus ? 'bg-amber-500/10 dark:bg-amber-500/20 p-2 rounded-md border border-amber-500/20' : ''}`}>
-                                {isBonus ? (
-                                  <Sparkles className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                                ) : (
-                                  <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                                )}
-                                <span className={isBonus ? 'font-medium text-amber-700 dark:text-amber-400' : 'text-muted-foreground'}>
-                                  {cleanReq}
+                              <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
+                                <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
+                                <span className="text-muted-foreground leading-relaxed">
+                                  {isBonus && '⭐ '}{cleanReq}
                                 </span>
                               </li>
                             );
@@ -122,9 +132,9 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                         </ul>
                       </div>
                       {!isFilled && (
-                        <div className="mt-4 pt-4 border-t">
-                          <Button className="w-full" size="lg">
-                            <Send className="h-4 w-4 mr-2" />
+                        <div className="mt-6 pt-4 border-t">
+                          <Button className="w-full group" size="lg">
+                            <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
                             {t('positions.applyNow')}
                           </Button>
                         </div>
@@ -140,8 +150,8 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
         {/* 
           ====================================
           Technical Team
-          - Full-stack Developer (Filled by المهندس خالد)
-          - Lead Backend Developer (Filled by المهندس خالد) - handles DevOps essentials
+          - Frontend Developer (Filled by المهندس خالد)
+          - Backend Developer (Filled by المهندس خالد) - handles DevOps essentials
           - React Native Developer
           - Designer (Filled by المهندس عبدالعزيز)
           - UI/UX Designer
@@ -151,7 +161,7 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
           <h3 className="text-2xl font-semibold mb-4">{t('positions.technical')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {technicalPositions.map((position, index) => {
-              const isFilled = position.titleEn === 'Full-stack Developer' || position.titleEn === 'Lead Backend Developer' || position.titleEn === 'Designer';
+              const isFilled = position.titleEn === 'Frontend Developer' || position.titleEn === 'Backend Developer' || position.titleEn === 'Designer';
               const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
               return (
                 <Card key={index} className={`transition-shadow ${isFilled ? 'border-green-500/20 bg-green-500/5' : 'hover:shadow-lg'}`}>
@@ -193,23 +203,33 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2">
-                      <p className="text-sm font-semibold text-muted-foreground mb-2">
-                        {locale === 'ar' ? 'المتطلبات التقنية:' : 'Technical Requirements:'}
-                      </p>
-                      <ul className="space-y-1.5">
+                    <div className="space-y-4">
+                      <ul className="space-y-2">
                         {requirements.map((req, idx) => {
                           const isBonus = req.startsWith('⭐');
-                          const cleanReq = isBonus ? req.substring(2) : req;
+                          const isSection = req.startsWith('---');
+                          const isEmpty = req.trim() === '';
+                          const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+
+                          if (isEmpty) {
+                            return <li key={idx} className="h-2" />;
+                          }
+
+                          if (isSection) {
+                            return (
+                              <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
+                                  {cleanReq}
+                                </h4>
+                              </li>
+                            );
+                          }
+
                           return (
-                            <li key={idx} className={`text-sm flex items-start gap-2 ${isBonus ? 'bg-amber-500/10 dark:bg-amber-500/20 p-2 rounded-md border border-amber-500/20' : ''}`}>
-                              {isBonus ? (
-                                <Sparkles className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                              ) : (
-                                <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                              )}
-                              <span className={isBonus ? 'font-medium text-amber-700 dark:text-amber-400' : 'text-muted-foreground'}>
-                                {cleanReq}
+                            <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
+                              <span className="text-muted-foreground leading-relaxed">
+                                {isBonus && '⭐ '}{cleanReq}
                               </span>
                             </li>
                           );
@@ -217,9 +237,9 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                       </ul>
                     </div>
                     {!isFilled && (
-                      <div className="mt-4 pt-4 border-t">
-                        <Button className="w-full" size="lg">
-                          <Send className="h-4 w-4 mr-2" />
+                      <div className="mt-6 pt-4 border-t">
+                        <Button className="w-full group" size="lg">
+                          <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
                           {t('positions.applyNow')}
                         </Button>
                       </div>
@@ -234,8 +254,7 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
         {/* 
           ====================================
           Content Team
-          - Content Writers (2 positions)
-          - Editor
+          - Content Writers (2 positions) - includes Writing + Editing + Peer Review
           ====================================
         */}
         <div className="mb-8">
@@ -269,32 +288,42 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2">
-                      <p className="text-sm font-semibold text-muted-foreground mb-2">
-                        {locale === 'ar' ? 'المتطلبات التقنية:' : 'Technical Requirements:'}
-                      </p>
-                      <ul className="space-y-1.5">
+                    <div className="space-y-4">
+                      <ul className="space-y-2">
                         {requirements.map((req, idx) => {
                           const isBonus = req.startsWith('⭐');
-                          const cleanReq = isBonus ? req.substring(2) : req;
+                          const isSection = req.startsWith('---');
+                          const isEmpty = req.trim() === '';
+                          const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+
+                          if (isEmpty) {
+                            return <li key={idx} className="h-2" />;
+                          }
+
+                          if (isSection) {
+                            return (
+                              <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
+                                  {cleanReq}
+                                </h4>
+                              </li>
+                            );
+                          }
+
                           return (
-                            <li key={idx} className={`text-sm flex items-start gap-2 ${isBonus ? 'bg-amber-500/10 dark:bg-amber-500/20 p-2 rounded-md border border-amber-500/20' : ''}`}>
-                              {isBonus ? (
-                                <Sparkles className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                              ) : (
-                                <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                              )}
-                              <span className={isBonus ? 'font-medium text-amber-700 dark:text-amber-400' : 'text-muted-foreground'}>
-                                {cleanReq}
+                            <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
+                              <span className="text-muted-foreground leading-relaxed">
+                                {isBonus && '⭐ '}{cleanReq}
                               </span>
                             </li>
                           );
                         })}
                       </ul>
                     </div>
-                    <div className="mt-4 pt-4 border-t">
-                      <Button className="w-full" size="lg">
-                        <Send className="h-4 w-4 mr-2" />
+                    <div className="mt-6 pt-4 border-t">
+                      <Button className="w-full group" size="lg">
+                        <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
                         {t('positions.applyNow')}
                       </Button>
                     </div>
@@ -358,23 +387,33 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold text-muted-foreground mb-2">
-                          {locale === 'ar' ? 'المتطلبات التقنية:' : 'Technical Requirements:'}
-                        </p>
-                        <ul className="space-y-1.5">
+                      <div className="space-y-4">
+                        <ul className="space-y-2">
                           {requirements.map((req, idx) => {
                             const isBonus = req.startsWith('⭐');
-                            const cleanReq = isBonus ? req.substring(2) : req;
+                            const isSection = req.startsWith('---');
+                            const isEmpty = req.trim() === '';
+                            const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+
+                            if (isEmpty) {
+                              return <li key={idx} className="h-2" />;
+                            }
+
+                            if (isSection) {
+                              return (
+                                <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                  <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
+                                    {cleanReq}
+                                  </h4>
+                                </li>
+                              );
+                            }
+
                             return (
-                              <li key={idx} className={`text-sm flex items-start gap-2 ${isBonus ? 'bg-amber-500/10 dark:bg-amber-500/20 p-2 rounded-md border border-amber-500/20' : ''}`}>
-                                {isBonus ? (
-                                  <Sparkles className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                                ) : (
-                                  <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                                )}
-                                <span className={isBonus ? 'font-medium text-amber-700 dark:text-amber-400' : 'text-muted-foreground'}>
-                                  {cleanReq}
+                              <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
+                                <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
+                                <span className="text-muted-foreground leading-relaxed">
+                                  {isBonus && '⭐ '}{cleanReq}
                                 </span>
                               </li>
                             );
@@ -382,9 +421,9 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                         </ul>
                       </div>
                       {!isFilled && (
-                        <div className="mt-4 pt-4 border-t">
-                          <Button className="w-full" size="lg">
-                            <Send className="h-4 w-4 mr-2" />
+                        <div className="mt-6 pt-4 border-t">
+                          <Button className="w-full group" size="lg">
+                            <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
                             {t('positions.applyNow')}
                           </Button>
                         </div>
@@ -453,23 +492,33 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                       )}
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold text-muted-foreground mb-2">
-                          {locale === 'ar' ? 'المتطلبات:' : 'Requirements:'}
-                        </p>
-                        <ul className="space-y-1.5">
+                      <div className="space-y-4">
+                        <ul className="space-y-2">
                           {requirements.map((req, idx) => {
                             const isBonus = req.startsWith('⭐');
-                            const cleanReq = isBonus ? req.substring(2) : req;
+                            const isSection = req.startsWith('---');
+                            const isEmpty = req.trim() === '';
+                            const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+
+                            if (isEmpty) {
+                              return <li key={idx} className="h-2" />;
+                            }
+
+                            if (isSection) {
+                              return (
+                                <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                  <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
+                                    {cleanReq}
+                                  </h4>
+                                </li>
+                              );
+                            }
+
                             return (
-                              <li key={idx} className={`text-sm flex items-start gap-2 ${isBonus ? 'bg-amber-500/10 dark:bg-amber-500/20 p-2 rounded-md border border-amber-500/20' : ''}`}>
-                                {isBonus ? (
-                                  <Sparkles className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                                ) : (
-                                  <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                                )}
-                                <span className={isBonus ? 'font-medium text-amber-700 dark:text-amber-400' : 'text-muted-foreground'}>
-                                  {cleanReq}
+                              <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
+                                <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
+                                <span className="text-muted-foreground leading-relaxed">
+                                  {isBonus && '⭐ '}{cleanReq}
                                 </span>
                               </li>
                             );
@@ -477,9 +526,9 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                         </ul>
                       </div>
                       {!isFilled && (
-                        <div className="mt-4 pt-4 border-t">
-                          <Button className="w-full" size="lg">
-                            <Send className="h-4 w-4 mr-2" />
+                        <div className="mt-6 pt-4 border-t">
+                          <Button className="w-full group" size="lg">
+                            <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
                             {t('positions.applyNow')}
                           </Button>
                         </div>
@@ -559,4 +608,5 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
     </div>
   );
 }
+
 

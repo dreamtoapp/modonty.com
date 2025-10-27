@@ -28,15 +28,7 @@ export default async function LocaleLayout({
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <Navigation />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <footer className="border-t py-8 mt-16 no-print">
-            <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-              <p>© 2024 Modonty. All rights reserved.</p>
-            </div>
-          </footer>
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>

@@ -120,6 +120,28 @@
     "print": "Print",
     "darkMode": "Dark Mode",
     "lightMode": "Light Mode"
+  },
+  "admin": {
+    "loginTitle": "Admin Login",
+    "loginDescription": "Enter your credentials to access the admin panel",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Login",
+    "logout": "Logout",
+    "adminPanel": "Admin Panel",
+    "invalidCredentials": "Invalid credentials",
+    "loading": "Loading...",
+    "dashboard": "Dashboard",
+    "dashboardTitle": "Admin Dashboard",
+    "dashboardDescription": "Manage business plans and documents",
+    "organizationalStructure": "Organizational Structure",
+    "generalPlan": "General Plan",
+    "generalPlanDesc": "View and manage the general business plan",
+    "hiringPlan": "Hiring Plan",
+    "hiringPlanDesc": "View and manage the detailed hiring plan",
+    "timeline": "Timeline",
+    "timelineDesc": "View and manage the launch timeline",
+    "backToWebsite": "Back to Website"
   }
 }
 

@@ -120,6 +120,28 @@
     "print": "طباعة",
     "darkMode": "الوضع الداكن",
     "lightMode": "الوضع الفاتح"
+  },
+  "admin": {
+    "loginTitle": "تسجيل دخول الإدارة",
+    "loginDescription": "أدخل بيانات الدخول للوصول إلى لوحة التحكم",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "loginButton": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "adminPanel": "لوحة الإدارة",
+    "invalidCredentials": "بيانات الدخول غير صحيحة",
+    "loading": "جاري التحميل...",
+    "dashboard": "لوحة التحكم",
+    "dashboardTitle": "لوحة التحكم الإدارية",
+    "dashboardDescription": "إدارة خطط العمل والوثائق",
+    "organizationalStructure": "الهيكل الإداري",
+    "generalPlan": "الخطة العامة",
+    "generalPlanDesc": "عرض وإدارة الخطة العامة للمشروع",
+    "hiringPlan": "خطة التوظيف",
+    "hiringPlanDesc": "عرض وإدارة خطة التوظيف التفصيلية",
+    "timeline": "الجدول الزمني",
+    "timelineDesc": "عرض وإدارة الجدول الزمني للإطلاق",
+    "backToWebsite": "العودة للموقع"
   }
 }
 
