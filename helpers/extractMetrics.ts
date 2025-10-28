@@ -200,8 +200,8 @@ export function getTeamPositions(): Position[] {
       ]
     },
     {
-      title: 'Head of Content',
-      titleEn: 'Head of Content',
+      title: 'Head of Content / SEO Specialist',
+      titleEn: 'Head of Content / SEO Specialist',
       count: 1,
       salaryMin: 0,
       salaryMax: 0,
