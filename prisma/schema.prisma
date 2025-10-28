@@ -1,0 +1,57 @@
+// Prisma schema for MongoDB
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Application {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Applicant Information
+  applicantName     String
+  email             String
+  phone             String
+  position          String
+  yearsOfExperience Int
+
+  // Optional URLs
+  portfolioUrl String?
+  githubUrl    String?
+  linkedinUrl  String?
+
+  // Skills and Documents
+  skills       String[] // Array of skill strings
+  coverLetter  String
+  cvUrl        String   // Cloudinary URL
+  cvPublicId   String   // Cloudinary public ID for deletion
+  
+  // Personal Image
+  profileImageUrl String // Cloudinary URL for profile image (required)
+  profileImagePublicId String // Cloudinary public ID for deletion (required)
+
+  // Application Status
+  status     ApplicationStatus @default(PENDING)
+  adminNotes String?
+
+  // Metadata
+  locale String @default("ar") // ar or en
+
+  @@index([status])
+  @@index([position])
+  @@index([email])
+  @@index([createdAt])
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWED
+  ACCEPTED
+  REJECTED
+}
+

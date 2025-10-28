@@ -1,68 +1,61 @@
-'use client';
-
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { FileText, Users, Network } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { getTranslations } from 'next-intl/server';
+import { getApplicationCountsByPosition } from '@/lib/applications';
+import { getTeamPositions } from '@/helpers/extractMetrics';
+import { AdminSidebarClient } from './AdminSidebarClient';
 
 interface AdminSidebarProps {
   locale: string;
 }
 
-export function AdminSidebar({ locale }: AdminSidebarProps) {
-  const pathname = usePathname();
-  const t = useTranslations('admin');
+export async function AdminSidebar({ locale }: AdminSidebarProps) {
+  const t = await getTranslations('admin');
 
-  const navItems = [
+  // Fetch application counts
+  const applicationCounts = await getApplicationCountsByPosition();
+  const positions = getTeamPositions();
+
+  // Create a map for easy lookup
+  const countsMap = new Map(applicationCounts.map(c => [c.position, c.total]));
+
+  // Group positions by category
+  const leadershipPositions = positions.filter(p => p.phase === 0);
+  const technicalPositions = positions.filter(p => p.phase === 1);
+  const contentPositions = positions.filter(p => p.phase === 2);
+  const salesPositions = positions.filter(p => p.phase === 4);
+
+  const positionGroups = [
     {
-      href: `/${locale}/admin`,
-      label: t('organizationalStructure'),
-      icon: Network,
-      exact: true,
+      label: locale === 'ar' ? 'القيادة والإدارة' : 'Leadership',
+      positions: leadershipPositions,
     },
     {
-      href: `/${locale}/admin/general-plan`,
-      label: t('generalPlan'),
-      icon: FileText,
+      label: locale === 'ar' ? 'الفريق التقني' : 'Technical Team',
+      positions: technicalPositions,
     },
     {
-      href: `/${locale}/admin/hiring-plan`,
-      label: t('hiringPlan'),
-      icon: Users,
+      label: locale === 'ar' ? 'فريق المحتوى' : 'Content Team',
+      positions: contentPositions,
+    },
+    {
+      label: locale === 'ar' ? 'المبيعات والتسويق' : 'Sales & Marketing',
+      positions: salesPositions,
     },
   ];
 
   return (
-    <div className="h-full bg-muted/30">
-      <div className="p-6 border-b">
-        <h2 className="text-lg font-semibold">{t('adminPanel')}</h2>
-      </div>
-
-      <nav className="p-4 space-y-1">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = item.exact
-            ? pathname === item.href
-            : pathname?.startsWith(item.href);
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
-                'hover:bg-accent hover:text-accent-foreground',
-                isActive && 'bg-accent text-accent-foreground font-medium'
-              )}
-            >
-              <Icon className="h-4 w-4 flex-shrink-0" />
-              <span className="truncate">{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
+    <AdminSidebarClient
+      locale={locale}
+      positionGroups={positionGroups}
+      countsMap={Object.fromEntries(countsMap)}
+      translations={{
+        adminPanel: t('adminPanel'),
+        organizationalStructure: t('organizationalStructure'),
+        applications: t('applications'),
+        allApplications: t('allApplications'),
+        generalPlan: t('generalPlan'),
+        hiringPlan: t('hiringPlan'),
+      }}
+    />
   );
 }
 

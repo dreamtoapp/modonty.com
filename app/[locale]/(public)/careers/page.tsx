@@ -2,7 +2,8 @@ import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Briefcase, Send } from 'lucide-react';
+import { CheckCircle2, Briefcase, Send, Users, Target, Sparkles, TrendingUp, Code, PenTool, Megaphone, BarChart3, ShoppingCart, Award, ArrowRight, Clock } from 'lucide-react';
+import Link from 'next/link';
 import { getTeamPositions } from '@/helpers/extractMetrics';
 
 export default async function CareersPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -16,597 +17,822 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
   const operationsPositions = positions.filter(p => p.phase === 3);
   const salesPositions = positions.filter(p => p.phase === 4);
 
+  // Get all vacant positions
+  const vacantPositions = positions.filter(p => !p.filledBy);
+  const filledCount = positions.filter(p => p.filledBy).length;
+  const totalCount = positions.length;
+
+  // Get phase icon
+  const getPhaseIcon = (phase: number) => {
+    switch (phase) {
+      case 0: return Target;
+      case 1: return Code;
+      case 2: return PenTool;
+      case 3: return BarChart3;
+      case 4: return ShoppingCart;
+      default: return Briefcase;
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-12">
-      {/* Hero Section */}
-      <div className="text-center mb-12 max-w-3xl mx-auto">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-          <Briefcase className="h-8 w-8 text-primary" />
-        </div>
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          {t('title')}
-        </h1>
-        <p className="text-xl text-muted-foreground mb-4">
-          {t('subtitle')}
-        </p>
-        <div className="bg-muted/50 p-4 rounded-lg border-l-4 border-primary inline-block">
-          <p className="text-sm text-muted-foreground">
-            {t('confidentialityNote')}
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-background via-primary/[0.02] to-background">
+      {/* Enhanced Hero Section */}
+      <div className="relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25" />
+
+        <div className="container mx-auto px-4 py-16 md:py-24 relative">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Icon with animation */}
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 mb-6 shadow-lg shadow-primary/10 backdrop-blur-sm animate-fade-in-up">
+              <Briefcase className="h-10 w-10 text-primary" />
+            </div>
+
+            {/* Title */}
+            <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+              {t('title')}
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              {t('subtitle')}
+            </p>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <Card className="border-2 bg-card/50 backdrop-blur-sm">
+                <CardContent className="p-4 text-center">
+                  <div className="text-3xl font-bold text-primary mb-1">{totalCount}</div>
+                  <div className="text-sm text-muted-foreground">{locale === 'ar' ? 'إجمالي الوظائف' : 'Total Positions'}</div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-green-500/30 bg-green-500/5 backdrop-blur-sm">
+                <CardContent className="p-4 text-center">
+                  <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">{vacantPositions.length}</div>
+                  <div className="text-sm text-muted-foreground">{locale === 'ar' ? 'وظائف شاغرة' : 'Open Positions'}</div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 bg-card/50 backdrop-blur-sm">
+                <CardContent className="p-4 text-center">
+                  <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">{filledCount}</div>
+                  <div className="text-sm text-muted-foreground">{locale === 'ar' ? 'وظائف مشغولة' : 'Filled Positions'}</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Confidentiality Note */}
+            <div className="bg-gradient-to-r from-muted/50 via-muted/70 to-muted/50 p-6 rounded-xl border-l-4 border-primary inline-block backdrop-blur-sm shadow-sm animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              <div className="flex items-start gap-3">
+                <Award className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-muted-foreground text-left">
+                  {t('confidentialityNote')}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Available Positions */}
-      <div id="positions" className="mb-16">
-        <h2 className="text-3xl font-bold mb-8 text-center">
-          {t('positions.title')}
-        </h2>
-
-        {/* 
-          ====================================
-          Leadership & Executive Positions
-          - CTO / Technical Lead (Filled by المهندس خالد)
-          - Operations (Filled by المهندس عبدالعزيز) - includes Customer Support & Data Analysis
-          - Head of Content
-          - Head of Marketing (includes Digital Marketing & Social Media)
-          ====================================
-        */}
-        {leadershipPositions.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-2xl font-semibold mb-4">{t('positions.leadership')}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {leadershipPositions.map((position, index) => {
-                const isFilled = !!position.filledBy;
-                const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
-                return (
-                  <Card key={index} className={`transition-shadow ${isFilled ? 'border-green-500/20 bg-green-500/5' : 'hover:shadow-lg border-primary/20'}`}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between mb-2">
-                        <CardTitle className="text-lg">
-                          {locale === 'ar' ? position.title : position.titleEn}
-                        </CardTitle>
-                        <div className="flex gap-2 flex-wrap justify-end">
+      <div className="container mx-auto px-4 pb-12">
+        {/* Enhanced Vacant Positions Quick Links */}
+        {vacantPositions.length > 0 && (
+          <div className="mb-16 -mt-8">
+            <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-background shadow-xl shadow-primary/5">
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-center gap-4 flex-wrap">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Sparkles className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-2xl md:text-3xl">
+                      {locale === 'ar' ? '🎯 الوظائف الشاغرة' : '🎯 Open Positions'}
+                    </CardTitle>
+                  </div>
+                  <Badge variant="default" className="text-lg px-4 py-1.5 shadow-md">
+                    {vacantPositions.length} {locale === 'ar' ? 'وظيفة' : 'positions'}
+                  </Badge>
+                </div>
+                <p className="text-center text-muted-foreground mt-2 text-sm">
+                  {locale === 'ar' ? 'اضغط على أي وظيفة للانتقال السريع' : 'Click any position to jump directly'}
+                </p>
+              </CardHeader>
+              <CardContent className="pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {vacantPositions.map((position, index) => {
+                    const positionId = (locale === 'ar' ? position.title : position.titleEn).toLowerCase().replace(/\s+/g, '-');
+                    const PhaseIcon = getPhaseIcon(position.phase);
+                    return (
+                      <a
+                        key={index}
+                        href={`#${positionId}`}
+                        className="group relative flex items-center gap-3 p-4 rounded-xl border-2 border-border hover:border-primary/50 bg-card hover:bg-primary/5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                      >
+                        <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                          <PhaseIcon className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm truncate group-hover:text-primary transition-colors">
+                            {locale === 'ar' ? position.title : position.titleEn}
+                          </div>
                           {position.employmentType && (
-                            <Badge variant="outline">
+                            <div className="text-xs text-muted-foreground mt-0.5">
                               {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
-                            </Badge>
-                          )}
-                          {isFilled ? (
-                            <>
-                              <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20 hover:bg-green-500/20">
-                                <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
-                                {t('positions.filled')}
-                              </Badge>
-                              {position.filledBy && (
-                                <Badge variant="outline" className="bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20">
-                                  {position.filledBy}
-                                </Badge>
-                              )}
-                            </>
-                          ) : (
-                            <>
-                              <Badge>{position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}</Badge>
-                              <Badge variant="outline" className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20">
-                                {t('positions.vacant')}
-                              </Badge>
-                              <Badge variant="outline" className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20">
-                                {t('positions.lookingForYou')}
-                              </Badge>
-                            </>
+                            </div>
                           )}
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <ul className="space-y-2">
-                          {requirements.map((req, idx) => {
-                            const isBonus = req.startsWith('⭐');
-                            const isSection = req.startsWith('---');
-                            const isEmpty = req.trim() === '';
-                            const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
-
-                            if (isEmpty) {
-                              return <li key={idx} className="h-2" />;
-                            }
-
-                            if (isSection) {
-                              return (
-                                <li key={idx} className="pt-3 pb-1.5 first:pt-0">
-                                  <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
-                                    {cleanReq}
-                                  </h4>
-                                </li>
-                              );
-                            }
-
-                            return (
-                              <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
-                                <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
-                                <span className="text-muted-foreground leading-relaxed">
-                                  {isBonus && '⭐ '}{cleanReq}
-                                </span>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                      {!isFilled && (
-                        <div className="mt-6 pt-4 border-t">
-                          <Button className="w-full group" size="lg">
-                            <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
-                            {t('positions.applyNow')}
-                          </Button>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+                        {position.count > 1 && (
+                          <Badge variant="secondary" className="text-xs">
+                            ×{position.count}
+                          </Badge>
+                        )}
+                        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
 
-        {/* 
-          ====================================
-          Technical Team
-          - Frontend Developer (Filled by المهندس خالد)
-          - Backend Developer (Filled by المهندس خالد) - handles DevOps essentials
-          - React Native Developer
-          - Designer (Filled by المهندس عبدالعزيز)
-          - UI/UX Designer
-          ====================================
-        */}
-        <div className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4">{t('positions.technical')}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {technicalPositions.map((position, index) => {
-              const isFilled = position.titleEn === 'Frontend Developer' || position.titleEn === 'Backend Developer' || position.titleEn === 'Designer';
-              const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
-              return (
-                <Card key={index} className={`transition-shadow ${isFilled ? 'border-green-500/20 bg-green-500/5' : 'hover:shadow-lg'}`}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <CardTitle className="text-lg">
-                        {locale === 'ar' ? position.title : position.titleEn}
-                      </CardTitle>
-                      <div className="flex gap-2 flex-wrap justify-end">
-                        {position.employmentType && (
-                          <Badge variant="outline">
-                            {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
-                          </Badge>
+        {/* Available Positions */}
+        <div id="positions" className="space-y-16">
+          {/* Section Title */}
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
+              <Users className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-primary">{locale === 'ar' ? 'تصفح الفرص' : 'Browse Opportunities'}</span>
+            </div>
+            <h2 className="text-4xl font-bold mb-3">
+              {t('positions.title')}
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              {locale === 'ar'
+                ? 'اكتشف الفرص المتاحة وكن جزءاً من فريقنا المتميز'
+                : 'Discover available opportunities and be part of our exceptional team'}
+            </p>
+          </div>
+
+          {/* Leadership & Executive Positions */}
+          {leadershipPositions.length > 0 && (
+            <section className="space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b-2">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-500/5">
+                  <Target className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold">{t('positions.leadership')}</h3>
+                  <p className="text-sm text-muted-foreground">{leadershipPositions.length} {locale === 'ar' ? 'وظيفة' : 'positions'}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {leadershipPositions.map((position, index) => {
+                  const isFilled = !!position.filledBy;
+                  const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
+                  const positionId = (locale === 'ar' ? position.title : position.titleEn).toLowerCase().replace(/\s+/g, '-');
+                  return (
+                    <Card
+                      key={index}
+                      id={positionId}
+                      className={`
+                        scroll-mt-24 transition-all duration-300 hover:shadow-xl group
+                        ${isFilled
+                          ? 'border-2 border-green-500/30 bg-gradient-to-br from-green-500/5 to-background'
+                          : 'border-2 border-primary/20 hover:border-primary/40 bg-card hover:-translate-y-1'
+                        }
+                      `}
+                    >
+                      <CardHeader className="space-y-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <CardTitle className="text-xl mb-3 flex items-center gap-2">
+                              {locale === 'ar' ? position.title : position.titleEn}
+                              {!isFilled && <Sparkles className="h-4 w-4 text-primary animate-pulse" />}
+                            </CardTitle>
+                            <div className="flex gap-2 flex-wrap">
+                              {position.employmentType && (
+                                <Badge variant="outline" className="text-xs">
+                                  <Clock className="h-3 w-3 mr-1" />
+                                  {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
+                                </Badge>
+                              )}
+                              {isFilled ? (
+                                <>
+                                  <Badge className="bg-green-500/20 text-green-700 dark:text-green-300 border-green-500/30 hover:bg-green-500/30">
+                                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                                    {t('positions.filled')}
+                                  </Badge>
+                                  {position.filledBy && (
+                                    <Badge variant="outline" className="bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/30">
+                                      {position.filledBy}
+                                    </Badge>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  <Badge variant="default" className="shadow-sm">
+                                    {position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}
+                                  </Badge>
+                                  <Badge className="bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30">
+                                    {t('positions.vacant')}
+                                  </Badge>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                          <ul className="space-y-2">
+                            {requirements.map((req, idx) => {
+                              const isBonus = req.startsWith('⭐');
+                              const isSection = req.startsWith('---');
+                              const isEmpty = req.trim() === '';
+                              const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+
+                              if (isEmpty) {
+                                return <li key={idx} className="h-2" />;
+                              }
+
+                              if (isSection) {
+                                return (
+                                  <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-primary/90 flex items-center gap-2">
+                                      <div className="h-px flex-1 bg-primary/20" />
+                                      {cleanReq}
+                                      <div className="h-px flex-1 bg-primary/20" />
+                                    </h4>
+                                  </li>
+                                );
+                              }
+
+                              return (
+                                <li key={idx} className="text-sm flex items-start gap-2.5 pl-1 group/item">
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0 group-hover/item:text-primary transition-colors" />
+                                  <span className="text-muted-foreground leading-relaxed">
+                                    {isBonus && <span className="text-yellow-600 dark:text-yellow-400">⭐ </span>}
+                                    {cleanReq}
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                        {!isFilled && (
+                          <div className="pt-4 border-t">
+                            <Link href={`/${locale}/careers/apply/${encodeURIComponent(locale === 'ar' ? position.title : position.titleEn)}`}>
+                              <Button className="w-full group/btn relative overflow-hidden" size="lg">
+                                <span className="relative z-10 flex items-center justify-center gap-2">
+                                  <Send className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                                  {t('positions.applyNow')}
+                                  <TrendingUp className="h-4 w-4 group-hover/btn:translate-y-[-2px] transition-transform" />
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
+                              </Button>
+                            </Link>
+                          </div>
                         )}
-                        {isFilled ? (
-                          <>
-                            <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20 hover:bg-green-500/20">
-                              <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
-                              {t('positions.filled')}
-                            </Badge>
-                            {position.filledBy && (
-                              <Badge variant="outline" className="bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20">
-                                {position.filledBy}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {/* Technical Team */}
+          <section className="space-y-6">
+            <div className="flex items-center gap-3 pb-4 border-b-2">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/5">
+                <Code className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold">{t('positions.technical')}</h3>
+                <p className="text-sm text-muted-foreground">{technicalPositions.length} {locale === 'ar' ? 'وظيفة' : 'positions'}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {technicalPositions.map((position, index) => {
+                const isFilled = !!position.filledBy;
+                const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
+                const positionId = (locale === 'ar' ? position.title : position.titleEn).toLowerCase().replace(/\s+/g, '-');
+                return (
+                  <Card
+                    key={index}
+                    id={positionId}
+                    className={`
+                      scroll-mt-24 transition-all duration-300 hover:shadow-xl group
+                      ${isFilled
+                        ? 'border-2 border-green-500/30 bg-gradient-to-br from-green-500/5 to-background'
+                        : 'border-2 border-border hover:border-primary/40 bg-card hover:-translate-y-1'
+                      }
+                    `}
+                  >
+                    <CardHeader className="space-y-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <CardTitle className="text-xl mb-3 flex items-center gap-2">
+                            {locale === 'ar' ? position.title : position.titleEn}
+                            {!isFilled && <Sparkles className="h-4 w-4 text-primary animate-pulse" />}
+                          </CardTitle>
+                          <div className="flex gap-2 flex-wrap">
+                            {position.employmentType && (
+                              <Badge variant="outline" className="text-xs">
+                                <Clock className="h-3 w-3 mr-1" />
+                                {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
                               </Badge>
                             )}
-                          </>
-                        ) : (
-                          <>
-                            <Badge>{position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}</Badge>
-                            <Badge variant="outline" className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20">
-                              {t('positions.vacant')}
-                            </Badge>
-                            <Badge variant="outline" className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20">
-                              {t('positions.lookingForYou')}
-                            </Badge>
-                          </>
-                        )}
+                            {isFilled ? (
+                              <>
+                                <Badge className="bg-green-500/20 text-green-700 dark:text-green-300 border-green-500/30 hover:bg-green-500/30">
+                                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                                  {t('positions.filled')}
+                                </Badge>
+                                {position.filledBy && (
+                                  <Badge variant="outline" className="bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/30">
+                                    {position.filledBy}
+                                  </Badge>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                <Badge variant="default" className="shadow-sm">
+                                  {position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}
+                                </Badge>
+                                <Badge className="bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30">
+                                  {t('positions.vacant')}
+                                </Badge>
+                              </>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <ul className="space-y-2">
-                        {requirements.map((req, idx) => {
-                          const isBonus = req.startsWith('⭐');
-                          const isSection = req.startsWith('---');
-                          const isEmpty = req.trim() === '';
-                          const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                        <ul className="space-y-2">
+                          {requirements.map((req, idx) => {
+                            const isBonus = req.startsWith('⭐');
+                            const isSection = req.startsWith('---');
+                            const isEmpty = req.trim() === '';
+                            const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
 
-                          if (isEmpty) {
-                            return <li key={idx} className="h-2" />;
-                          }
+                            if (isEmpty) {
+                              return <li key={idx} className="h-2" />;
+                            }
 
-                          if (isSection) {
+                            if (isSection) {
+                              return (
+                                <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                  <h4 className="text-xs font-bold uppercase tracking-wider text-primary/90 flex items-center gap-2">
+                                    <div className="h-px flex-1 bg-primary/20" />
+                                    {cleanReq}
+                                    <div className="h-px flex-1 bg-primary/20" />
+                                  </h4>
+                                </li>
+                              );
+                            }
+
                             return (
-                              <li key={idx} className="pt-3 pb-1.5 first:pt-0">
-                                <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
+                              <li key={idx} className="text-sm flex items-start gap-2.5 pl-1 group/item">
+                                <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0 group-hover/item:text-primary transition-colors" />
+                                <span className="text-muted-foreground leading-relaxed">
+                                  {isBonus && <span className="text-yellow-600 dark:text-yellow-400">⭐ </span>}
                                   {cleanReq}
-                                </h4>
+                                </span>
                               </li>
                             );
-                          }
-
-                          return (
-                            <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
-                              <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
-                              <span className="text-muted-foreground leading-relaxed">
-                                {isBonus && '⭐ '}{cleanReq}
-                              </span>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                    {!isFilled && (
-                      <div className="mt-6 pt-4 border-t">
-                        <Button className="w-full group" size="lg">
-                          <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
-                          {t('positions.applyNow')}
-                        </Button>
+                          })}
+                        </ul>
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 
-          ====================================
-          Content Team
-          - Content Writers (2 positions) - includes Writing + Editing + Peer Review
-          ====================================
-        */}
-        <div className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4">{t('positions.content')}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {contentPositions.map((position, index) => {
-              const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
-              return (
-                <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <CardTitle className="text-lg">
-                        {locale === 'ar' ? position.title : position.titleEn}
-                      </CardTitle>
-                      <div className="flex gap-2 flex-wrap justify-end">
-                        {position.employmentType && (
-                          <Badge variant="outline">
-                            {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
-                          </Badge>
-                        )}
-                        <Badge>{position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}</Badge>
-                      </div>
-                    </div>
-                    <div className="mt-2 flex gap-2 flex-wrap">
-                      <Badge variant="outline" className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20">
-                        {t('positions.vacant')}
-                      </Badge>
-                      <Badge variant="outline" className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20">
-                        {t('positions.lookingForYou')}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <ul className="space-y-2">
-                        {requirements.map((req, idx) => {
-                          const isBonus = req.startsWith('⭐');
-                          const isSection = req.startsWith('---');
-                          const isEmpty = req.trim() === '';
-                          const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
-
-                          if (isEmpty) {
-                            return <li key={idx} className="h-2" />;
-                          }
-
-                          if (isSection) {
-                            return (
-                              <li key={idx} className="pt-3 pb-1.5 first:pt-0">
-                                <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
-                                  {cleanReq}
-                                </h4>
-                              </li>
-                            );
-                          }
-
-                          return (
-                            <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
-                              <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
-                              <span className="text-muted-foreground leading-relaxed">
-                                {isBonus && '⭐ '}{cleanReq}
+                      {!isFilled && (
+                        <div className="pt-4 border-t">
+                          <Link href={`/${locale}/careers/apply/${encodeURIComponent(locale === 'ar' ? position.title : position.titleEn)}`}>
+                            <Button className="w-full group/btn relative overflow-hidden" size="lg">
+                              <span className="relative z-10 flex items-center justify-center gap-2">
+                                <Send className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                                {t('positions.applyNow')}
+                                <TrendingUp className="h-4 w-4 group-hover/btn:translate-y-[-2px] transition-transform" />
                               </span>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                    <div className="mt-6 pt-4 border-t">
-                      <Button className="w-full group" size="lg">
-                        <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
-                        {t('positions.applyNow')}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
+                              <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
+                            </Button>
+                          </Link>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
 
-        {/* 
-          ====================================
-          Operations & Support
-          - No positions (all integrated into Operations leadership)
-          ====================================
-        */}
-        {operationsPositions.length > 0 && (
-          <div>
-            <h3 className="text-2xl font-semibold mb-4">{t('positions.operations')}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {operationsPositions.map((position, index) => {
-                const isFilled = !!position.filledBy;
-                const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
-                return (
-                  <Card key={index} className={`transition-shadow ${isFilled ? 'border-green-500/20 bg-green-500/5' : 'hover:shadow-lg'}`}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between mb-2">
-                        <CardTitle className="text-lg">
-                          {locale === 'ar' ? position.title : position.titleEn}
-                        </CardTitle>
-                        <div className="flex gap-2 flex-wrap justify-end">
-                          {position.employmentType && (
-                            <Badge variant="outline">
-                              {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
-                            </Badge>
-                          )}
-                          {isFilled ? (
-                            <>
-                              <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20 hover:bg-green-500/20">
-                                <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
-                                {t('positions.filled')}
-                              </Badge>
-                              {position.filledBy && (
-                                <Badge variant="outline" className="bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20">
-                                  {position.filledBy}
+          {/* Content Team */}
+          {contentPositions.length > 0 && (
+            <section className="space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b-2">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-pink-500/20 to-pink-500/5">
+                  <PenTool className="h-6 w-6 text-pink-600 dark:text-pink-400" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold">{t('positions.content')}</h3>
+                  <p className="text-sm text-muted-foreground">{contentPositions.length} {locale === 'ar' ? 'وظيفة' : 'positions'}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {contentPositions.map((position, index) => {
+                  const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
+                  const positionId = (locale === 'ar' ? position.title : position.titleEn).toLowerCase().replace(/\s+/g, '-');
+                  return (
+                    <Card
+                      key={index}
+                      id={positionId}
+                      className="scroll-mt-24 border-2 border-border hover:border-primary/40 bg-card transition-all duration-300 hover:shadow-xl group hover:-translate-y-1"
+                    >
+                      <CardHeader className="space-y-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <CardTitle className="text-xl mb-3 flex items-center gap-2">
+                              {locale === 'ar' ? position.title : position.titleEn}
+                              <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+                            </CardTitle>
+                            <div className="flex gap-2 flex-wrap">
+                              {position.employmentType && (
+                                <Badge variant="outline" className="text-xs">
+                                  <Clock className="h-3 w-3 mr-1" />
+                                  {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
                                 </Badge>
                               )}
-                            </>
-                          ) : (
-                            <>
-                              <Badge>{position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}</Badge>
-                              <Badge variant="outline" className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20">
+                              <Badge variant="default" className="shadow-sm">
+                                {position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}
+                              </Badge>
+                              <Badge className="bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30">
                                 {t('positions.vacant')}
                               </Badge>
-                              <Badge variant="outline" className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20">
-                                {t('positions.lookingForYou')}
-                              </Badge>
-                            </>
-                          )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <ul className="space-y-2">
-                          {requirements.map((req, idx) => {
-                            const isBonus = req.startsWith('⭐');
-                            const isSection = req.startsWith('---');
-                            const isEmpty = req.trim() === '';
-                            const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                          <ul className="space-y-2">
+                            {requirements.map((req, idx) => {
+                              const isBonus = req.startsWith('⭐');
+                              const isSection = req.startsWith('---');
+                              const isEmpty = req.trim() === '';
+                              const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
 
-                            if (isEmpty) {
-                              return <li key={idx} className="h-2" />;
-                            }
+                              if (isEmpty) {
+                                return <li key={idx} className="h-2" />;
+                              }
 
-                            if (isSection) {
+                              if (isSection) {
+                                return (
+                                  <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-primary/90 flex items-center gap-2">
+                                      <div className="h-px flex-1 bg-primary/20" />
+                                      {cleanReq}
+                                      <div className="h-px flex-1 bg-primary/20" />
+                                    </h4>
+                                  </li>
+                                );
+                              }
+
                               return (
-                                <li key={idx} className="pt-3 pb-1.5 first:pt-0">
-                                  <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
+                                <li key={idx} className="text-sm flex items-start gap-2.5 pl-1 group/item">
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0 group-hover/item:text-primary transition-colors" />
+                                  <span className="text-muted-foreground leading-relaxed">
+                                    {isBonus && <span className="text-yellow-600 dark:text-yellow-400">⭐ </span>}
                                     {cleanReq}
-                                  </h4>
+                                  </span>
                                 </li>
                               );
-                            }
-
-                            return (
-                              <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
-                                <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
-                                <span className="text-muted-foreground leading-relaxed">
-                                  {isBonus && '⭐ '}{cleanReq}
-                                </span>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                      {!isFilled && (
-                        <div className="mt-6 pt-4 border-t">
-                          <Button className="w-full group" size="lg">
-                            <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
-                            {t('positions.applyNow')}
-                          </Button>
+                            })}
+                          </ul>
                         </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        )}
+                        <div className="pt-4 border-t">
+                          <Link href={`/${locale}/careers/apply/${encodeURIComponent(locale === 'ar' ? position.title : position.titleEn)}`}>
+                            <Button className="w-full group/btn relative overflow-hidden" size="lg">
+                              <span className="relative z-10 flex items-center justify-center gap-2">
+                                <Send className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                                {t('positions.applyNow')}
+                                <TrendingUp className="h-4 w-4 group-hover/btn:translate-y-[-2px] transition-transform" />
+                              </span>
+                              <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
+                            </Button>
+                          </Link>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
-        {/* 
-          ====================================
-          Sales & Marketing Positions
-          - Sales Representative (2 positions)
-          - Customer Success Manager
-          ====================================
-        */}
-        {salesPositions.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-2xl font-semibold mb-4">{t('positions.sales')}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {salesPositions.map((position, index) => {
-                const isFilled = !!position.filledBy;
-                const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
-                return (
-                  <Card key={index} className={`transition-shadow border-blue-500/20 ${isFilled ? 'bg-green-500/5' : 'hover:shadow-lg'}`}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between mb-2">
-                        <CardTitle className="text-lg">
-                          {locale === 'ar' ? position.title : position.titleEn}
-                        </CardTitle>
-                        <div className="flex gap-2 flex-wrap justify-end">
-                          {position.employmentType && (
-                            <Badge variant="outline">
-                              {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
-                            </Badge>
-                          )}
-                          {isFilled ? (
-                            <>
-                              <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20 hover:bg-green-500/20">
-                                <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
-                                {t('positions.filled')}
-                              </Badge>
-                              {position.filledBy && (
-                                <Badge variant="outline" className="bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20">
-                                  {position.filledBy}
+          {/* Operations & Support */}
+          {operationsPositions.length > 0 && (
+            <section className="space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b-2">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-teal-500/20 to-teal-500/5">
+                  <BarChart3 className="h-6 w-6 text-teal-600 dark:text-teal-400" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold">{t('positions.operations')}</h3>
+                  <p className="text-sm text-muted-foreground">{operationsPositions.length} {locale === 'ar' ? 'وظيفة' : 'positions'}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {operationsPositions.map((position, index) => {
+                  const isFilled = !!position.filledBy;
+                  const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
+                  const positionId = (locale === 'ar' ? position.title : position.titleEn).toLowerCase().replace(/\s+/g, '-');
+                  return (
+                    <Card
+                      key={index}
+                      id={positionId}
+                      className={`
+                        scroll-mt-24 transition-all duration-300 hover:shadow-xl group
+                        ${isFilled
+                          ? 'border-2 border-green-500/30 bg-gradient-to-br from-green-500/5 to-background'
+                          : 'border-2 border-border hover:border-primary/40 bg-card hover:-translate-y-1'
+                        }
+                      `}
+                    >
+                      <CardHeader className="space-y-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <CardTitle className="text-xl mb-3 flex items-center gap-2">
+                              {locale === 'ar' ? position.title : position.titleEn}
+                              {!isFilled && <Sparkles className="h-4 w-4 text-primary animate-pulse" />}
+                            </CardTitle>
+                            <div className="flex gap-2 flex-wrap">
+                              {position.employmentType && (
+                                <Badge variant="outline" className="text-xs">
+                                  <Clock className="h-3 w-3 mr-1" />
+                                  {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
                                 </Badge>
                               )}
-                            </>
-                          ) : (
-                            <Badge variant="secondary">{position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}</Badge>
-                          )}
+                              {isFilled ? (
+                                <>
+                                  <Badge className="bg-green-500/20 text-green-700 dark:text-green-300 border-green-500/30 hover:bg-green-500/30">
+                                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                                    {t('positions.filled')}
+                                  </Badge>
+                                  {position.filledBy && (
+                                    <Badge variant="outline" className="bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/30">
+                                      {position.filledBy}
+                                    </Badge>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  <Badge variant="default" className="shadow-sm">
+                                    {position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}
+                                  </Badge>
+                                  <Badge className="bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30">
+                                    {t('positions.vacant')}
+                                  </Badge>
+                                </>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      {!isFilled && (
-                        <div className="mt-2 flex gap-2 flex-wrap">
-                          <Badge variant="outline" className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20">
-                            {t('positions.vacant')}
-                          </Badge>
-                          <Badge variant="outline" className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20">
-                            {t('positions.lookingForYou')}
-                          </Badge>
-                        </div>
-                      )}
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <ul className="space-y-2">
-                          {requirements.map((req, idx) => {
-                            const isBonus = req.startsWith('⭐');
-                            const isSection = req.startsWith('---');
-                            const isEmpty = req.trim() === '';
-                            const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                          <ul className="space-y-2">
+                            {requirements.map((req, idx) => {
+                              const isBonus = req.startsWith('⭐');
+                              const isSection = req.startsWith('---');
+                              const isEmpty = req.trim() === '';
+                              const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
 
-                            if (isEmpty) {
-                              return <li key={idx} className="h-2" />;
-                            }
+                              if (isEmpty) {
+                                return <li key={idx} className="h-2" />;
+                              }
 
-                            if (isSection) {
+                              if (isSection) {
+                                return (
+                                  <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-primary/90 flex items-center gap-2">
+                                      <div className="h-px flex-1 bg-primary/20" />
+                                      {cleanReq}
+                                      <div className="h-px flex-1 bg-primary/20" />
+                                    </h4>
+                                  </li>
+                                );
+                              }
+
                               return (
-                                <li key={idx} className="pt-3 pb-1.5 first:pt-0">
-                                  <h4 className="text-xs font-bold uppercase tracking-wider text-primary/80">
+                                <li key={idx} className="text-sm flex items-start gap-2.5 pl-1 group/item">
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0 group-hover/item:text-primary transition-colors" />
+                                  <span className="text-muted-foreground leading-relaxed">
+                                    {isBonus && <span className="text-yellow-600 dark:text-yellow-400">⭐ </span>}
                                     {cleanReq}
-                                  </h4>
+                                  </span>
                                 </li>
                               );
-                            }
-
-                            return (
-                              <li key={idx} className="text-sm flex items-start gap-2.5 pl-1">
-                                <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0" />
-                                <span className="text-muted-foreground leading-relaxed">
-                                  {isBonus && '⭐ '}{cleanReq}
-                                </span>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                      {!isFilled && (
-                        <div className="mt-6 pt-4 border-t">
-                          <Button className="w-full group" size="lg">
-                            <Send className="h-4 w-4 mr-2 group-hover:translate-x-0.5 transition-transform" />
-                            {t('positions.applyNow')}
-                          </Button>
+                            })}
+                          </ul>
                         </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                        {!isFilled && (
+                          <div className="pt-4 border-t">
+                            <Link href={`/${locale}/careers/apply/${encodeURIComponent(locale === 'ar' ? position.title : position.titleEn)}`}>
+                              <Button className="w-full group/btn relative overflow-hidden" size="lg">
+                                <span className="relative z-10 flex items-center justify-center gap-2">
+                                  <Send className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                                  {t('positions.applyNow')}
+                                  <TrendingUp className="h-4 w-4 group-hover/btn:translate-y-[-2px] transition-transform" />
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
+                              </Button>
+                            </Link>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {/* Sales & Marketing Positions */}
+          {salesPositions.length > 0 && (
+            <section className="space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b-2">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-500/5">
+                  <ShoppingCart className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold">{t('positions.sales')}</h3>
+                  <p className="text-sm text-muted-foreground">{salesPositions.length} {locale === 'ar' ? 'وظيفة' : 'positions'}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {salesPositions.map((position, index) => {
+                  const isFilled = !!position.filledBy;
+                  const requirements = locale === 'ar' ? position.requirements : position.requirementsEn;
+                  const positionId = (locale === 'ar' ? position.title : position.titleEn).toLowerCase().replace(/\s+/g, '-');
+                  return (
+                    <Card
+                      key={index}
+                      id={positionId}
+                      className={`
+                        scroll-mt-24 transition-all duration-300 hover:shadow-xl group
+                        ${isFilled
+                          ? 'border-2 border-green-500/30 bg-gradient-to-br from-green-500/5 to-background'
+                          : 'border-2 border-orange-500/30 hover:border-orange-500/50 bg-card hover:-translate-y-1'
+                        }
+                      `}
+                    >
+                      <CardHeader className="space-y-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <CardTitle className="text-xl mb-3 flex items-center gap-2">
+                              {locale === 'ar' ? position.title : position.titleEn}
+                              {!isFilled && <Sparkles className="h-4 w-4 text-primary animate-pulse" />}
+                            </CardTitle>
+                            <div className="flex gap-2 flex-wrap">
+                              {position.employmentType && (
+                                <Badge variant="outline" className="text-xs">
+                                  <Clock className="h-3 w-3 mr-1" />
+                                  {position.employmentType === 'full-time' ? t('positions.fullTime') : t('positions.projectBased')}
+                                </Badge>
+                              )}
+                              {isFilled ? (
+                                <>
+                                  <Badge className="bg-green-500/20 text-green-700 dark:text-green-300 border-green-500/30 hover:bg-green-500/30">
+                                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                                    {t('positions.filled')}
+                                  </Badge>
+                                  {position.filledBy && (
+                                    <Badge variant="outline" className="bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/30">
+                                      {position.filledBy}
+                                    </Badge>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  <Badge variant="default" className="shadow-sm">
+                                    {position.count} {locale === 'ar' ? 'وظيفة' : 'position(s)'}
+                                  </Badge>
+                                  <Badge className="bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30">
+                                    {t('positions.vacant')}
+                                  </Badge>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                          <ul className="space-y-2">
+                            {requirements.map((req, idx) => {
+                              const isBonus = req.startsWith('⭐');
+                              const isSection = req.startsWith('---');
+                              const isEmpty = req.trim() === '';
+                              const cleanReq = isBonus ? req.substring(2).trim() : req.replace(/^---\s*/, '').replace(/\s*---$/, '').trim();
+
+                              if (isEmpty) {
+                                return <li key={idx} className="h-2" />;
+                              }
+
+                              if (isSection) {
+                                return (
+                                  <li key={idx} className="pt-3 pb-1.5 first:pt-0">
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-primary/90 flex items-center gap-2">
+                                      <div className="h-px flex-1 bg-primary/20" />
+                                      {cleanReq}
+                                      <div className="h-px flex-1 bg-primary/20" />
+                                    </h4>
+                                  </li>
+                                );
+                              }
+
+                              return (
+                                <li key={idx} className="text-sm flex items-start gap-2.5 pl-1 group/item">
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-primary/70 mt-0.5 flex-shrink-0 group-hover/item:text-primary transition-colors" />
+                                  <span className="text-muted-foreground leading-relaxed">
+                                    {isBonus && <span className="text-yellow-600 dark:text-yellow-400">⭐ </span>}
+                                    {cleanReq}
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                        {!isFilled && (
+                          <div className="pt-4 border-t">
+                            <Link href={`/${locale}/careers/apply/${encodeURIComponent(locale === 'ar' ? position.title : position.titleEn)}`}>
+                              <Button className="w-full group/btn relative overflow-hidden" size="lg">
+                                <span className="relative z-10 flex items-center justify-center gap-2">
+                                  <Send className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                                  {t('positions.applyNow')}
+                                  <TrendingUp className="h-4 w-4 group-hover/btn:translate-y-[-2px] transition-transform" />
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
+                              </Button>
+                            </Link>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+        </div>
+
+        {/* Enhanced Hiring Process */}
+        <div className="mt-24 mb-16">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
+              <TrendingUp className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-primary">{locale === 'ar' ? 'عملية التوظيف' : 'Hiring Process'}</span>
             </div>
+            <h2 className="text-4xl font-bold mb-3">
+              {t('hiringProcess.title')}
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              {locale === 'ar'
+                ? 'رحلتك معنا خلال 4 خطوات بسيطة وواضحة'
+                : 'Your journey with us through 4 simple and clear steps'}
+            </p>
           </div>
-        )}
-      </div>
 
-      {/* Hiring Process */}
-      <div className="mb-16">
-        <h2 className="text-3xl font-bold mb-8 text-center">
-          {t('hiringProcess.title')}
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="rounded-full bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center font-bold">
-                  1
-                </div>
-                <CardTitle className="text-lg">{t('hiringProcess.step1')}</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{t('hiringProcess.step1Desc')}</p>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+            {/* Connection Lines */}
+            <div className="hidden lg:block absolute top-12 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0" />
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="rounded-full bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center font-bold">
-                  2
-                </div>
-                <CardTitle className="text-lg">{t('hiringProcess.step2')}</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{t('hiringProcess.step2Desc')}</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="rounded-full bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center font-bold">
-                  3
-                </div>
-                <CardTitle className="text-lg">{t('hiringProcess.step3')}</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{t('hiringProcess.step3Desc')}</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="rounded-full bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center font-bold">
-                  4
-                </div>
-                <CardTitle className="text-lg">{t('hiringProcess.step4')}</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{t('hiringProcess.step4Desc')}</p>
-            </CardContent>
-          </Card>
+            {[1, 2, 3, 4].map((step) => (
+              <Card key={step} className="relative border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group">
+                <CardHeader>
+                  <div className="relative">
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-br from-primary to-primary/70 text-primary-foreground w-12 h-12 flex items-center justify-center font-bold text-lg shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform">
+                      {step}
+                    </div>
+                  </div>
+                  <CardTitle className="text-lg text-center mt-4 pt-4 border-t">
+                    {t(`hiringProcess.step${step}`)}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground text-center leading-relaxed">
+                    {t(`hiringProcess.step${step}Desc`)}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
+
     </div>
   );
 }
-
-

@@ -1,8 +1,5 @@
-'use client';
-
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Briefcase, Code, FileText, ShoppingCart, Network } from 'lucide-react';
-import { useLocale } from 'next-intl';
 
 interface PositionCardProps {
   title: string;
@@ -13,8 +10,7 @@ interface PositionCardProps {
   color?: string;
 }
 
-function PositionCard({ title, count, icon: Icon, filled, filledBy, color = 'bg-primary' }: PositionCardProps) {
-  const locale = useLocale();
+function PositionCard({ title, count, icon: Icon, filled, filledBy, color = 'bg-primary', locale }: PositionCardProps & { locale: string }) {
   const isArabic = locale === 'ar';
 
   return (
@@ -61,7 +57,7 @@ function PositionCard({ title, count, icon: Icon, filled, filledBy, color = 'bg-
                 <span className="text-muted-foreground font-medium">
                   {count} {isArabic ? 'وظيفة' : 'position'}{count > 1 && !isArabic ? 's' : ''}
                 </span>
-      </div>
+              </div>
 
               {filled && filledBy && (
                 <div className="flex items-center gap-1.5 text-xs">
@@ -73,17 +69,17 @@ function PositionCard({ title, count, icon: Icon, filled, filledBy, color = 'bg-
               )}
             </div>
           </div>
-                  </div>
+        </div>
 
         {/* Hover indicator */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </CardContent>
-              </Card>
+    </Card>
   );
 }
 
-export default function AdminDashboardPage() {
-  const locale = useLocale();
+export default async function AdminDashboardPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const isArabic = locale === 'ar';
 
   return (
@@ -132,6 +128,7 @@ export default function AdminDashboardPage() {
             count={1}
             icon={Briefcase}
             color="bg-purple-500"
+            locale={locale}
           />
         </div>
 
@@ -159,6 +156,7 @@ export default function AdminDashboardPage() {
               filled
               filledBy={isArabic ? 'المهندس خالد' : 'Eng. Khalid'}
               color="bg-blue-500"
+              locale={locale}
             />
             <PositionCard
               title={isArabic ? 'مدير العمليات' : 'Operations Manager'}
@@ -167,18 +165,21 @@ export default function AdminDashboardPage() {
               filled
               filledBy={isArabic ? 'المهندس عبدالعزيز' : 'Eng. Abdulaziz'}
               color="bg-orange-500"
+              locale={locale}
             />
             <PositionCard
               title={isArabic ? 'مدير المحتوى' : 'Head of Content'}
               count={1}
               icon={FileText}
               color="bg-green-500"
+              locale={locale}
             />
             <PositionCard
               title={isArabic ? 'مدير التسويق' : 'Head of Marketing'}
               count={1}
               icon={ShoppingCart}
               color="bg-pink-500"
+              locale={locale}
             />
           </div>
         </div>
@@ -207,6 +208,7 @@ export default function AdminDashboardPage() {
               filled
               filledBy={isArabic ? 'خالد' : 'Khalid'}
               color="bg-cyan-500"
+              locale={locale}
             />
             <PositionCard
               title={isArabic ? 'مطور Backend' : 'Backend Developer'}
@@ -215,12 +217,14 @@ export default function AdminDashboardPage() {
               filled
               filledBy={isArabic ? 'خالد' : 'Khalid'}
               color="bg-indigo-500"
+              locale={locale}
             />
             <PositionCard
               title={isArabic ? 'مطور React Native' : 'React Native Developer'}
               count={1}
               icon={Code}
               color="bg-violet-500"
+              locale={locale}
             />
             <PositionCard
               title={isArabic ? 'مصمم' : 'Designer'}
@@ -229,6 +233,7 @@ export default function AdminDashboardPage() {
               filled
               filledBy={isArabic ? 'عبدالعزيز' : 'Abdulaziz'}
               color="bg-purple-500"
+              locale={locale}
             />
           </div>
         </div>
@@ -255,12 +260,14 @@ export default function AdminDashboardPage() {
               count={1}
               icon={FileText}
               color="bg-emerald-500"
+              locale={locale}
             />
             <PositionCard
               title={isArabic ? 'كاتب محتوى #2' : 'Content Writer #2'}
               count={1}
               icon={FileText}
               color="bg-emerald-500"
+              locale={locale}
             />
           </div>
         </div>
@@ -287,12 +294,14 @@ export default function AdminDashboardPage() {
               count={1}
               icon={ShoppingCart}
               color="bg-rose-500"
+              locale={locale}
             />
             <PositionCard
               title={isArabic ? 'ممثل مبيعات #2' : 'Sales Representative #2'}
               count={1}
               icon={ShoppingCart}
               color="bg-rose-500"
+              locale={locale}
             />
           </div>
         </div>
