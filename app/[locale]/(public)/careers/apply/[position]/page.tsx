@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, AlertCircle } from 'lucid
 import Link from 'next/link';
 import { CVUpload } from '@/components/CVUpload';
 import { ProfileImageUpload } from '@/components/ProfileImageUpload';
+import { SuccessDialog } from '@/components/SuccessDialog';
 import { submitApplication } from '@/actions/submitApplication';
 import { getTeamPositions } from '@/helpers/extractMetrics';
 
@@ -31,6 +32,7 @@ export default function ApplyPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   const [formData, setFormData] = useState({
     applicantName: '',
@@ -108,7 +110,7 @@ export default function ApplyPage() {
       });
 
       if (result.success) {
-        router.push(`/${locale}/careers?success=true`);
+        setShowSuccessDialog(true);
       } else {
         setError(result.error || (locale === 'ar' ? 'فشل في إرسال الطلب' : 'Failed to submit application'));
       }
@@ -423,6 +425,15 @@ export default function ApplyPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* Success Dialog */}
+      <SuccessDialog
+        open={showSuccessDialog}
+        onClose={() => setShowSuccessDialog(false)}
+        applicantName={formData.applicantName}
+        position={positionTitle}
+        locale={locale}
+      />
     </div>
   );
 }

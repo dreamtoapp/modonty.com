@@ -1,10 +1,16 @@
 import { Navigation } from '@/components/Navigation';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+
   return (
     <>
       <Navigation />
@@ -16,6 +22,9 @@ export default function PublicLayout({
           <p>© 2024 Modonty. All rights reserved.</p>
         </div>
       </footer>
+
+      {/* WhatsApp Floating Button */}
+      <WhatsAppButton phoneNumber={whatsappNumber} locale={locale} />
     </>
   );
 }
