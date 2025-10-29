@@ -1,11 +1,11 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { ADMIN_PASSWORD } from '@/helpers/adminAuth';
+import { validateCredentials } from '@/helpers/adminAuth';
 
-export async function adminLogin(password: string) {
-  if (password !== ADMIN_PASSWORD) {
-    return { success: false, error: 'Invalid password' };
+export async function adminLogin(username: string, password: string) {
+  if (!validateCredentials(username, password)) {
+    return { success: false, error: 'Invalid credentials' };
   }
 
   const cookieStore = await cookies();

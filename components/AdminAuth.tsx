@@ -13,6 +13,7 @@ interface AdminAuthProps {
 
 export function AdminAuth({ children }: AdminAuthProps) {
   const [isAuth, setIsAuth] = useState(false);
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -32,10 +33,11 @@ export function AdminAuth({ children }: AdminAuthProps) {
     setIsSubmitting(true);
 
     try {
-      const result = await adminLogin(password);
+      const result = await adminLogin(username, password);
 
       if (result.success) {
         setIsAuth(true);
+        setUsername('');
         setPassword('');
       } else {
         setError(t('invalidCredentials'));
@@ -71,6 +73,22 @@ export function AdminAuth({ children }: AdminAuthProps) {
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
+                <label htmlFor="username" className="text-sm font-medium">
+                  {t('username')}
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md bg-background"
+                  placeholder={t('enterUsername')}
+                  required
+                  autoComplete="username"
+                  autoFocus
+                />
+              </div>
+              <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-medium">
                   {t('password')}
                 </label>
@@ -82,7 +100,6 @@ export function AdminAuth({ children }: AdminAuthProps) {
                   className="w-full px-3 py-2 border rounded-md bg-background"
                   required
                   autoComplete="current-password"
-                  autoFocus
                 />
               </div>
               {error && (

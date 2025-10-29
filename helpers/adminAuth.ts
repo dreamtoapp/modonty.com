@@ -1,7 +1,13 @@
-export const ADMIN_PASSWORD = 'admin';
+export function validateCredentials(username: string, password: string): boolean {
+  const adminUsername = process.env.ADMIN_USERNAME;
+  const adminPassword = process.env.ADMIN_PASSWORD;
 
-export function validatePassword(password: string): boolean {
-  return password === ADMIN_PASSWORD;
+  if (!adminUsername || !adminPassword) {
+    console.error('ADMIN_USERNAME or ADMIN_PASSWORD not set in environment variables');
+    return false;
+  }
+
+  return username === adminUsername && password === adminPassword;
 }
 
 export function setAdminSession(): void {

@@ -32,6 +32,7 @@ export async function AdminSidebar({ locale }: AdminSidebarProps) {
         accounting: t('accounting'),
         employeeAffairs: t('employeeAffairs'),
         administrativeNotes: t('administrativeNotes'),
+        contracts: t('contracts'),
         reports: t('reports'),
         settings: t('settings'),
       }}

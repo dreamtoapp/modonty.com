@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { Button } from './ui/button';
-import { Languages, Menu, X } from 'lucide-react';
+import { Languages, Menu, X, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -62,6 +62,16 @@ export function Navigation() {
             >
               <Languages className="h-5 w-5" />
             </Button>
+
+            <Link href={`/${locale}/admin`}>
+              <Button
+                variant="ghost"
+                size="icon"
+                title={locale === 'ar' ? 'لوحة الإدارة' : 'Admin'}
+              >
+                <Shield className="h-5 w-5" />
+              </Button>
+            </Link>
 
             <Button
               variant="ghost"

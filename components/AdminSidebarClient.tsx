@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FileText, Users, Network, Briefcase, CheckSquare, Calculator, UserCog, StickyNote, CreditCard, ListTodo, BarChart3, Settings } from 'lucide-react';
+import { FileText, Users, Network, Briefcase, CheckSquare, Calculator, UserCog, StickyNote, CreditCard, ListTodo, BarChart3, Settings, FileSignature } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from './ui/badge';
 
@@ -22,6 +22,7 @@ interface AdminSidebarClientProps {
     accounting: string;
     employeeAffairs: string;
     administrativeNotes: string;
+    contracts: string;
     reports: string;
     settings: string;
   };
@@ -105,6 +106,12 @@ export function AdminSidebarClient({
       href: `/${locale}/admin/notes`,
       label: translations.administrativeNotes,
       icon: StickyNote,
+      comingSoon: true,
+    },
+    {
+      href: `/${locale}/admin/contracts`,
+      label: translations.contracts,
+      icon: FileSignature,
       comingSoon: true,
     },
     {
