@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calculator, TrendingUp, Receipt, DollarSign, PieChart, FileText, CreditCard } from 'lucide-react';
+import { Calculator, TrendingUp, Receipt, PieChart, FileText, CreditCard } from 'lucide-react';
 
 export default async function AccountingPage({
   params

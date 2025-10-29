@@ -19,6 +19,7 @@ export async function seedRequirements() {
       { category: 'Technical Infrastructure', title: 'Professional Email', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },
       { category: 'Technical Infrastructure', title: 'Vercel', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },
       { category: 'Technical Infrastructure', title: 'MongoDB Atlas', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },
+      { category: 'Technical Infrastructure', title: 'ChatGPT Business', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },
       { category: 'Technical Infrastructure', title: 'SIM Card for WhatsApp', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },
       { category: 'Technical Infrastructure', title: 'Social Media Accounts', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },
       { category: 'Technical Infrastructure', title: 'Facebook Ads Budget', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },

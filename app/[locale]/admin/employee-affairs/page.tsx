@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { UserCog, Calendar, Award, DollarSign, FileText, TrendingUp, Clock } from 'lucide-react';
+import { UserCog, Calendar, FileText, Clock } from 'lucide-react';
 
 export default async function EmployeeAffairsPage({
   params

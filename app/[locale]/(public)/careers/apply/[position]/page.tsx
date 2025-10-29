@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, use } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -16,7 +15,6 @@ import { submitApplication } from '@/actions/submitApplication';
 import { getTeamPositions } from '@/helpers/extractMetrics';
 
 export default function ApplyPage() {
-  const router = useRouter();
   const params = useParams();
   const t = useTranslations('applications');
   const locale = params.locale as string;
@@ -114,7 +112,7 @@ export default function ApplyPage() {
       } else {
         setError(result.error || (locale === 'ar' ? 'فشل في إرسال الطلب' : 'Failed to submit application'));
       }
-    } catch (err) {
+    } catch {
       setError(locale === 'ar' ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred');
     } finally {
       setSubmitting(false);

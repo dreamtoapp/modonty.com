@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Briefcase, Send, Users, Target, Sparkles, TrendingUp, Code, PenTool, Megaphone, BarChart3, ShoppingCart, Award, ArrowRight, Clock } from 'lucide-react';
+import { CheckCircle2, Briefcase, Send, Users, Target, Sparkles, TrendingUp, Code, PenTool, BarChart3, ShoppingCart, Award, ArrowRight, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { getTeamPositions } from '@/helpers/extractMetrics';
 

@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
 } from './ui/dialog';
 import { useRouter } from 'next/navigation';
@@ -107,7 +106,7 @@ export function SuccessDialog({ open, onClose, applicantName, position, locale }
               ) : (
                 <>
                   💡 <span className="font-medium">Tip:</span> Please check your email regularly (including spam folder).
-                  We'll send you updates about your application status.
+                  We&apos;ll send you updates about your application status.
                 </>
               )}
             </p>

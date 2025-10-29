@@ -245,7 +245,6 @@ function SubsectionContent({ subsection }: { subsection: Subsection }) {
 
 export function PlanTimeline({ sections, showMetrics = false }: PlanTimelineProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
-  const [expandedSubsections, setExpandedSubsections] = useState<Set<string>>(new Set());
 
   const toggleSection = (id: string) => {
     const newExpanded = new Set(expandedSections);
@@ -255,16 +254,6 @@ export function PlanTimeline({ sections, showMetrics = false }: PlanTimelineProp
       newExpanded.add(id);
     }
     setExpandedSections(newExpanded);
-  };
-
-  const toggleSubsection = (id: string) => {
-    const newExpanded = new Set(expandedSubsections);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
-    } else {
-      newExpanded.add(id);
-    }
-    setExpandedSubsections(newExpanded);
   };
 
   const getColorClass = (index: number) => {
@@ -305,12 +294,17 @@ export function PlanTimeline({ sections, showMetrics = false }: PlanTimelineProp
             <div className="ml-20">
               <Card
                 className={cn(
-                  'transition-all duration-300 hover:shadow-lg cursor-pointer',
+                  'transition-all duration-300',
                   isExpanded && 'shadow-md'
                 )}
-                onClick={() => section.subsections && toggleSection(sectionId)}
               >
-                <CardHeader className="pb-3">
+                <CardHeader
+                  className={cn(
+                    'pb-3 cursor-pointer hover:bg-accent/50 transition-colors rounded-t-lg',
+                    section.subsections && 'cursor-pointer'
+                  )}
+                  onClick={() => section.subsections && toggleSection(sectionId)}
+                >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <CardTitle className="text-lg mb-2">{section.title}</CardTitle>
@@ -372,73 +366,56 @@ export function PlanTimeline({ sections, showMetrics = false }: PlanTimelineProp
                 </CardHeader>
 
                 {isExpanded && section.subsections && (
-                  <CardContent className="pt-0 space-y-3">
-                    {section.subsections.map((subsection) => {
-                      const subsectionId = `subsection-${subsection.id}`;
-                      const isSubExpanded = expandedSubsections.has(subsectionId);
+                  <CardContent className="pt-0 space-y-4">
+                    {section.subsections.map((subsection) => (
+                      <div key={subsection.id} className="border-l-2 border-primary/20 pl-4 py-2">
+                        <div className="mb-3">
+                          <div className="flex items-center gap-2">
+                            <Circle className="h-3 w-3 text-primary fill-primary shrink-0" />
+                            <h4 className="font-semibold text-sm text-primary">
+                              {subsection.title}
+                            </h4>
+                          </div>
+                        </div>
 
-                      return (
-                        <div key={subsection.id} className="border-l-2 border-primary/20 pl-4 py-2">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleSubsection(subsectionId);
-                            }}
-                            className="w-full text-left group"
-                          >
-                            <div className="flex items-center gap-2">
-                              {isSubExpanded ? (
-                                <Circle className="h-3 w-3 text-primary fill-primary shrink-0" />
-                              ) : (
-                                <Circle className="h-3 w-3 text-primary shrink-0" />
-                              )}
-                              <h4 className="font-semibold text-sm group-hover:text-primary transition-colors">
-                                {subsection.title}
-                              </h4>
-                            </div>
-                          </button>
+                        <div className="space-y-3">
+                          <SubsectionContent subsection={subsection} />
 
-                          {isSubExpanded && (
-                            <div className="mt-3 space-y-3">
-                              <SubsectionContent subsection={subsection} />
+                          {subsection.items && subsection.items.length > 0 && (
+                            <ul className="space-y-1.5">
+                              {subsection.items.map((item, itemIdx) => (
+                                <li key={itemIdx} className="text-sm flex items-start gap-2">
+                                  <CheckCircle2 className="h-4 w-4 text-primary/70 mt-0.5 shrink-0" />
+                                  <span className="text-muted-foreground">{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
 
-                              {subsection.items && subsection.items.length > 0 && (
-                                <ul className="space-y-1.5">
-                                  {subsection.items.map((item, itemIdx) => (
-                                    <li key={itemIdx} className="text-sm flex items-start gap-2">
-                                      <CheckCircle2 className="h-4 w-4 text-primary/70 mt-0.5 shrink-0" />
-                                      <span className="text-muted-foreground">{item}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
-
-                              {subsection.deliverables && subsection.deliverables.length > 0 && (
-                                <div className="mt-3 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
-                                  <p className="text-xs font-semibold text-green-700 dark:text-green-400 mb-2">
-                                    المخرجات:
-                                  </p>
-                                  <ul className="space-y-1">
-                                    {subsection.deliverables.map((item, itemIdx) => (
-                                      <li key={itemIdx} className="text-xs flex items-start gap-2">
-                                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
-                                        <span className="text-green-700 dark:text-green-300">{item}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-
-                              {subsection.conclusion && (
-                                <p className="text-sm italic text-muted-foreground mt-3 p-3 bg-muted/50 rounded-lg">
-                                  {subsection.conclusion}
-                                </p>
-                              )}
+                          {subsection.deliverables && subsection.deliverables.length > 0 && (
+                            <div className="mt-3 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                              <p className="text-xs font-semibold text-green-700 dark:text-green-400 mb-2">
+                                المخرجات:
+                              </p>
+                              <ul className="space-y-1">
+                                {subsection.deliverables.map((item, itemIdx) => (
+                                  <li key={itemIdx} className="text-xs flex items-start gap-2">
+                                    <CheckCircle2 className="h-3.5 w-3.5 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
+                                    <span className="text-green-700 dark:text-green-300">{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
                           )}
+
+                          {subsection.conclusion && (
+                            <p className="text-sm italic text-muted-foreground mt-3 p-3 bg-muted/50 rounded-lg">
+                              {subsection.conclusion}
+                            </p>
+                          )}
                         </div>
-                      );
-                    })}
+                      </div>
+                    ))}
                   </CardContent>
                 )}
               </Card>

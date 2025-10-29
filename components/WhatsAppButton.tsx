@@ -31,13 +31,14 @@ export function WhatsAppButton({ phoneNumber, locale = 'ar' }: WhatsAppButtonPro
   const [isHovered, setIsHovered] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
 
-  if (!phoneNumber) return null;
-
   // Hide pulse after 10 seconds
   useEffect(() => {
+    if (!phoneNumber) return;
     const timer = setTimeout(() => setShowPulse(false), 10000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [phoneNumber]);
+
+  if (!phoneNumber) return null;
 
   const defaultMessage = locale === 'ar'
     ? 'اود الاستفسار'

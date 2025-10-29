@@ -104,7 +104,7 @@ export function getCVFileType(cvUrl: string): 'PDF' | 'DOCX' | 'DOC' | 'UNKNOWN'
     if (url.includes('.docx')) return 'DOCX';
     if (url.includes('.doc')) return 'DOC';
     return 'UNKNOWN';
-  } catch (error) {
+  } catch {
     return 'UNKNOWN';
   }
 }

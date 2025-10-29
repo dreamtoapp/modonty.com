@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BarChart3, TrendingUp, PieChart, LineChart, FileText, Download } from 'lucide-react';
+import { BarChart3, TrendingUp, PieChart, LineChart, Download } from 'lucide-react';
 
 export default async function ReportsPage({
   params

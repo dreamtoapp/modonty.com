@@ -20,7 +20,7 @@ export default function SeedRequirementsPage() {
 
       const data = await response.json();
       setResult(data);
-    } catch (error) {
+    } catch {
       setResult({ success: false, message: 'Failed to seed requirements' });
     } finally {
       setIsLoading(false);
@@ -35,7 +35,7 @@ export default function SeedRequirementsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            This will populate the database with initial Phase 1 Requirements data. 
+            This will populate the database with initial Phase 1 Requirements data.
             This only needs to be done once. If requirements already exist, this will not create duplicates.
           </p>
 
@@ -52,11 +52,10 @@ export default function SeedRequirementsPage() {
 
           {result && (
             <div
-              className={`p-4 rounded-lg flex items-start gap-3 ${
-                result.success
+              className={`p-4 rounded-lg flex items-start gap-3 ${result.success
                   ? 'bg-green-500/10 border border-green-500/30'
                   : 'bg-red-500/10 border border-red-500/30'
-              }`}
+                }`}
             >
               {result.success ? (
                 <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
@@ -65,9 +64,8 @@ export default function SeedRequirementsPage() {
               )}
               <div>
                 <p
-                  className={`font-semibold ${
-                    result.success ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
-                  }`}
+                  className={`font-semibold ${result.success ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
+                    }`}
                 >
                   {result.message}
                 </p>

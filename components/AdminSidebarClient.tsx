@@ -27,6 +27,15 @@ interface AdminSidebarClientProps {
   };
 }
 
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  exact?: boolean;
+  count?: number;
+  comingSoon?: boolean;
+}
+
 export function AdminSidebarClient({
   locale,
   totalCount,
@@ -34,7 +43,7 @@ export function AdminSidebarClient({
 }: AdminSidebarClientProps) {
   const pathname = usePathname();
 
-  const navItems = [
+  const navItems: NavItem[] = [
     {
       href: `/${locale}/admin`,
       label: translations.organizationalStructure,
@@ -142,12 +151,12 @@ export function AdminSidebarClient({
             >
               <Icon className="h-4 w-4 flex-shrink-0" />
               <span className="truncate">{item.label}</span>
-              {(item as any).count > 0 && (
+              {item.count && item.count > 0 && (
                 <Badge variant="secondary" className="text-[10px] h-4 px-1.5 ml-auto">
-                  {(item as any).count}
+                  {item.count}
                 </Badge>
               )}
-              {(item as any).comingSoon && (
+              {item.comingSoon && (
                 <Badge variant="outline" className="text-[9px] h-4 px-1.5 ml-auto bg-primary/10 text-primary border-primary/30">
                   {locale === 'ar' ? 'قريباً' : 'Soon'}
                 </Badge>

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Users, Briefcase, Code, FileText, ShoppingCart, Network } from 'lucide-react';
 
 interface PositionCardProps {
@@ -132,9 +132,29 @@ export default async function AdminDashboardPage({ params }: { params: Promise<{
           />
         </div>
 
-        {/* Connecting Line */}
-        <div className="flex justify-center">
-          <div className="w-0.5 h-8 bg-gradient-to-b from-primary/50 to-primary/20" />
+        {/* Enhanced Connecting Lines from CEO to Leadership */}
+        <div className="relative flex justify-center h-16">
+          {/* Vertical line down from CEO */}
+          <div className="absolute top-0 w-1 h-8 bg-gradient-to-b from-purple-500/60 via-primary/40 to-transparent rounded-full shadow-sm" />
+
+          {/* Horizontal distribution line */}
+          <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[80%] max-w-4xl h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent rounded-full" />
+
+          {/* Vertical lines down to each leadership card */}
+          <div className="absolute top-9 left-1/2 -translate-x-1/2 w-[80%] max-w-4xl h-7 grid grid-cols-4 gap-4">
+            <div className="flex justify-center">
+              <div className="w-1 h-full bg-gradient-to-b from-primary/40 to-blue-500/50 rounded-full shadow-sm" />
+            </div>
+            <div className="flex justify-center">
+              <div className="w-1 h-full bg-gradient-to-b from-primary/40 to-orange-500/50 rounded-full shadow-sm" />
+            </div>
+            <div className="flex justify-center">
+              <div className="w-1 h-full bg-gradient-to-b from-primary/40 to-green-500/50 rounded-full shadow-sm" />
+            </div>
+            <div className="flex justify-center">
+              <div className="w-1 h-full bg-gradient-to-b from-primary/40 to-pink-500/50 rounded-full shadow-sm" />
+            </div>
+          </div>
         </div>
 
         {/* Leadership Level */}
@@ -148,7 +168,7 @@ export default async function AdminDashboardPage({ params }: { params: Promise<{
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="leadership-grid">
             <PositionCard
               title={isArabic ? 'CTO / المدير التقني' : 'CTO / Technical Lead'}
               count={1}
@@ -184,125 +204,180 @@ export default async function AdminDashboardPage({ params }: { params: Promise<{
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="flex justify-center">
-          <div className="w-32 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+        {/* Section Divider */}
+        <div className="my-12 flex justify-center">
+          <div className="w-48 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
         </div>
 
-        {/* Technical Team */}
+        {/* CTO → Technical Team Section */}
         <div className="space-y-4">
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20">
-              <Code className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
-              <h3 className="text-sm font-bold text-blue-600 dark:text-blue-400">
-                {isArabic ? 'الفريق التقني' : 'Technical Team'}
-              </h3>
+          {/* Connection Visualization */}
+          <div className="relative h-16 mb-4">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative w-full max-w-7xl mx-auto px-4">
+                {/* Visual connector */}
+                <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 justify-start lg:justify-start">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                    <span className="font-medium">{isArabic ? 'تحت إشراف CTO' : 'Under CTO'}</span>
+                  </div>
+                  <div className="flex-1 h-px bg-gradient-to-r from-blue-500/30 to-transparent max-w-xs" />
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <PositionCard
-              title={isArabic ? 'مطور Frontend' : 'Frontend Developer'}
-              count={1}
-              icon={Code}
-              filled
-              filledBy={isArabic ? 'خالد' : 'Khalid'}
-              color="bg-cyan-500"
-              locale={locale}
-            />
-            <PositionCard
-              title={isArabic ? 'مطور Backend' : 'Backend Developer'}
-              count={1}
-              icon={Code}
-              filled
-              filledBy={isArabic ? 'خالد' : 'Khalid'}
-              color="bg-indigo-500"
-              locale={locale}
-            />
-            <PositionCard
-              title={isArabic ? 'مطور React Native' : 'React Native Developer'}
-              count={1}
-              icon={Code}
-              color="bg-violet-500"
-              locale={locale}
-            />
-            <PositionCard
-              title={isArabic ? 'مصمم' : 'Designer'}
-              count={1}
-              icon={Briefcase}
-              filled
-              filledBy={isArabic ? 'عبدالعزيز' : 'Abdulaziz'}
-              color="bg-purple-500"
-              locale={locale}
-            />
-          </div>
-        </div>
+          {/* Technical Team */}
+          <div className="space-y-4">
+            <div className="flex justify-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20">
+                <Code className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                <h3 className="text-sm font-bold text-blue-600 dark:text-blue-400">
+                  {isArabic ? 'الفريق التقني' : 'Technical Team'}
+                </h3>
+              </div>
+            </div>
 
-        {/* Divider */}
-        <div className="flex justify-center">
-          <div className="w-32 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-        </div>
-
-        {/* Content Team */}
-        <div className="space-y-4">
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
-              <FileText className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
-              <h3 className="text-sm font-bold text-green-600 dark:text-green-400">
-                {isArabic ? 'فريق المحتوى' : 'Content Team'}
-              </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <PositionCard
+                title={isArabic ? 'مطور Frontend' : 'Frontend Developer'}
+                count={1}
+                icon={Code}
+                filled
+                filledBy={isArabic ? 'خالد' : 'Khalid'}
+                color="bg-cyan-500"
+                locale={locale}
+              />
+              <PositionCard
+                title={isArabic ? 'مطور Backend' : 'Backend Developer'}
+                count={1}
+                icon={Code}
+                filled
+                filledBy={isArabic ? 'خالد' : 'Khalid'}
+                color="bg-indigo-500"
+                locale={locale}
+              />
+              <PositionCard
+                title={isArabic ? 'مطور React Native' : 'React Native Developer'}
+                count={1}
+                icon={Code}
+                color="bg-violet-500"
+                locale={locale}
+              />
+              <PositionCard
+                title={isArabic ? 'مصمم' : 'Designer'}
+                count={1}
+                icon={Briefcase}
+                filled
+                filledBy={isArabic ? 'عبدالعزيز' : 'Abdulaziz'}
+                color="bg-purple-500"
+                locale={locale}
+              />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-            <PositionCard
-              title={isArabic ? 'كاتب محتوى #1' : 'Content Writer #1'}
-              count={1}
-              icon={FileText}
-              color="bg-emerald-500"
-              locale={locale}
-            />
-            <PositionCard
-              title={isArabic ? 'كاتب محتوى #2' : 'Content Writer #2'}
-              count={1}
-              icon={FileText}
-              color="bg-emerald-500"
-              locale={locale}
-            />
+          {/* Section Divider */}
+          <div className="my-12 flex justify-center">
+            <div className="w-48 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
           </div>
-        </div>
 
-        {/* Divider */}
-        <div className="flex justify-center">
-          <div className="w-32 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-        </div>
-
-        {/* Sales & Marketing */}
-        <div className="space-y-4">
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20">
-              <ShoppingCart className="h-3.5 w-3.5 text-pink-600 dark:text-pink-400" />
-              <h3 className="text-sm font-bold text-pink-600 dark:text-pink-400">
-                {isArabic ? 'المبيعات والتسويق' : 'Sales & Marketing'}
-              </h3>
+          {/* Head of Content → Content Team Section */}
+          <div className="space-y-4">
+            {/* Connection Visualization */}
+            <div className="relative h-16 mb-4">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-full max-w-2xl mx-auto px-4">
+                  <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 justify-center">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      <span className="font-medium">{isArabic ? 'تحت إشراف مدير المحتوى' : 'Under Head of Content'}</span>
+                    </div>
+                    <div className="flex-1 h-px bg-gradient-to-r from-green-500/30 to-transparent max-w-xs" />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-            <PositionCard
-              title={isArabic ? 'ممثل مبيعات #1' : 'Sales Representative #1'}
-              count={1}
-              icon={ShoppingCart}
-              color="bg-rose-500"
-              locale={locale}
-            />
-            <PositionCard
-              title={isArabic ? 'ممثل مبيعات #2' : 'Sales Representative #2'}
-              count={1}
-              icon={ShoppingCart}
-              color="bg-rose-500"
-              locale={locale}
-            />
+            {/* Content Team */}
+            <div className="space-y-4">
+              <div className="flex justify-center">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
+                  <FileText className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                  <h3 className="text-sm font-bold text-green-600 dark:text-green-400">
+                    {isArabic ? 'فريق المحتوى' : 'Content Team'}
+                  </h3>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                <PositionCard
+                  title={isArabic ? 'كاتب محتوى #1' : 'Content Writer #1'}
+                  count={1}
+                  icon={FileText}
+                  color="bg-emerald-500"
+                  locale={locale}
+                />
+                <PositionCard
+                  title={isArabic ? 'كاتب محتوى #2' : 'Content Writer #2'}
+                  count={1}
+                  icon={FileText}
+                  color="bg-emerald-500"
+                  locale={locale}
+                />
+              </div>
+            </div>
+
+            {/* Section Divider */}
+            <div className="my-12 flex justify-center">
+              <div className="w-48 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+            </div>
+
+            {/* Head of Marketing → Sales Team Section */}
+            <div className="space-y-4">
+              {/* Connection Visualization */}
+              <div className="relative h-16 mb-4">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative w-full max-w-2xl mx-auto px-4">
+                    <div className="flex items-center gap-2 text-sm text-pink-600 dark:text-pink-400 justify-center">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+                        <span className="font-medium">{isArabic ? 'تحت إشراف مدير التسويق' : 'Under Head of Marketing'}</span>
+                      </div>
+                      <div className="flex-1 h-px bg-gradient-to-r from-pink-500/30 to-transparent max-w-xs" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sales & Marketing */}
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20">
+                    <ShoppingCart className="h-3.5 w-3.5 text-pink-600 dark:text-pink-400" />
+                    <h3 className="text-sm font-bold text-pink-600 dark:text-pink-400">
+                      {isArabic ? 'المبيعات والتسويق' : 'Sales & Marketing'}
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                  <PositionCard
+                    title={isArabic ? 'ممثل مبيعات #1' : 'Sales Representative #1'}
+                    count={1}
+                    icon={ShoppingCart}
+                    color="bg-rose-500"
+                    locale={locale}
+                  />
+                  <PositionCard
+                    title={isArabic ? 'ممثل مبيعات #2' : 'Sales Representative #2'}
+                    count={1}
+                    icon={ShoppingCart}
+                    color="bg-rose-500"
+                    locale={locale}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

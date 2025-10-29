@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckSquare, AlertCircle, Clock, DollarSign, Users, Code, Server, Globe, ExternalLink } from 'lucide-react';
+import { CheckSquare, AlertCircle, Clock, DollarSign, Users, Server, Globe, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { CollapsibleCard } from '@/components/CollapsibleCard';
 import { InteractiveStatusBadge } from '@/components/InteractiveStatusBadge';
@@ -94,6 +95,24 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
           url: 'https://www.mongodb.com/pricing',
           when: isArabic ? 'الآن (مجاني) / عند النشر (مدفوع)' : 'Now (Free) / On Launch (Paid)',
           whenColor: 'text-amber-600 dark:text-amber-400' as const,
+          status: 'pending' as const,
+          priority: 'high' as const,
+        },
+        {
+          key: 'ChatGPT Plus/API',
+          title: 'ChatGPT Business',
+          description: isArabic
+            ? 'اشتراك ChatGPT للفريق - توليد وتحسين المحتوى'
+            : 'ChatGPT Business for team - content generation and enhancement',
+          price: '$300',
+          billing: isArabic ? 'سنوياً' : 'per year',
+          plan: 'Business (1 user)',
+          freeTierDetails: isArabic
+            ? 'ChatGPT Business: $25/شهر ($300/سنة بالدفع السنوي) - يشمل GPT-5 بدون حدود + أدوات تعاون الفريق + لوحة تحكم إدارية'
+            : 'ChatGPT Business: $25/month ($300/year with annual billing) - includes unlimited GPT-5 + team collaboration + admin controls',
+          url: 'https://openai.com/chatgpt/pricing',
+          when: isArabic ? 'الآن' : 'Now',
+          whenColor: 'text-red-600 dark:text-red-400' as const,
           status: 'pending' as const,
           priority: 'high' as const,
         },
@@ -488,6 +507,10 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
                         <span className="font-bold">$102/سنة</span>
                       </div>
                       <div className="flex justify-between text-sm">
+                        <span>ChatGPT Business:</span>
+                        <span className="font-bold">$300/سنة</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
                         <span>{isArabic ? 'شريحة واتساب:' : 'WhatsApp SIM:'}</span>
                         <span className="font-bold text-amber-600">$8</span>
                       </div>
@@ -502,10 +525,10 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
                       <div className="pt-2 mt-2 border-t">
                         <div className="flex justify-between font-bold text-base">
                           <span>{isArabic ? 'السنة الأولى:' : 'Year 1 Total:'}</span>
-                          <span className="text-emerald-600 dark:text-emerald-400">$751</span>
+                          <span className="text-emerald-600 dark:text-emerald-400">$1,051</span>
                         </div>
                         <p className="text-[10px] text-muted-foreground mt-1">
-                          {isArabic ? '$28.50/شهر (متكرر) + $300 (إعلانات) + $109 (رسوم لمرة واحدة)' : '$28.50/month (recurring) + $300 (ads) + $109 (one-time)'}
+                          {isArabic ? '$53.50/شهر (متكرر) + $300 (إعلانات) + $109 (رسوم لمرة واحدة)' : '$53.50/month (recurring) + $300 (ads) + $109 (one-time)'}
                         </p>
                       </div>
                     </div>

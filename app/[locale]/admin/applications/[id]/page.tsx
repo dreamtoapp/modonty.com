@@ -1,7 +1,6 @@
 'use client';
 
 import { use, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,7 +18,6 @@ interface ApplicationDetailPageProps {
 export default function ApplicationDetailPage({ params }: ApplicationDetailPageProps) {
   const resolvedParams = use(params);
   const { locale, id } = resolvedParams;
-  const router = useRouter();
 
   const [application, setApplication] = useState<Application | null>(null);
   const [loading, setLoading] = useState(true);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload, X, FileText, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Upload, X, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { validateFile } from '@/lib/validations/application';
 

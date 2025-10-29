@@ -40,7 +40,7 @@ export function AdminAuth({ children }: AdminAuthProps) {
       } else {
         setError(t('invalidCredentials'));
       }
-    } catch (err) {
+    } catch {
       setError(t('invalidCredentials'));
     } finally {
       setIsSubmitting(false);

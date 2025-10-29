@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload, X, User, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, User, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { validateImage } from '@/lib/validations/application';
 import Image from 'next/image';
