@@ -55,3 +55,28 @@ enum ApplicationStatus {
   REJECTED
 }
 
+model Phase1Requirement {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  category    String
+  title       String
+  status      RequirementStatus @default(PENDING)
+  priority    RequirementPriority
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([category])
+  @@index([status])
+}
+
+enum RequirementStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum RequirementPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+

@@ -1,32 +1,24 @@
 import { prisma } from '@/lib/prisma';
-import { ApplicationCard } from '@/components/ApplicationCard';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Briefcase, Users, Clock, CheckCircle2, X, XCircle } from 'lucide-react';
+import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { getTeamPositions } from '@/helpers/extractMetrics';
 
 export default async function ApplicationsPage({
-  params,
-  searchParams
+  params
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ position?: string }>;
 }) {
   const { locale } = await params;
-  const { position: filterPosition } = await searchParams;
 
-  // Build query with optional position filter
-  const whereClause = filterPosition ? { position: filterPosition } : {};
-
+  // Fetch all applications and group by position
   const [applications, stats] = await Promise.all([
     prisma.application.findMany({
-      where: whereClause,
       orderBy: { createdAt: 'desc' },
     }),
     prisma.application.groupBy({
       by: ['status'],
-      where: whereClause,
       _count: true,
     }),
   ]);
@@ -38,6 +30,50 @@ export default async function ApplicationsPage({
     accepted: stats.find((s) => s.status === 'ACCEPTED')?._count || 0,
     rejected: stats.find((s) => s.status === 'REJECTED')?._count || 0,
   };
+
+  // Get all team positions
+  const teamPositions = getTeamPositions();
+
+  // Group applications by position
+  const applicationsByPosition = applications.reduce((acc, app) => {
+    if (!acc[app.position]) {
+      acc[app.position] = {
+        position: app.position,
+        total: 0,
+        pending: 0,
+        reviewed: 0,
+        accepted: 0,
+        rejected: 0,
+      };
+    }
+    acc[app.position].total++;
+    if (app.status === 'PENDING') acc[app.position].pending++;
+    if (app.status === 'REVIEWED') acc[app.position].reviewed++;
+    if (app.status === 'ACCEPTED') acc[app.position].accepted++;
+    if (app.status === 'REJECTED') acc[app.position].rejected++;
+    return acc;
+  }, {} as Record<string, { position: string; total: number; pending: number; reviewed: number; accepted: number; rejected: number }>);
+
+  // Create position stats for ALL positions (including those with 0 applications)
+  const positionStats = teamPositions.map(pos => {
+    const appData = applicationsByPosition[pos.titleEn];
+    return {
+      position: pos.titleEn,
+      titleAr: pos.title,
+      total: appData?.total || 0,
+      pending: appData?.pending || 0,
+      reviewed: appData?.reviewed || 0,
+      accepted: appData?.accepted || 0,
+      rejected: appData?.rejected || 0,
+      hasApplications: !!appData,
+    };
+  }).sort((a, b) => {
+    // Sort: positions with applications first, then by total count descending
+    if (a.hasApplications && !b.hasApplications) return -1;
+    if (!a.hasApplications && b.hasApplications) return 1;
+    if (a.hasApplications && b.hasApplications) return b.total - a.total;
+    return 0;
+  });
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -54,27 +90,9 @@ export default async function ApplicationsPage({
         </div>
         <p className="text-muted-foreground text-base">
           {locale === 'ar'
-            ? 'إدارة ومراجعة جميع طلبات التوظيف المقدمة'
-            : 'Manage and review all submitted job applications'}
+            ? 'نظرة عامة على طلبات التوظيف حسب الوظيفة'
+            : 'Overview of job applications by position'}
         </p>
-
-        {/* Filter Badge */}
-        {filterPosition && (
-          <div className="mt-4 flex items-center gap-2 flex-wrap">
-            <span className="text-sm text-muted-foreground">
-              {locale === 'ar' ? 'مفلتر حسب الوظيفة:' : 'Filtered by position:'}
-            </span>
-            <Badge variant="secondary" className="text-sm">
-              {filterPosition}
-            </Badge>
-            <Link href={`/${locale}/admin/applications`}>
-              <Button variant="ghost" size="sm" className="h-7 text-xs">
-                <X className="h-3 w-3 mr-1" />
-                {locale === 'ar' ? 'إزالة الفلاتر' : 'Clear Filters'}
-              </Button>
-            </Link>
-          </div>
-        )}
       </div>
 
       {/* Stats */}
@@ -150,28 +168,105 @@ export default async function ApplicationsPage({
         </Card>
       </div>
 
-      {/* Applications List */}
-      {applications.length === 0 ? (
-        <Card>
-          <CardContent className="py-12 text-center">
-            <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">
-              {locale === 'ar' ? 'لا توجد طلبات توظيف' : 'No Applications Yet'}
-            </h2>
-            <p className="text-muted-foreground">
-              {locale === 'ar'
-                ? 'سيتم عرض طلبات التوظيف هنا عند استلامها'
-                : 'Job applications will appear here when submitted'}
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {applications.map((application) => (
-            <ApplicationCard key={application.id} application={application} locale={locale} />
-          ))}
-        </div>
-      )}
+      {/* Position Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {positionStats.map((positionStat) => {
+          const displayName = locale === 'ar' ? positionStat.titleAr : positionStat.position;
+          const hasApps = positionStat.hasApplications;
+
+          return (
+            <Link
+              key={positionStat.position}
+              href={`/${locale}/admin/applications/position/${encodeURIComponent(positionStat.position)}`}
+            >
+              <Card className={`h-full hover:shadow-lg transition-all duration-300 cursor-pointer group ${hasApps
+                ? 'border-primary/30 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-transparent'
+                : 'border-muted hover:border-muted-foreground/30 bg-muted/30'
+                }`}>
+                <CardHeader>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 flex-1">
+                      <div className={`p-3 rounded-xl transition-all ${hasApps
+                        ? 'bg-gradient-to-br from-primary/20 to-primary/5 group-hover:from-primary/30 group-hover:to-primary/10'
+                        : 'bg-muted/50 group-hover:bg-muted/70'
+                        }`}>
+                        <Briefcase className={`h-6 w-6 ${hasApps ? 'text-primary' : 'text-muted-foreground'}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className={`text-lg mb-1 line-clamp-2 ${!hasApps && 'text-muted-foreground'}`}>
+                          {displayName}
+                        </CardTitle>
+                        <div className="flex items-center gap-2">
+                          <Badge
+                            variant={hasApps ? 'secondary' : 'outline'}
+                            className={`text-xs ${!hasApps && 'text-muted-foreground'}`}
+                          >
+                            {positionStat.total} {locale === 'ar' ? 'طلب' : 'applications'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                    <ArrowRight className={`h-5 w-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 ${locale === 'ar' ? 'rotate-180' : ''}`} />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {positionStat.pending > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-yellow-600" />
+                          <span className="text-muted-foreground">
+                            {locale === 'ar' ? 'قيد المراجعة' : 'Pending'}
+                          </span>
+                        </div>
+                        <span className="font-semibold text-yellow-600">{positionStat.pending}</span>
+                      </div>
+                    )}
+                    {positionStat.reviewed > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-blue-600" />
+                          <span className="text-muted-foreground">
+                            {locale === 'ar' ? 'تمت المراجعة' : 'Reviewed'}
+                          </span>
+                        </div>
+                        <span className="font-semibold text-blue-600">{positionStat.reviewed}</span>
+                      </div>
+                    )}
+                    {positionStat.accepted > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-green-600" />
+                          <span className="text-muted-foreground">
+                            {locale === 'ar' ? 'مقبول' : 'Accepted'}
+                          </span>
+                        </div>
+                        <span className="font-semibold text-green-600">{positionStat.accepted}</span>
+                      </div>
+                    )}
+                    {positionStat.rejected > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <XCircle className="h-4 w-4 text-red-600" />
+                          <span className="text-muted-foreground">
+                            {locale === 'ar' ? 'مرفوض' : 'Rejected'}
+                          </span>
+                        </div>
+                        <span className="font-semibold text-red-600">{positionStat.rejected}</span>
+                      </div>
+                    )}
+                    {positionStat.total === 0 && (
+                      <p className="text-sm text-muted-foreground text-center py-2 italic">
+                        {locale === 'ar' ? 'لا توجد طلبات بعد' : 'No applications yet'}
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
-import { Lock } from 'lucide-react';
-import { validatePassword, setAdminSession, isAuthenticated } from '@/helpers/adminAuth';
+import { Lock, Loader2 } from 'lucide-react';
+import { adminLogin, checkAdminAuth } from '@/actions/adminLogin';
 
 interface AdminAuthProps {
   children: React.ReactNode;
@@ -16,23 +16,34 @@ export function AdminAuth({ children }: AdminAuthProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations('admin');
 
   useEffect(() => {
-    setIsAuth(isAuthenticated());
-    setIsLoading(false);
+    checkAdminAuth().then((result) => {
+      setIsAuth(result.isAuthenticated);
+      setIsLoading(false);
+    });
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsSubmitting(true);
 
-    if (validatePassword(password)) {
-      setAdminSession();
-      setIsAuth(true);
-      setPassword('');
-    } else {
+    try {
+      const result = await adminLogin(password);
+
+      if (result.success) {
+        setIsAuth(true);
+        setPassword('');
+      } else {
+        setError(t('invalidCredentials'));
+      }
+    } catch (err) {
       setError(t('invalidCredentials'));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -79,8 +90,15 @@ export function AdminAuth({ children }: AdminAuthProps) {
                   {error}
                 </div>
               )}
-              <Button type="submit" className="w-full">
-                {t('loginButton')}
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t('loading')}
+                  </>
+                ) : (
+                  t('loginButton')
+                )}
               </Button>
             </form>
           </CardContent>

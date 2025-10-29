@@ -1,40 +1,38 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FileText, Users, Network, Briefcase, ChevronDown, ChevronRight } from 'lucide-react';
+import { FileText, Users, Network, Briefcase, CheckSquare, Calculator, UserCog, StickyNote, CreditCard, ListTodo, BarChart3, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from './ui/badge';
-import { Position } from '@/helpers/extractMetrics';
-
-interface PositionGroup {
-  label: string;
-  positions: Position[];
-}
 
 interface AdminSidebarClientProps {
   locale: string;
-  positionGroups: PositionGroup[];
-  countsMap: Record<string, number>;
+  totalCount: number;
   translations: {
     adminPanel: string;
+    subscriptions: string;
+    customers: string;
+    tasks: string;
     organizationalStructure: string;
     applications: string;
-    allApplications: string;
     generalPlan: string;
     hiringPlan: string;
+    phase1Requirements: string;
+    accounting: string;
+    employeeAffairs: string;
+    administrativeNotes: string;
+    reports: string;
+    settings: string;
   };
 }
 
 export function AdminSidebarClient({
   locale,
-  positionGroups,
-  countsMap,
+  totalCount,
   translations
 }: AdminSidebarClientProps) {
   const pathname = usePathname();
-  const [isApplicationsExpanded, setIsApplicationsExpanded] = useState(true);
 
   const navItems = [
     {
@@ -49,22 +47,83 @@ export function AdminSidebarClient({
       icon: FileText,
     },
     {
+      href: `/${locale}/admin/phase-1-requirements`,
+      label: translations.phase1Requirements,
+      icon: CheckSquare,
+    },
+    {
       href: `/${locale}/admin/hiring-plan`,
       label: translations.hiringPlan,
+      icon: Briefcase,
+    },
+    {
+      href: `/${locale}/admin/applications`,
+      label: translations.applications,
+      icon: Briefcase,
+      count: totalCount,
+    },
+    {
+      href: `/${locale}/admin/subscriptions`,
+      label: translations.subscriptions,
+      icon: CreditCard,
+      comingSoon: true,
+    },
+    {
+      href: `/${locale}/admin/customers`,
+      label: translations.customers,
       icon: Users,
+      comingSoon: true,
+    },
+    {
+      href: `/${locale}/admin/tasks`,
+      label: translations.tasks,
+      icon: ListTodo,
+      comingSoon: true,
+    },
+    {
+      href: `/${locale}/admin/accounting`,
+      label: translations.accounting,
+      icon: Calculator,
+      comingSoon: true,
+    },
+    {
+      href: `/${locale}/admin/employee-affairs`,
+      label: translations.employeeAffairs,
+      icon: UserCog,
+      comingSoon: true,
+    },
+    {
+      href: `/${locale}/admin/notes`,
+      label: translations.administrativeNotes,
+      icon: StickyNote,
+      comingSoon: true,
+    },
+    {
+      href: `/${locale}/admin/reports`,
+      label: translations.reports,
+      icon: BarChart3,
+      comingSoon: true,
+    },
+    {
+      href: `/${locale}/admin/settings`,
+      label: translations.settings,
+      icon: Settings,
+      comingSoon: true,
     },
   ];
-
-  const isApplicationsActive = pathname?.includes('/admin/applications');
 
   return (
     <div className="h-full bg-muted/30 overflow-y-auto">
       <div className="p-6 border-b">
-        <h2 className="text-lg font-semibold">{translations.adminPanel}</h2>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h2 className="text-lg font-semibold">{translations.adminPanel}</h2>
+          <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-gradient-to-r from-primary/20 to-primary/10 text-primary border border-primary/30 animate-pulse">
+            {locale === 'ar' ? 'النسخة الأولية' : 'Beta'}
+          </span>
+        </div>
       </div>
 
       <nav className="p-4 space-y-1">
-        {/* Regular nav items */}
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.exact
@@ -83,79 +142,19 @@ export function AdminSidebarClient({
             >
               <Icon className="h-4 w-4 flex-shrink-0" />
               <span className="truncate">{item.label}</span>
+              {(item as any).count > 0 && (
+                <Badge variant="secondary" className="text-[10px] h-4 px-1.5 ml-auto">
+                  {(item as any).count}
+                </Badge>
+              )}
+              {(item as any).comingSoon && (
+                <Badge variant="outline" className="text-[9px] h-4 px-1.5 ml-auto bg-primary/10 text-primary border-primary/30">
+                  {locale === 'ar' ? 'قريباً' : 'Soon'}
+                </Badge>
+              )}
             </Link>
           );
         })}
-
-        {/* Applications with expandable submenu */}
-        <div>
-          <button
-            onClick={() => setIsApplicationsExpanded(!isApplicationsExpanded)}
-            className={cn(
-              'w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
-              'hover:bg-accent hover:text-accent-foreground',
-              isApplicationsActive && 'bg-accent text-accent-foreground font-medium'
-            )}
-          >
-            <div className="flex items-center gap-3">
-              <Briefcase className="h-4 w-4 flex-shrink-0" />
-              <span className="truncate">{translations.applications}</span>
-            </div>
-            {isApplicationsExpanded ? (
-              <ChevronDown className="h-4 w-4 flex-shrink-0" />
-            ) : (
-              <ChevronRight className="h-4 w-4 flex-shrink-0" />
-            )}
-          </button>
-
-          {isApplicationsExpanded && (
-            <div className="ml-4 mt-1 space-y-1 border-l-2 border-muted pl-2">
-              {/* All Applications link */}
-              <Link
-                href={`/${locale}/admin/applications`}
-                className={cn(
-                  'flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors',
-                  'hover:bg-accent hover:text-accent-foreground',
-                  pathname === `/${locale}/admin/applications` && 'bg-accent/50 text-accent-foreground font-medium'
-                )}
-              >
-                <span className="truncate">{translations.allApplications}</span>
-              </Link>
-
-              {/* Position groups */}
-              {positionGroups.map((group) => (
-                <div key={group.label} className="space-y-1">
-                  <div className="px-3 py-1 text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">
-                    {group.label}
-                  </div>
-                  {group.positions.map((position) => {
-                    const count = countsMap[position.titleEn] || 0;
-                    const isActive = pathname === `/${locale}/admin/applications/position/${encodeURIComponent(position.titleEn)}`;
-
-                    return (
-                      <Link
-                        key={position.titleEn}
-                        href={`/${locale}/admin/applications/position/${encodeURIComponent(position.titleEn)}`}
-                        className={cn(
-                          'flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors',
-                          'hover:bg-accent hover:text-accent-foreground',
-                          isActive && 'bg-accent/50 text-accent-foreground font-medium'
-                        )}
-                      >
-                        <span className="truncate">{locale === 'ar' ? position.title : position.titleEn}</span>
-                        {count > 0 && (
-                          <Badge variant="secondary" className="text-[10px] h-4 px-1.5">
-                            {count}
-                          </Badge>
-                        )}
-                      </Link>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
       </nav>
     </div>
   );
