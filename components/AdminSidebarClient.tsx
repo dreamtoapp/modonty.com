@@ -44,7 +44,8 @@ export function AdminSidebarClient({
 }: AdminSidebarClientProps) {
   const pathname = usePathname();
 
-  const navItems: NavItem[] = [
+  // Completed/Active items
+  const activeItems: NavItem[] = [
     {
       href: `/${locale}/admin`,
       label: translations.organizationalStructure,
@@ -73,6 +74,15 @@ export function AdminSidebarClient({
       count: totalCount,
     },
     {
+      href: `/${locale}/admin/accounting`,
+      label: translations.accounting,
+      icon: Calculator,
+    },
+  ];
+
+  // Coming soon items
+  const comingSoonItems: NavItem[] = [
+    {
       href: `/${locale}/admin/subscriptions`,
       label: translations.subscriptions,
       icon: CreditCard,
@@ -88,12 +98,6 @@ export function AdminSidebarClient({
       href: `/${locale}/admin/tasks`,
       label: translations.tasks,
       icon: ListTodo,
-      comingSoon: true,
-    },
-    {
-      href: `/${locale}/admin/accounting`,
-      label: translations.accounting,
-      icon: Calculator,
       comingSoon: true,
     },
     {
@@ -139,38 +143,76 @@ export function AdminSidebarClient({
         </div>
       </div>
 
-      <nav className="p-4 space-y-1">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = item.exact
-            ? pathname === item.href
-            : pathname?.startsWith(item.href);
+      <nav className="p-4 space-y-6">
+        {/* Active/Completed Section */}
+        <div className="space-y-1">
+          <div className="px-3 mb-2">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              {locale === 'ar' ? 'تم الإنجاز' : 'Active'}
+            </h3>
+          </div>
+          {activeItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = item.exact
+              ? pathname === item.href
+              : pathname?.startsWith(item.href);
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
-                'hover:bg-accent hover:text-accent-foreground',
-                isActive && 'bg-accent text-accent-foreground font-medium'
-              )}
-            >
-              <Icon className="h-4 w-4 flex-shrink-0" />
-              <span className="truncate">{item.label}</span>
-              {item.count && item.count > 0 && (
-                <Badge variant="secondary" className="text-[10px] h-4 px-1.5 ml-auto">
-                  {item.count}
-                </Badge>
-              )}
-              {item.comingSoon && (
-                <Badge variant="outline" className="text-[9px] h-4 px-1.5 ml-auto bg-primary/10 text-primary border-primary/30">
-                  {locale === 'ar' ? 'قريباً' : 'Soon'}
-                </Badge>
-              )}
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+                  'hover:bg-accent hover:text-accent-foreground',
+                  isActive && 'bg-accent text-accent-foreground font-medium'
+                )}
+              >
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                <span className="truncate">{item.label}</span>
+                {item.count && item.count > 0 && (
+                  <Badge variant="secondary" className="text-[10px] h-4 px-1.5 ml-auto">
+                    {item.count}
+                  </Badge>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Coming Soon Section */}
+        <div className="space-y-1">
+          <div className="px-3 mb-2">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              {locale === 'ar' ? 'قريباً' : 'Coming Soon'}
+            </h3>
+          </div>
+          {comingSoonItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = item.exact
+              ? pathname === item.href
+              : pathname?.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors opacity-60',
+                  'hover:bg-accent hover:text-accent-foreground hover:opacity-100',
+                  isActive && 'bg-accent text-accent-foreground font-medium opacity-100'
+                )}
+              >
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                <span className="truncate">{item.label}</span>
+                {item.comingSoon && (
+                  <Badge variant="outline" className="text-[9px] h-4 px-1.5 ml-auto bg-primary/10 text-primary border-primary/30">
+                    {locale === 'ar' ? 'قريباً' : 'Soon'}
+                  </Badge>
+                )}
+              </Link>
+            );
+          })}
+        </div>
       </nav>
     </div>
   );

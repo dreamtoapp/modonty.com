@@ -80,3 +80,30 @@ enum RequirementPriority {
   LOW
 }
 
+model Transaction {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Transaction Details
+  type        TransactionType
+  amount      Float
+  description String
+  category    String?
+  date        DateTime
+
+  // Invoice Image (for expenses only)
+  invoiceImageUrl    String?
+  invoiceImagePublicId String?
+
+  @@index([type])
+  @@index([date])
+  @@index([category])
+  @@index([createdAt])
+}
+
+enum TransactionType {
+  EXPENSE
+  REVENUE
+}
+
