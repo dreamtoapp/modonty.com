@@ -264,14 +264,14 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
         {
           key: 'Frontend Developer',
           title: isArabic ? 'مطور Frontend' : 'Frontend Developer',
-          description: isArabic ? 'خالد' : 'Khalid',
+          description: isArabic ? 'محمد' : 'Mohammed',
           status: 'completed' as const,
           priority: 'high' as const,
         },
         {
           key: 'Backend Developer',
           title: isArabic ? 'مطور Backend' : 'Backend Developer',
-          description: isArabic ? 'خالد' : 'Khalid',
+          description: isArabic ? 'مصطفى' : 'Mustafa',
           status: 'completed' as const,
           priority: 'high' as const,
         },
@@ -285,7 +285,7 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
         {
           key: 'Designer',
           title: isArabic ? 'مصمم' : 'Designer',
-          description: isArabic ? 'عبدالعزيز' : 'Abdulaziz',
+          description: isArabic ? 'احمد' : 'Ahmed',
           status: 'completed' as const,
           priority: 'high' as const,
         },

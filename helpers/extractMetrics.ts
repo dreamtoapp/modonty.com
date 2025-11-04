@@ -385,7 +385,7 @@ export function getTeamPositions(): Position[] {
       salaryMin: 0,
       salaryMax: 0,
       phase: 1,
-      filledBy: 'المهندس خالد',
+      filledBy: 'المهندس محمد',
       requirements: [
         '3-5 سنوات خبرة عملية في تطوير واجهات المستخدم',
         'React.js/Next.js 14+، TypeScript متقدم',
@@ -416,7 +416,7 @@ export function getTeamPositions(): Position[] {
       salaryMin: 0,
       salaryMax: 0,
       phase: 1,
-      filledBy: 'المهندس خالد',
+      filledBy: 'المهندس مصطفى',
       requirements: [
         '5-7 سنوات خبرة في Backend Development',
         'إتقان Node.js + Express/Fastify أو NestJS',
@@ -536,7 +536,7 @@ export function getTeamPositions(): Position[] {
       salaryMin: 0,
       salaryMax: 0,
       phase: 1,
-      filledBy: 'المهندس عبدالعزيز',
+      filledBy: 'المهندس احمد',
       requirements: [
         '4+ سنوات خبرة احترافية في التصميم الرقمي والاتصال البصري',
         'إتقان كامل لـ Adobe Creative Suite (Photoshop، Illustrator، After Effects)',

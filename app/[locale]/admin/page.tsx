@@ -244,7 +244,7 @@ export default async function AdminDashboardPage({ params }: { params: Promise<{
                 count={1}
                 icon={Code}
                 filled
-                filledBy={isArabic ? 'خالد' : 'Khalid'}
+                filledBy={isArabic ? 'محمد' : 'Mohammed'}
                 color="bg-cyan-500"
                 locale={locale}
               />
@@ -253,7 +253,7 @@ export default async function AdminDashboardPage({ params }: { params: Promise<{
                 count={1}
                 icon={Code}
                 filled
-                filledBy={isArabic ? 'خالد' : 'Khalid'}
+                filledBy={isArabic ? 'مصطفى' : 'Mustafa'}
                 color="bg-indigo-500"
                 locale={locale}
               />
@@ -269,7 +269,7 @@ export default async function AdminDashboardPage({ params }: { params: Promise<{
                 count={1}
                 icon={Briefcase}
                 filled
-                filledBy={isArabic ? 'عبدالعزيز' : 'Abdulaziz'}
+                filledBy={isArabic ? 'احمد' : 'Ahmed'}
                 color="bg-purple-500"
                 locale={locale}
               />
