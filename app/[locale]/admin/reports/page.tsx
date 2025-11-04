@@ -56,8 +56,8 @@ export default async function ReportsPage({
             </h1>
             <p className="text-muted-foreground text-lg">
               {locale === 'ar'
-                ? 'نظام بسيط لإنشاء التقارير والتحليلات - ينمو مع احتياجات مدونتي'
-                : 'Simple system to create reports and analytics - grows with Modonty\'s needs'}
+                ? 'نظام بسيط لإنشاء التقارير والتحليلات - ينمو مع احتياجات جبرسيو'
+                : 'Simple system to create reports and analytics - grows with JBRtechno\'s needs'}
             </p>
           </div>
         </div>
@@ -96,8 +96,8 @@ export default async function ReportsPage({
                 {/* Subtitle */}
                 <p className="text-lg md:text-xl font-semibold text-indigo-900 dark:text-indigo-100 max-w-2xl">
                   {locale === 'ar'
-                    ? '🚀 نبني هذا النظام داخلياً لدعم مدونتي في المرحلة الأولى'
-                    : '🚀 Building this system internally to support Modonty in Phase 1'}
+                    ? '🚀 نبني هذا النظام داخلياً لدعم جبرسيو في المرحلة الأولى'
+                    : '🚀 Building this system internally to support JBRtechno in Phase 1'}
                 </p>
 
                 {/* Progress indicator */}
@@ -125,8 +125,8 @@ export default async function ReportsPage({
           </CardTitle>
           <CardDescription className="text-base">
             {locale === 'ar'
-              ? 'نبدأ بنظام بسيط لإنشاء تقارير مالية ومبيعات أساسية. مع نمو نظام مدونتي، سنضيف ميزات متقدمة مثل التحليلات التفاعلية ولوحات التحكم.'
-              : 'We\'re starting with a simple system to create basic financial and sales reports. As Modonty system grows, we\'ll add advanced features like interactive analytics and dashboards.'}
+              ? 'نبدأ بنظام بسيط لإنشاء تقارير مالية ومبيعات أساسية. مع نمو نظام جبرسيو، سنضيف ميزات متقدمة مثل التحليلات التفاعلية ولوحات التحكم.'
+              : 'We\'re starting with a simple system to create basic financial and sales reports. As JBRtechno system grows, we\'ll add advanced features like interactive analytics and dashboards.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -140,8 +140,8 @@ export default async function ReportsPage({
               </h4>
               <p className="text-sm text-muted-foreground">
                 {locale === 'ar'
-                  ? 'نبدأ بتقارير مالية بسيطة وملخصات شهرية. مع الوقت، سنضيف ميزات مثل التحليلات المتقدمة، الرسوم البيانية التفاعلية، والتنبؤات. النظام ينمو مع احتياجات نظام مدونتي.'
-                  : 'We start with simple financial reports and monthly summaries. Over time, we\'ll add features like advanced analytics, interactive charts, and forecasting. The system grows with Modonty system\'s needs.'}
+                  ? 'نبدأ بتقارير مالية بسيطة وملخصات شهرية. مع الوقت، سنضيف ميزات مثل التحليلات المتقدمة، الرسوم البيانية التفاعلية، والتنبؤات. النظام ينمو مع احتياجات نظام جبرسيو.'
+                  : 'We start with simple financial reports and monthly summaries. Over time, we\'ll add features like advanced analytics, interactive charts, and forecasting. The system grows with JBRtechno system\'s needs.'}
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default async function ReportsPage({
       <Card className="border-dashed">
         <CardHeader>
           <CardTitle className="text-lg">
-            {locale === 'ar' ? 'مع نمو نظام مدونتي سنضيف' : 'As Modonty System Grows, We\'ll Add'}
+            {locale === 'ar' ? 'مع نمو نظام جبرسيو سنضيف' : 'As JBRtechno System Grows, We\'ll Add'}
           </CardTitle>
         </CardHeader>
         <CardContent>

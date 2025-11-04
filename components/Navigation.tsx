@@ -32,7 +32,7 @@ export function Navigation() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href={`/${locale}`} className="text-xl font-bold">
-              Modonty
+              JBRtechno
             </Link>
 
             <div className="hidden md:flex items-center gap-4">

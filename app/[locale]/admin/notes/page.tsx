@@ -56,8 +56,8 @@ export default async function AdministrativeNotesPage({
             </h1>
             <p className="text-muted-foreground text-lg">
               {locale === 'ar'
-                ? 'نظام بسيط لحفظ الملاحظات والقرارات - ينمو مع احتياجات مدونتي'
-                : 'Simple system to save notes and decisions - grows with Modonty\'s needs'}
+                ? 'نظام بسيط لحفظ الملاحظات والقرارات - ينمو مع احتياجات جبرسيو'
+                : 'Simple system to save notes and decisions - grows with JBRtechno\'s needs'}
             </p>
           </div>
         </div>
@@ -96,8 +96,8 @@ export default async function AdministrativeNotesPage({
                 {/* Subtitle */}
                 <p className="text-lg md:text-xl font-semibold text-amber-900 dark:text-amber-100 max-w-2xl">
                   {locale === 'ar'
-                    ? '🚀 نبني هذا النظام داخلياً لدعم مدونتي في المرحلة الأولى'
-                    : '🚀 Building this system internally to support Modonty in Phase 1'}
+                    ? '🚀 نبني هذا النظام داخلياً لدعم جبرسيو في المرحلة الأولى'
+                    : '🚀 Building this system internally to support JBRtechno in Phase 1'}
                 </p>
 
                 {/* Progress indicator */}
@@ -125,8 +125,8 @@ export default async function AdministrativeNotesPage({
           </CardTitle>
           <CardDescription className="text-base">
             {locale === 'ar'
-              ? 'نبدأ بنظام بسيط لكتابة الملاحظات وحفظ القرارات المهمة. مع نمو نظام مدونتي، سنضيف ميزات متقدمة مثل التصنيفات والبحث المتقدم والمشاركة بين الفرق.'
-              : 'We\'re starting with a simple system to write notes and save important decisions. As Modonty system grows, we\'ll add advanced features like categories, advanced search, and team sharing.'}
+              ? 'نبدأ بنظام بسيط لكتابة الملاحظات وحفظ القرارات المهمة. مع نمو نظام جبرسيو، سنضيف ميزات متقدمة مثل التصنيفات والبحث المتقدم والمشاركة بين الفرق.'
+              : 'We\'re starting with a simple system to write notes and save important decisions. As JBRtechno system grows, we\'ll add advanced features like categories, advanced search, and team sharing.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -140,8 +140,8 @@ export default async function AdministrativeNotesPage({
               </h4>
               <p className="text-sm text-muted-foreground">
                 {locale === 'ar'
-                  ? 'نبدأ بكتابة الملاحظات وحفظ القرارات المهمة بشكل بسيط. مع الوقت، سنضيف ميزات مثل التصنيفات، البحث المتقدم، والمشاركة. النظام ينمو مع احتياجات نظام مدونتي.'
-                  : 'We start by writing notes and saving important decisions simply. Over time, we\'ll add features like categories, advanced search, and sharing. The system grows with Modonty system\'s needs.'}
+                  ? 'نبدأ بكتابة الملاحظات وحفظ القرارات المهمة بشكل بسيط. مع الوقت، سنضيف ميزات مثل التصنيفات، البحث المتقدم، والمشاركة. النظام ينمو مع احتياجات نظام جبرسيو.'
+                  : 'We start by writing notes and saving important decisions simply. Over time, we\'ll add features like categories, advanced search, and sharing. The system grows with JBRtechno system\'s needs.'}
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default async function AdministrativeNotesPage({
       <Card className="border-dashed">
         <CardHeader>
           <CardTitle className="text-lg">
-            {locale === 'ar' ? 'مع نمو نظام مدونتي سنضيف' : 'As Modonty System Grows, We\'ll Add'}
+            {locale === 'ar' ? 'مع نمو نظام جبرسيو سنضيف' : 'As JBRtechno System Grows, We\'ll Add'}
           </CardTitle>
         </CardHeader>
         <CardContent>

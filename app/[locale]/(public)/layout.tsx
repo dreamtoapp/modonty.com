@@ -19,7 +19,7 @@ export default async function PublicLayout({
       </main>
       <footer className="border-t py-8 mt-16 no-print">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2024 Modonty. All rights reserved.</p>
+          <p>© 2024 JBRtechno. All rights reserved.</p>
         </div>
       </footer>
 

@@ -56,8 +56,8 @@ export default async function SubscriptionsPage({
             </h1>
             <p className="text-muted-foreground text-lg">
               {locale === 'ar'
-                ? 'نظام آلي لإدارة الاشتراكات والدفعات المتكررة تلقائياً - ينمو مع احتياجات مدونتي'
-                : 'Automated system for subscriptions and automatic recurring payments - grows with Modonty\'s needs'}
+                ? 'نظام آلي لإدارة الاشتراكات والدفعات المتكررة تلقائياً - ينمو مع احتياجات جبرسيو'
+                : 'Automated system for subscriptions and automatic recurring payments - grows with JBRtechno\'s needs'}
             </p>
           </div>
         </div>
@@ -96,8 +96,8 @@ export default async function SubscriptionsPage({
                 {/* Subtitle */}
                 <p className="text-lg md:text-xl font-semibold text-purple-900 dark:text-purple-100 max-w-2xl">
                   {locale === 'ar'
-                    ? '🚀 نبني هذا النظام داخلياً لدعم مدونتي في المرحلة الأولى'
-                    : '🚀 Building this system internally to support Modonty in Phase 1'}
+                    ? '🚀 نبني هذا النظام داخلياً لدعم جبرسيو في المرحلة الأولى'
+                    : '🚀 Building this system internally to support JBRtechno in Phase 1'}
                 </p>
 
                 {/* Progress indicator */}
@@ -125,8 +125,8 @@ export default async function SubscriptionsPage({
           </CardTitle>
           <CardDescription className="text-base">
             {locale === 'ar'
-              ? 'نبدأ بنظام آلي للاشتراكات مع تجديد وخصم تلقائي. مع نمو نظام مدونتي، سنضيف ميزات متقدمة مثل خطط متعددة، إشعارات ذكية، وتحليلات متقدمة.'
-              : 'We\'re starting with an automated subscription system with auto-renewal and automatic charging. As Modonty system grows, we\'ll add advanced features like multiple tiers, smart notifications, and advanced analytics.'}
+              ? 'نبدأ بنظام آلي للاشتراكات مع تجديد وخصم تلقائي. مع نمو نظام جبرسيو، سنضيف ميزات متقدمة مثل خطط متعددة، إشعارات ذكية، وتحليلات متقدمة.'
+              : 'We\'re starting with an automated subscription system with auto-renewal and automatic charging. As JBRtechno system grows, we\'ll add advanced features like multiple tiers, smart notifications, and advanced analytics.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -140,8 +140,8 @@ export default async function SubscriptionsPage({
               </h4>
               <p className="text-sm text-muted-foreground">
                 {locale === 'ar'
-                  ? 'نبدأ بنظام آلي بالكامل: تجديد الاشتراكات، خصم المبالغ، وإرسال الفواتير تلقائياً. مع الوقت، سنضيف ذكاء اصطناعي للتنبؤ، إشعارات ذكية، وخطط مرنة. النظام ينمو مع احتياجات نظام مدونتي.'
-                  : 'We start with a fully automated system: auto-renewal, automatic charging, and invoice sending. Over time, we\'ll add AI for predictions, smart notifications, and flexible plans. The system grows with Modonty system\'s needs.'}
+                  ? 'نبدأ بنظام آلي بالكامل: تجديد الاشتراكات، خصم المبالغ، وإرسال الفواتير تلقائياً. مع الوقت، سنضيف ذكاء اصطناعي للتنبؤ، إشعارات ذكية، وخطط مرنة. النظام ينمو مع احتياجات نظام جبرسيو.'
+                  : 'We start with a fully automated system: auto-renewal, automatic charging, and invoice sending. Over time, we\'ll add AI for predictions, smart notifications, and flexible plans. The system grows with JBRtechno system\'s needs.'}
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default async function SubscriptionsPage({
       <Card className="border-dashed">
         <CardHeader>
           <CardTitle className="text-lg">
-            {locale === 'ar' ? 'مع نمو نظام مدونتي سنضيف' : 'As Modonty System Grows, We\'ll Add'}
+            {locale === 'ar' ? 'مع نمو نظام جبرسيو سنضيف' : 'As JBRtechno System Grows, We\'ll Add'}
           </CardTitle>
         </CardHeader>
         <CardContent>

@@ -49,7 +49,7 @@ It will redirect to: `http://localhost:3000/ar` (Arabic homepage)
 ## File Structure Created
 
 ```
-modonty.com/
+jbrtechno.com/
 ├── app/
 │   ├── [locale]/              ✅ Bilingual routing
 │   │   ├── page.tsx           ✅ Home page
@@ -155,7 +155,7 @@ Route                           Size    First Load JS
 
 ## 🎊 Status: READY FOR HEADQUARTERS PRESENTATION
 
-**Brand**: Modonty
+**Brand**: JBRtechno
 
 Your business plan website is **live, working, and ready to deploy**!
 

@@ -139,7 +139,7 @@ The project is **production-ready** and can be deployed immediately!
 
 All business plan documents from the `doc/` folder are beautifully rendered and ready for presentation to headquarters.
 
-**Brand**: Modonty
+**Brand**: JBRtechno
 
 ---
 

@@ -87,6 +87,6 @@ Business plan documents are located in the `doc/` directory:
 
 ## License
 
-© 2024 Modonty. All rights reserved.
+© 2024 JBRtechno. All rights reserved.
 
-# modonty.com
+# jbrtechno.com

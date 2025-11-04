@@ -25,12 +25,12 @@ cp .env.example .env
 3. Get your connection string
 4. Replace in `.env`:
 ```
-DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/modonty?retryWrites=true&w=majority"
+DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/jbrtechno?retryWrites=true&w=majority"
 ```
 
 #### Option B: Local MongoDB
 ```
-DATABASE_URL="mongodb://localhost:27017/modonty"
+DATABASE_URL="mongodb://localhost:27017/jbrtechno"
 ```
 
 ### 3. Configure Cloudinary

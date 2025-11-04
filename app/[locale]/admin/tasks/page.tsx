@@ -56,8 +56,8 @@ export default async function TasksPage({
             </h1>
             <p className="text-muted-foreground text-lg">
               {locale === 'ar'
-                ? 'نظام بسيط لإدارة مهام الاشتراكات والتطوير - ينمو مع احتياجات مدونتي'
-                : 'Simple system to manage subscription and development tasks - grows with Modonty\'s needs'}
+                ? 'نظام بسيط لإدارة مهام الاشتراكات والتطوير - ينمو مع احتياجات جبرسيو'
+                : 'Simple system to manage subscription and development tasks - grows with JBRtechno\'s needs'}
             </p>
           </div>
         </div>
@@ -96,8 +96,8 @@ export default async function TasksPage({
                 {/* Subtitle */}
                 <p className="text-lg md:text-xl font-semibold text-orange-900 dark:text-orange-100 max-w-2xl">
                   {locale === 'ar'
-                    ? '🚀 نبني هذا النظام داخلياً لدعم مدونتي في المرحلة الأولى'
-                    : '🚀 Building this system internally to support Modonty in Phase 1'}
+                    ? '🚀 نبني هذا النظام داخلياً لدعم جبرسيو في المرحلة الأولى'
+                    : '🚀 Building this system internally to support JBRtechno in Phase 1'}
                 </p>
 
                 {/* Progress indicator */}
@@ -125,8 +125,8 @@ export default async function TasksPage({
           </CardTitle>
           <CardDescription className="text-base">
             {locale === 'ar'
-              ? 'نبدأ بنظام بسيط لإنشاء المهام وتتبع تقدمها. مع نمو نظام مدونتي، سنضيف ميزات متقدمة مثل إدارة الاشتراكات والتطوير والتقارير التفصيلية.'
-              : 'We\'re starting with a simple system to create tasks and track progress. As Modonty system grows, we\'ll add advanced features like subscription and development management and detailed reports.'}
+              ? 'نبدأ بنظام بسيط لإنشاء المهام وتتبع تقدمها. مع نمو نظام جبرسيو، سنضيف ميزات متقدمة مثل إدارة الاشتراكات والتطوير والتقارير التفصيلية.'
+              : 'We\'re starting with a simple system to create tasks and track progress. As JBRtechno system grows, we\'ll add advanced features like subscription and development management and detailed reports.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -140,8 +140,8 @@ export default async function TasksPage({
               </h4>
               <p className="text-sm text-muted-foreground">
                 {locale === 'ar'
-                  ? 'نبدأ بقائمة مهام بسيطة مع تواريخ التسليم. مع الوقت، سنضيف ميزات مثل إدارة الاشتراكات والتطوير، التبعيات، والتقارير. النظام ينمو مع احتياجات نظام مدونتي.'
-                  : 'We start with a simple task list with deadlines. Over time, we\'ll add features like subscription and development management, dependencies, and reports. The system grows with Modonty system\'s needs.'}
+                  ? 'نبدأ بقائمة مهام بسيطة مع تواريخ التسليم. مع الوقت، سنضيف ميزات مثل إدارة الاشتراكات والتطوير، التبعيات، والتقارير. النظام ينمو مع احتياجات نظام جبرسيو.'
+                  : 'We start with a simple task list with deadlines. Over time, we\'ll add features like subscription and development management, dependencies, and reports. The system grows with JBRtechno system\'s needs.'}
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default async function TasksPage({
       <Card className="border-dashed">
         <CardHeader>
           <CardTitle className="text-lg">
-            {locale === 'ar' ? 'مع نمو نظام مدونتي سنضيف' : 'As Modonty System Grows, We\'ll Add'}
+            {locale === 'ar' ? 'مع نمو نظام جبرسيو سنضيف' : 'As JBRtechno System Grows, We\'ll Add'}
           </CardTitle>
         </CardHeader>
         <CardContent>

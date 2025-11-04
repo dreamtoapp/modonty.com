@@ -56,8 +56,8 @@ export default async function CustomersPage({
             </h1>
             <p className="text-muted-foreground text-lg">
               {locale === 'ar'
-                ? 'نظام بسيط لإدارة العملاء واشتراكاتهم وملاحظاتهم - ينمو مع احتياجات مدونتي'
-                : 'Simple system to manage customers, their subscriptions and feedback - grows with Modonty\'s needs'}
+                ? 'نظام بسيط لإدارة العملاء واشتراكاتهم وملاحظاتهم - ينمو مع احتياجات جبرسيو'
+                : 'Simple system to manage customers, their subscriptions and feedback - grows with JBRtechno\'s needs'}
             </p>
           </div>
         </div>
@@ -96,8 +96,8 @@ export default async function CustomersPage({
                 {/* Subtitle */}
                 <p className="text-lg md:text-xl font-semibold text-green-900 dark:text-green-100 max-w-2xl">
                   {locale === 'ar'
-                    ? '🚀 نبني هذا النظام داخلياً لدعم مدونتي في المرحلة الأولى'
-                    : '🚀 Building this system internally to support Modonty in Phase 1'}
+                    ? '🚀 نبني هذا النظام داخلياً لدعم جبرسيو في المرحلة الأولى'
+                    : '🚀 Building this system internally to support JBRtechno in Phase 1'}
                 </p>
 
                 {/* Progress indicator */}
@@ -125,8 +125,8 @@ export default async function CustomersPage({
           </CardTitle>
           <CardDescription className="text-base">
             {locale === 'ar'
-              ? 'نبدأ بنظام بسيط لإدارة معلومات العملاء، اشتراكاتهم، ملاحظاتهم، شكاويهم، واقتراحاتهم. مع نمو نظام مدونتي، سنضيف ميزات متقدمة مثل CRM كامل وتحليل رضا العملاء.'
-              : 'We\'re starting with a simple system to manage customer information, subscriptions, notes, complaints, and suggestions. As Modonty system grows, we\'ll add advanced features like full CRM and customer satisfaction analysis.'}
+              ? 'نبدأ بنظام بسيط لإدارة معلومات العملاء، اشتراكاتهم، ملاحظاتهم، شكاويهم، واقتراحاتهم. مع نمو نظام جبرسيو، سنضيف ميزات متقدمة مثل CRM كامل وتحليل رضا العملاء.'
+              : 'We\'re starting with a simple system to manage customer information, subscriptions, notes, complaints, and suggestions. As JBRtechno system grows, we\'ll add advanced features like full CRM and customer satisfaction analysis.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -140,8 +140,8 @@ export default async function CustomersPage({
               </h4>
               <p className="text-sm text-muted-foreground">
                 {locale === 'ar'
-                  ? 'نبدأ بتسجيل معلومات العملاء الأساسية، اشتراكاتهم، وتتبع ملاحظاتهم وشكاويهم واقتراحاتهم. مع الوقت، سنضيف ميزات مثل التحليلات، تقييم الرضا، والرد التلقائي. النظام ينمو مع احتياجات نظام مدونتي.'
-                  : 'We start by recording basic customer information, subscriptions, and tracking their notes, complaints, and suggestions. Over time, we\'ll add features like analytics, satisfaction ratings, and automated responses. The system grows with Modonty system\'s needs.'}
+                  ? 'نبدأ بتسجيل معلومات العملاء الأساسية، اشتراكاتهم، وتتبع ملاحظاتهم وشكاويهم واقتراحاتهم. مع الوقت، سنضيف ميزات مثل التحليلات، تقييم الرضا، والرد التلقائي. النظام ينمو مع احتياجات نظام جبرسيو.'
+                  : 'We start by recording basic customer information, subscriptions, and tracking their notes, complaints, and suggestions. Over time, we\'ll add features like analytics, satisfaction ratings, and automated responses. The system grows with JBRtechno system\'s needs.'}
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default async function CustomersPage({
       <Card className="border-dashed">
         <CardHeader>
           <CardTitle className="text-lg">
-            {locale === 'ar' ? 'مع نمو نظام مدونتي سنضيف' : 'As Modonty System Grows, We\'ll Add'}
+            {locale === 'ar' ? 'مع نمو نظام جبرسيو سنضيف' : 'As JBRtechno System Grows, We\'ll Add'}
           </CardTitle>
         </CardHeader>
         <CardContent>

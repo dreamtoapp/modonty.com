@@ -56,8 +56,8 @@ export default async function EmployeeAffairsPage({
             </h1>
             <p className="text-muted-foreground text-lg">
               {locale === 'ar'
-                ? 'نظام بسيط لإدارة بيانات الموظفين - ينمو مع احتياجات مدونتي'
-                : 'Simple system to manage employee data - grows with Modonty\'s needs'}
+                ? 'نظام بسيط لإدارة بيانات الموظفين - ينمو مع احتياجات جبرسيو'
+                : 'Simple system to manage employee data - grows with JBRtechno\'s needs'}
             </p>
           </div>
         </div>
@@ -96,8 +96,8 @@ export default async function EmployeeAffairsPage({
                 {/* Subtitle */}
                 <p className="text-lg md:text-xl font-semibold text-blue-900 dark:text-blue-100 max-w-2xl">
                   {locale === 'ar'
-                    ? '🚀 نبني هذا النظام داخلياً لدعم مدونتي في المرحلة الأولى'
-                    : '🚀 Building this system internally to support Modonty in Phase 1'}
+                    ? '🚀 نبني هذا النظام داخلياً لدعم جبرسيو في المرحلة الأولى'
+                    : '🚀 Building this system internally to support JBRtechno in Phase 1'}
                 </p>
 
                 {/* Progress indicator */}
@@ -125,8 +125,8 @@ export default async function EmployeeAffairsPage({
           </CardTitle>
           <CardDescription className="text-base">
             {locale === 'ar'
-              ? 'نبدأ بنظام بسيط لتسجيل بيانات الموظفين وإدارة الإجازات. مع نمو نظام مدونتي، سنضيف ميزات متقدمة مثل إدارة الرواتب وتقييم الأداء.'
-              : 'We\'re starting with a simple system to record employee data and manage leave. As Modonty system grows, we\'ll add advanced features like payroll and performance management.'}
+              ? 'نبدأ بنظام بسيط لتسجيل بيانات الموظفين وإدارة الإجازات. مع نمو نظام جبرسيو، سنضيف ميزات متقدمة مثل إدارة الرواتب وتقييم الأداء.'
+              : 'We\'re starting with a simple system to record employee data and manage leave. As JBRtechno system grows, we\'ll add advanced features like payroll and performance management.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -140,8 +140,8 @@ export default async function EmployeeAffairsPage({
               </h4>
               <p className="text-sm text-muted-foreground">
                 {locale === 'ar'
-                  ? 'نبدأ بتسجيل معلومات الموظفين وإدارة الإجازات يدوياً. مع الوقت، سنضيف ميزات مثل نظام الرواتب، تقييم الأداء، والتدريب. النظام ينمو مع احتياجات نظام مدونتي.'
-                  : 'We start by manually recording employee information and managing leave. Over time, we\'ll add features like payroll system, performance reviews, and training. The system grows with Modonty system\'s needs.'}
+                  ? 'نبدأ بتسجيل معلومات الموظفين وإدارة الإجازات يدوياً. مع الوقت، سنضيف ميزات مثل نظام الرواتب، تقييم الأداء، والتدريب. النظام ينمو مع احتياجات نظام جبرسيو.'
+                  : 'We start by manually recording employee information and managing leave. Over time, we\'ll add features like payroll system, performance reviews, and training. The system grows with JBRtechno system\'s needs.'}
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default async function EmployeeAffairsPage({
       <Card className="border-dashed">
         <CardHeader>
           <CardTitle className="text-lg">
-            {locale === 'ar' ? 'مع نمو نظام مدونتي سنضيف' : 'As Modonty System Grows, We\'ll Add'}
+            {locale === 'ar' ? 'مع نمو نظام جبرسيو سنضيف' : 'As JBRtechno System Grows, We\'ll Add'}
           </CardTitle>
         </CardHeader>
         <CardContent>

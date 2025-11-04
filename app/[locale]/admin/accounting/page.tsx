@@ -30,14 +30,14 @@ export default async function AccountingPage({
             </h1>
             <p className="text-muted-foreground text-lg">
               {locale === 'ar'
-                ? 'نظام محاسبة بسيط لتتبع مصاريف ومدخولات نظام مدونتي - ينمو معنا'
-                : 'Simple accounting system to track Modonty system expenses and income - grows with us'}
+                ? 'نظام محاسبة بسيط لتتبع مصاريف ومدخولات نظام جبرسيو - ينمو معنا'
+                : 'Simple accounting system to track JBRtechno system expenses and income - grows with us'}
             </p>
           </div>
         </div>
       </div>
 
-      <AccountingClient 
+      <AccountingClient
         initialTransactions={transactions}
         initialTrialBalance={trialBalance}
       />

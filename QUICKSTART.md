@@ -95,7 +95,7 @@ pnpm install
 ## Project Structure
 
 \`\`\`
-modonty.com/
+jbrtechno.com/
 ├── app/                  # Next.js app directory
 │   └── [locale]/        # Localized routes (ar/en)
 ├── components/          # React components

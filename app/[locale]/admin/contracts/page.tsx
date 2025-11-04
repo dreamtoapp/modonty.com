@@ -54,8 +54,8 @@ export default async function ContractsPage({
             </h1>
             <p className="text-muted-foreground mt-1">
               {locale === 'ar'
-                ? 'نظام بسيط لإدارة وحفظ جميع العقود - ينمو مع احتياجات مدونتي'
-                : 'Simple system to manage and store all contracts - grows with Modonty needs'}
+                ? 'نظام بسيط لإدارة وحفظ جميع العقود - ينمو مع احتياجات جبرسيو'
+                : 'Simple system to manage and store all contracts - grows with JBRtechno needs'}
             </p>
           </div>
         </div>
@@ -82,8 +82,8 @@ export default async function ContractsPage({
         <CardContent className="pt-6">
           <p className="text-center text-muted-foreground leading-relaxed">
             {locale === 'ar'
-              ? 'نبني هذا النظام داخلياً لدعم مدونتي في المرحلة الأولى'
-              : 'We are building this system internally to support Modonty in Phase 1'}
+              ? 'نبني هذا النظام داخلياً لدعم جبرسيو في المرحلة الأولى'
+              : 'We are building this system internally to support JBRtechno in Phase 1'}
           </p>
         </CardContent>
       </Card>
