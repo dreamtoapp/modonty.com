@@ -15,7 +15,7 @@ export async function seedRequirements() {
     priority: RequirementPriority;
   }> = [
       // Technical Infrastructure
-      { category: 'Technical Infrastructure', title: 'modonaty.com', status: RequirementStatus.COMPLETED, priority: RequirementPriority.HIGH },
+      { category: 'Technical Infrastructure', title: 'jbrseo.com', status: RequirementStatus.COMPLETED, priority: RequirementPriority.HIGH },
       { category: 'Technical Infrastructure', title: 'Professional Email', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },
       { category: 'Technical Infrastructure', title: 'Vercel', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },
       { category: 'Technical Infrastructure', title: 'MongoDB Atlas', status: RequirementStatus.PENDING, priority: RequirementPriority.HIGH },

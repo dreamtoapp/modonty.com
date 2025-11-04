@@ -15,9 +15,25 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
     orderBy: { createdAt: 'asc' },
   });
 
+  // Migrate modonaty.com to jbrseo.com if needed
+  const oldDomainReq = dbRequirements.find((req: typeof dbRequirements[0]) => req.title === 'modonaty.com');
+  if (oldDomainReq) {
+    // Check if jbrseo.com already exists
+    const newDomainReq = dbRequirements.find((req: typeof dbRequirements[0]) => req.title === 'jbrseo.com');
+    if (!newDomainReq) {
+      // Update the title in database
+      await prisma.phase1Requirement.update({
+        where: { id: oldDomainReq.id },
+        data: { title: 'jbrseo.com' },
+      });
+      // Update local array for immediate use
+      oldDomainReq.title = 'jbrseo.com';
+    }
+  }
+
   // Create a map for quick lookup using English titles as keys
-  const requirementStatusMap = new Map(
-    dbRequirements.map((req) => [req.title, { id: req.id, status: req.status, priority: req.priority }])
+  const requirementStatusMap = new Map<string, { id: string; status: string; priority: string }>(
+    dbRequirements.map((req: typeof dbRequirements[0]) => [req.title, { id: req.id, status: req.status, priority: req.priority }])
   );
 
   const requirements = [
@@ -31,8 +47,8 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
         : '🚨 Required from Day 1 - Cannot start development without these',
       items: [
         {
-          key: 'modonaty.com',
-          title: 'modonaty.com',
+          key: 'jbrseo.com',
+          title: 'jbrseo.com',
           description: isArabic ? 'اسم النطاق الرئيسي للمنصة' : 'Primary domain name for the platform',
           price: '$15',
           billing: isArabic ? 'سنوياً' : 'per year',
@@ -50,8 +66,8 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
           key: 'Professional Email',
           title: isArabic ? 'بريد إلكتروني احترافي' : 'Professional Email',
           description: isArabic
-            ? 'بريد احترافي بنطاق الشركة (@modonaty.com)'
-            : 'Professional email with company domain (@modonaty.com)',
+            ? 'بريد احترافي بنطاق الشركة (@jbrseo.com)'
+            : 'Professional email with company domain (@jbrseo.com)',
           price: '$102',
           billing: isArabic ? 'سنوياً (لحسابين)' : 'per year (2 accounts)',
           plan: isArabic ? 'Google Workspace (1) + Namecheap Pro (1)' : 'Google Workspace (1) + Namecheap Pro (1)',
@@ -367,8 +383,8 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
 
   // Calculate progress from database
   const totalItems = dbRequirements.length;
-  const completedItems = dbRequirements.filter((req) => req.status === 'COMPLETED').length;
-  const inProgressItems = dbRequirements.filter((req) => req.status === 'IN_PROGRESS').length;
+  const completedItems = dbRequirements.filter((req: typeof dbRequirements[0]) => req.status === 'COMPLETED').length;
+  const inProgressItems = dbRequirements.filter((req: typeof dbRequirements[0]) => req.status === 'IN_PROGRESS').length;
   const progressPercentage = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
 
   return (
@@ -547,7 +563,7 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
           // Calculate category progress from database
           const categoryCompleted = category.items.filter((item) => {
             const dbData = requirementStatusMap.get((item as any).key || item.title);
-            return dbData?.status === 'COMPLETED';
+            return dbData && dbData.status === 'COMPLETED';
           }).length;
           const categoryTotal = category.items.length;
           const categoryProgress = categoryTotal > 0 ? Math.round((categoryCompleted / categoryTotal) * 100) : 0;
@@ -592,7 +608,7 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
               <div className="divide-y">
                 {category.items.map((item, itemIdx) => {
                   const dbData = requirementStatusMap.get((item as any).key || item.title);
-                  const isCompleted = dbData?.status === 'COMPLETED';
+                  const isCompleted = dbData && dbData.status === 'COMPLETED';
 
                   return (
                     <div
@@ -668,8 +684,14 @@ export default async function Phase1RequirementsPage({ params }: { params: Promi
                       </div>
                       <div className="flex-shrink-0">
                         {(() => {
-                          const dbData = requirementStatusMap.get((item as any).key || item.title);
-                          if (dbData) {
+                          const lookupKey = (item as any).key || item.title;
+                          // Handle migration from modonaty.com to jbrseo.com
+                          let dbData = requirementStatusMap.get(lookupKey);
+                          if (!dbData && lookupKey === 'jbrseo.com') {
+                            // Fallback to old key for database migration compatibility
+                            dbData = requirementStatusMap.get('modonaty.com');
+                          }
+                          if (dbData && dbData.id && dbData.status) {
                             return (
                               <InteractiveStatusBadge
                                 id={dbData.id}
