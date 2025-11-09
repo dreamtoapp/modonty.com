@@ -7,6 +7,7 @@ import { Button } from './ui/button';
 import { Languages, Menu, X, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
+import Image from 'next/image';
 
 export function Navigation() {
   const t = useTranslations('nav');
@@ -31,8 +32,16 @@ export function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link href={`/${locale}`} className="text-xl font-bold">
-              JBRtechno
+            <Link href={`/${locale}`} className="flex items-center gap-2">
+              <Image
+                src="https://res.cloudinary.com/dhjy2k0fu/image/upload/v1762694663/logo_e6nxja.png"
+                alt="JBRtechno logo"
+                width={120}
+                height={36}
+                className="h-9 w-auto"
+                priority
+              />
+              <span className="sr-only">JBRtechno</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-4">
