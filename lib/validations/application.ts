@@ -1,16 +1,43 @@
 import { z } from 'zod';
 
+const languageProficiencySchema = z.enum([
+  'excellent',
+  'very_good',
+  'good',
+  'fair',
+]);
+
 export const applicationSchema = z.object({
-  applicantName: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  applicantName: z
+    .string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100),
   email: z.string().email('Invalid email address'),
-  phone: z.string().min(8, 'Phone number must be at least 8 characters').max(20),
+  phone: z
+    .string()
+    .min(8, 'Phone number must be at least 8 characters')
+    .max(20),
   position: z.string().min(2, 'Position is required'),
-  yearsOfExperience: z.number().min(0, 'Years of experience must be 0 or greater').max(50),
+  yearsOfExperience: z
+    .number()
+    .min(0, 'Years of experience must be 0 or greater')
+    .max(50),
+  availabilityDate: z.coerce.date(),
+  currentLocation: z
+    .string()
+    .min(2, 'Current location is required')
+    .max(100),
+  arabicProficiency: languageProficiencySchema,
+  englishProficiency: languageProficiencySchema,
+  consentToDataUsage: z.literal(true),
   portfolioUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
   githubUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
   linkedinUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
   skills: z.array(z.string()).min(1, 'At least one skill is required'),
-  coverLetter: z.string().min(50, 'Cover letter must be at least 50 characters').max(2000),
+  coverLetter: z
+    .string()
+    .min(50, 'Cover letter must be at least 50 characters')
+    .max(2000),
   cvUrl: z.string().url('CV upload is required'),
   cvPublicId: z.string().min(1, 'CV public ID is required'),
   profileImageUrl: z.string().url('Profile image is required'),
@@ -19,6 +46,7 @@ export const applicationSchema = z.object({
 });
 
 export type ApplicationFormData = z.infer<typeof applicationSchema>;
+export type ApplicationFormInput = z.input<typeof applicationSchema>;
 
 // File validation constants
 export const ALLOWED_FILE_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];

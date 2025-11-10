@@ -1,8 +1,14 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { applicationSchema, ApplicationFormData } from '@/lib/validations/application';
+import {
+  applicationSchema,
+  ApplicationFormData,
+  ApplicationFormInput,
+} from '@/lib/validations/application';
 import { revalidatePath } from 'next/cache';
+import { ZodError } from 'zod';
+import { sendWhatsAppNotification } from './sendWhatsAppNotification';
 
 export interface SubmitApplicationResult {
   success: boolean;
@@ -11,7 +17,7 @@ export interface SubmitApplicationResult {
 }
 
 export async function submitApplication(
-  data: ApplicationFormData
+  data: ApplicationFormInput
 ): Promise<SubmitApplicationResult> {
   try {
     // Validate data
@@ -25,6 +31,11 @@ export async function submitApplication(
         phone: validatedData.phone,
         position: validatedData.position,
         yearsOfExperience: validatedData.yearsOfExperience,
+        availabilityDate: validatedData.availabilityDate,
+        currentLocation: validatedData.currentLocation,
+        arabicProficiency: validatedData.arabicProficiency,
+        englishProficiency: validatedData.englishProficiency,
+        consentToDataUsage: validatedData.consentToDataUsage === true,
         portfolioUrl: validatedData.portfolioUrl || null,
         githubUrl: validatedData.githubUrl || null,
         linkedinUrl: validatedData.linkedinUrl || null,
@@ -42,11 +53,51 @@ export async function submitApplication(
     // Revalidate admin applications page
     revalidatePath('/[locale]/admin/applications', 'page');
 
+    await sendWhatsAppNotification({
+      applicantName: validatedData.applicantName,
+      phone: validatedData.phone,
+      email: validatedData.email,
+      position: validatedData.position,
+      yearsOfExperience: validatedData.yearsOfExperience,
+      availabilityDate: validatedData.availabilityDate,
+      currentLocation: validatedData.currentLocation,
+      arabicProficiency: validatedData.arabicProficiency,
+      englishProficiency: validatedData.englishProficiency,
+      skills: validatedData.skills,
+      message: validatedData.coverLetter,
+    });
+
     return {
       success: true,
       applicationId: application.id,
     };
   } catch (error) {
+    if (error instanceof ZodError) {
+      console.warn('Application validation error:', error.issues);
+      const firstIssue = error.issues[0];
+      const locale =
+        typeof data === 'object' && data && 'locale' in data
+          ? (data as { locale?: string }).locale ?? 'en'
+          : 'en';
+
+      let message =
+        firstIssue?.message ?? (locale === 'ar'
+          ? 'يرجى التحقق من بيانات الطلب.'
+          : 'Please check the application details.');
+
+      if (firstIssue?.path?.[0] === 'coverLetter') {
+        message =
+          locale === 'ar'
+            ? 'يرجى كتابة خطاب تقديم من 50 حرفًا على الأقل.'
+            : 'Please write at least 50 characters in your cover letter.';
+      }
+
+      return {
+        success: false,
+        error: message,
+      };
+    }
+
     console.error('Application submission error:', error);
 
     if (error instanceof Error) {

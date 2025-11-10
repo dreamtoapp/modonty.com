@@ -6,7 +6,22 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ApplicationStatusBadge } from '@/components/ApplicationStatusBadge';
 import { updateApplicationStatus, updateApplicationNotes } from '@/actions/updateApplicationStatus';
-import { ArrowLeft, ArrowRight, Mail, Phone, Calendar, Briefcase, Link2, ExternalLink, Loader2, User } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Mail,
+  Phone,
+  Calendar,
+  Briefcase,
+  Link2,
+  ExternalLink,
+  Loader2,
+  User,
+  MapPin,
+  CalendarClock,
+  Languages,
+  ShieldCheck,
+} from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Application, ApplicationStatus } from '@prisma/client';
@@ -15,11 +30,19 @@ interface ApplicationDetailPageProps {
   params: Promise<{ locale: string; id: string }>;
 }
 
+type ExtendedApplication = Application & {
+  availabilityDate?: Date | string | null;
+  currentLocation?: string | null;
+  arabicProficiency?: string | null;
+  englishProficiency?: string | null;
+  consentToDataUsage?: boolean | null;
+};
+
 export default function ApplicationDetailPage({ params }: ApplicationDetailPageProps) {
   const resolvedParams = use(params);
   const { locale, id } = resolvedParams;
 
-  const [application, setApplication] = useState<Application | null>(null);
+  const [application, setApplication] = useState<ExtendedApplication | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [notes, setNotes] = useState('');
@@ -30,7 +53,7 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
       try {
         const response = await fetch(`/api/applications/${id}`);
         if (response.ok) {
-          const data = await response.json();
+          const data: ExtendedApplication = await response.json();
           setApplication(data);
           setNotes(data.adminNotes || '');
         }
@@ -111,6 +134,31 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
     minute: '2-digit',
   }).format(new Date(application.createdAt));
 
+  const availabilityDate = application.availabilityDate
+    ? new Date(application.availabilityDate)
+    : null;
+
+  const formattedAvailability = availabilityDate
+    ? new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }).format(availabilityDate)
+    : null;
+
+  const languageLabel = (value: string | null | undefined) => {
+    if (!value) return null;
+    const map: Record<string, { ar: string; en: string }> = {
+      excellent: { ar: 'ممتاز', en: 'Excellent' },
+      very_good: { ar: 'جيد جدًا', en: 'Very Good' },
+      good: { ar: 'جيد', en: 'Good' },
+      fair: { ar: 'مقبول', en: 'Acceptable' },
+    };
+    const labels = map[value];
+    if (!labels) return value;
+    return locale === 'ar' ? labels.ar : labels.en;
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       <div className="mb-8">
@@ -180,6 +228,18 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
                 </div>
               </div>
 
+              {application.currentLocation && (
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      {locale === 'ar' ? 'الموقع الحالي' : 'Current Location'}
+                    </p>
+                    <p className="text-sm font-medium">{application.currentLocation}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="flex items-center gap-3">
                 <Calendar className="h-5 w-5 text-muted-foreground" />
                 <div>
@@ -189,6 +249,18 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
                   <p className="text-sm font-medium">{formattedDate}</p>
                 </div>
               </div>
+
+              {formattedAvailability && (
+                <div className="flex items-center gap-3">
+                  <CalendarClock className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      {locale === 'ar' ? 'تاريخ التوفر' : 'Availability Date'}
+                    </p>
+                    <p className="text-sm font-medium">{formattedAvailability}</p>
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center gap-3">
                 <Briefcase className="h-5 w-5 text-muted-foreground" />
@@ -202,6 +274,37 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
                 </div>
               </div>
             </div>
+
+            {(application.arabicProficiency || application.englishProficiency) && (
+              <div className="flex items-start gap-3">
+                <Languages className="h-5 w-5 text-muted-foreground mt-1" />
+                <div className="flex flex-wrap gap-2">
+                  {application.arabicProficiency && (
+                    <Badge variant="secondary">
+                      {locale === 'ar' ? 'العربية:' : 'Arabic:'}{' '}
+                      {languageLabel(application.arabicProficiency)}
+                    </Badge>
+                  )}
+                  {application.englishProficiency && (
+                    <Badge variant="secondary">
+                      {locale === 'ar' ? 'الإنجليزية:' : 'English:'}{' '}
+                      {languageLabel(application.englishProficiency)}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {application.consentToDataUsage && (
+              <div className="flex items-center gap-2 text-sm text-primary bg-primary/10 border border-primary/20 rounded-lg px-3 py-2">
+                <ShieldCheck className="h-4 w-4 flex-shrink-0" />
+                <span>
+                  {locale === 'ar'
+                    ? 'تمت موافقة المرشح على استخدام بياناته لأغراض التوظيف'
+                    : 'Candidate consented to data usage for recruitment'}
+                </span>
+              </div>
+            )}
           </CardContent>
         </Card>
 

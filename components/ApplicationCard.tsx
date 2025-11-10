@@ -2,14 +2,34 @@ import { Application } from '@prisma/client';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { ApplicationStatusBadge } from './ApplicationStatusBadge';
 import { Badge } from './ui/badge';
-import { Mail, Phone, Calendar, Briefcase, FileText, ExternalLink, User } from 'lucide-react';
+import {
+  Mail,
+  Phone,
+  Calendar,
+  Briefcase,
+  FileText,
+  ExternalLink,
+  User,
+  MapPin,
+  CalendarClock,
+  Languages,
+  ShieldCheck,
+} from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { getCVFileType } from '@/lib/applications';
 
+type ExtendedApplication = Application & {
+  availabilityDate?: Date | string | null;
+  currentLocation?: string | null;
+  arabicProficiency?: string | null;
+  englishProficiency?: string | null;
+  consentToDataUsage?: boolean | null;
+};
+
 interface ApplicationCardProps {
-  application: Application;
+  application: ExtendedApplication;
   locale: string;
 }
 
@@ -19,6 +39,27 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
     month: 'long',
     day: 'numeric',
   }).format(new Date(application.createdAt));
+
+  const formattedAvailability = application.availabilityDate
+    ? new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }).format(new Date(application.availabilityDate))
+    : null;
+
+  const languageLabel = (value: string | null | undefined) => {
+    if (!value) return null;
+    const map: Record<string, { ar: string; en: string }> = {
+      excellent: { ar: 'ممتاز', en: 'Excellent' },
+      very_good: { ar: 'جيد جدًا', en: 'Very Good' },
+      good: { ar: 'جيد', en: 'Good' },
+      fair: { ar: 'مقبول', en: 'Acceptable' },
+    };
+    const labels = map[value];
+    if (!labels) return value;
+    return locale === 'ar' ? labels.ar : labels.en;
+  };
 
   return (
     <Card className="hover:shadow-lg transition-shadow">
@@ -67,10 +108,27 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
           <span>{application.phone}</span>
         </div>
 
+        {application.currentLocation && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <MapPin className="h-4 w-4 flex-shrink-0" />
+            <span className="truncate">{application.currentLocation}</span>
+          </div>
+        )}
+
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4 flex-shrink-0" />
           <span>{formattedDate}</span>
         </div>
+
+        {formattedAvailability && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <CalendarClock className="h-4 w-4 flex-shrink-0" />
+            <span>
+              {locale === 'ar' ? 'متاح بدءًا من:' : 'Available from:'}{' '}
+              {formattedAvailability}
+            </span>
+          </div>
+        )}
 
         <div className="flex items-center gap-2 text-sm">
           <span className="text-muted-foreground">
@@ -78,6 +136,37 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
           </span>
           <Badge variant="secondary">{application.yearsOfExperience} {locale === 'ar' ? 'سنة' : 'years'}</Badge>
         </div>
+
+        {(application.arabicProficiency || application.englishProficiency) && (
+          <div className="flex items-start gap-2 text-sm text-muted-foreground">
+            <Languages className="h-4 w-4 flex-shrink-0 mt-0.5" />
+            <div className="flex flex-wrap gap-2">
+              {application.arabicProficiency && (
+                <Badge variant="outline">
+                  {locale === 'ar' ? 'العربية:' : 'Arabic:'}{' '}
+                  {languageLabel(application.arabicProficiency)}
+                </Badge>
+              )}
+              {application.englishProficiency && (
+                <Badge variant="outline">
+                  {locale === 'ar' ? 'الإنجليزية:' : 'English:'}{' '}
+                  {languageLabel(application.englishProficiency)}
+                </Badge>
+              )}
+            </div>
+          </div>
+        )}
+
+        {application.consentToDataUsage && (
+          <div className="flex items-center gap-2 text-xs text-primary">
+            <ShieldCheck className="h-4 w-4 flex-shrink-0" />
+            <span>
+              {locale === 'ar'
+                ? 'تمت الموافقة على استخدام البيانات'
+                : 'Data usage consent granted'}
+            </span>
+          </div>
+        )}
 
         {/* CV Preview */}
         <div className="flex items-center gap-2 text-sm">

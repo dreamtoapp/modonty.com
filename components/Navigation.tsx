@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { Button } from './ui/button';
-import { Languages, Menu, X, Shield } from 'lucide-react';
+import { Languages, Menu, X, Facebook } from 'lucide-react';
 import { useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
 import Image from 'next/image';
@@ -72,16 +72,6 @@ export function Navigation() {
               <Languages className="h-5 w-5" />
             </Button>
 
-            <Link href={`/${locale}/admin`}>
-              <Button
-                variant="ghost"
-                size="icon"
-                title={locale === 'ar' ? 'لوحة الإدارة' : 'Admin'}
-              >
-                <Shield className="h-5 w-5" />
-              </Button>
-            </Link>
-
             <Button
               variant="ghost"
               size="icon"
@@ -94,6 +84,30 @@ export function Navigation() {
                 <Menu className="h-5 w-5" />
               )}
             </Button>
+
+            <Link
+              href="https://www.facebook.com/profile.php?id=61583291444031"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                variant="ghost"
+                size="icon"
+                title={
+                  locale === 'ar'
+                    ? 'تابعنا على فيسبوك'
+                    : 'Follow us on Facebook'
+                }
+                aria-label={
+                  locale === 'ar'
+                    ? 'تابعنا على فيسبوك'
+                    : 'Follow us on Facebook'
+                }
+                className="bg-[#1877F2] text-white hover:bg-[#166fe0]"
+              >
+                <Facebook className="h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
 

@@ -13,6 +13,13 @@ import { ProfileImageUpload } from '@/components/ProfileImageUpload';
 import { SuccessDialog } from '@/components/SuccessDialog';
 import { submitApplication } from '@/actions/submitApplication';
 import { getTeamPositions } from '@/helpers/extractMetrics';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export default function ApplyPage() {
   const params = useParams();
@@ -37,6 +44,11 @@ export default function ApplyPage() {
     email: '',
     phone: '',
     yearsOfExperience: '',
+    availabilityDate: '',
+    currentLocation: '',
+    arabicProficiency: '' as '' | 'excellent' | 'very_good' | 'good' | 'fair',
+    englishProficiency: '' as '' | 'excellent' | 'very_good' | 'good' | 'fair',
+    consentToDataUsage: false,
     portfolioUrl: '',
     githubUrl: '',
     linkedinUrl: '',
@@ -84,6 +96,36 @@ export default function ApplyPage() {
       return;
     }
 
+    if (!formData.yearsOfExperience) {
+      setError(t('errorSelectExperience'));
+      return;
+    }
+
+    if (!formData.availabilityDate) {
+      setError(t('errorSelectAvailability'));
+      return;
+    }
+
+    if (!formData.currentLocation.trim()) {
+      setError(t('errorEnterLocation'));
+      return;
+    }
+
+    if (!formData.arabicProficiency || !formData.englishProficiency) {
+      setError(t('errorSelectLanguages'));
+      return;
+    }
+
+    if (!formData.consentToDataUsage) {
+      setError(t('errorConsentRequired'));
+      return;
+    }
+
+    if (formData.coverLetter.trim().length < 50) {
+      setError(t('errorCoverLetterLength'));
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -95,6 +137,11 @@ export default function ApplyPage() {
         phone: formData.phone,
         position: positionTitle,
         yearsOfExperience: parseInt(formData.yearsOfExperience, 10),
+        availabilityDate: formData.availabilityDate,
+        currentLocation: formData.currentLocation,
+        arabicProficiency: formData.arabicProficiency,
+        englishProficiency: formData.englishProficiency,
+        consentToDataUsage: formData.consentToDataUsage,
         portfolioUrl: formData.portfolioUrl || '',
         githubUrl: formData.githubUrl || '',
         linkedinUrl: formData.linkedinUrl || '',
@@ -125,6 +172,30 @@ export default function ApplyPage() {
       [e.target.name]: e.target.value,
     }));
   };
+
+  const languageOptions = [
+    {
+      value: 'excellent' as const,
+      label: locale === 'ar' ? 'ممتاز' : 'Excellent',
+    },
+    {
+      value: 'very_good' as const,
+      label: locale === 'ar' ? 'جيد جدًا' : 'Very Good',
+    },
+    {
+      value: 'good' as const,
+      label: locale === 'ar' ? 'جيد' : 'Good',
+    },
+    {
+      value: 'fair' as const,
+      label: locale === 'ar' ? 'مقبول' : 'Acceptable',
+    },
+  ] satisfies ReadonlyArray<{
+    value: 'excellent' | 'very_good' | 'good' | 'fair';
+    label: string;
+  }>;
+
+  const experienceOptions = Array.from({ length: 31 }, (_, index) => index.toString());
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -287,18 +358,25 @@ export default function ApplyPage() {
                   <label htmlFor="yearsOfExperience" className="text-sm font-medium">
                     {t('yearsOfExperience')} <span className="text-destructive">*</span>
                   </label>
-                  <input
-                    id="yearsOfExperience"
-                    name="yearsOfExperience"
-                    type="number"
-                    min="0"
-                    max="50"
-                    required
+                  <Select
                     value={formData.yearsOfExperience}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded-md bg-background"
-                    placeholder="0"
-                  />
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({ ...prev, yearsOfExperience: value }))
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t('yearsOfExperiencePlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {experienceOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {locale === 'ar'
+                            ? `${option} ${Number(option) === 1 ? 'سنة' : 'سنوات'}`
+                            : `${option} ${Number(option) === 1 ? 'year' : 'years'}`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-2">
@@ -344,6 +422,86 @@ export default function ApplyPage() {
                     className="w-full px-3 py-2 border rounded-md bg-background"
                     placeholder="https://linkedin.com/in/"
                   />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label htmlFor="availabilityDate" className="text-sm font-medium">
+                    {t('availabilityDate')} <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    id="availabilityDate"
+                    name="availabilityDate"
+                    type="date"
+                    required
+                    value={formData.availabilityDate}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border rounded-md bg-background"
+                    placeholder={t('availabilityDatePlaceholder')}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="currentLocation" className="text-sm font-medium">
+                    {t('currentLocation')} <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    id="currentLocation"
+                    name="currentLocation"
+                    type="text"
+                    required
+                    value={formData.currentLocation}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border rounded-md bg-background"
+                    placeholder={t('currentLocationPlaceholder')}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">
+                    {t('arabicProficiency')} <span className="text-destructive">*</span>
+                  </label>
+                  <Select
+                    value={formData.arabicProficiency}
+                    onValueChange={(value: 'excellent' | 'very_good' | 'good' | 'fair') =>
+                      setFormData((prev) => ({ ...prev, arabicProficiency: value }))
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t('languageLevelPlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {languageOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">
+                    {t('englishProficiency')} <span className="text-destructive">*</span>
+                  </label>
+                  <Select
+                    value={formData.englishProficiency}
+                    onValueChange={(value: 'excellent' | 'very_good' | 'good' | 'fair') =>
+                      setFormData((prev) => ({ ...prev, englishProficiency: value }))
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t('languageLevelPlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {languageOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -403,11 +561,34 @@ export default function ApplyPage() {
               </div>
 
               <div className="pt-4">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <Checkbox
+                    checked={formData.consentToDataUsage}
+                    onCheckedChange={(checked) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        consentToDataUsage: checked === true,
+                      }))
+                    }
+                  />
+                  <span className="text-sm leading-relaxed text-muted-foreground">
+                    {t('consentCopy')}
+                  </span>
+                </label>
+              </div>
+
+              <div className="pt-2">
                 <Button
                   type="submit"
                   size="lg"
                   className="w-full"
-                  disabled={submitting || !acknowledged || !formData.cvUrl || !formData.profileImageUrl}
+                  disabled={
+                    submitting ||
+                    !acknowledged ||
+                    !formData.cvUrl ||
+                    !formData.profileImageUrl ||
+                    !formData.consentToDataUsage
+                  }
                 >
                   {submitting ? (
                     <>
