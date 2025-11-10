@@ -22,7 +22,10 @@ export const applicationSchema = z.object({
     .number()
     .min(0, 'Years of experience must be 0 or greater')
     .max(50),
-  availabilityDate: z.coerce.date(),
+  availabilityDate: z
+    .string()
+    .min(1, 'Availability date is required')
+    .transform((value) => new Date(value)),
   currentLocation: z
     .string()
     .min(2, 'Current location is required')

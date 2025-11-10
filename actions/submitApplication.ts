@@ -31,7 +31,7 @@ export async function submitApplication(
         phone: validatedData.phone,
         position: validatedData.position,
         yearsOfExperience: validatedData.yearsOfExperience,
-        availabilityDate: validatedData.availabilityDate,
+        availabilityDate: validatedData.availabilityDate ?? null,
         currentLocation: validatedData.currentLocation,
         arabicProficiency: validatedData.arabicProficiency,
         englishProficiency: validatedData.englishProficiency,
