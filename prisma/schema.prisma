@@ -112,3 +112,20 @@ enum TransactionType {
   REVENUE
 }
 
+model ContactMessage {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fullName String
+  email    String
+  phone    String?
+  subject  String
+  message  String
+  locale   String  @default("en")
+  source   String  @default("contact-form")
+
+  @@index([createdAt])
+  @@index([locale])
+}
+

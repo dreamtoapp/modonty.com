@@ -19,6 +19,7 @@ export function Navigation() {
   const navItems = [
     { href: `/${locale}`, label: t('home') },
     { href: `/${locale}/careers`, label: t('careers') },
+    { href: `/${locale}/contact`, label: t('contact') },
   ];
 
   const toggleLanguage = () => {

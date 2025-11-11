@@ -5,6 +5,8 @@
     "generalPlan": "General Plan",
     "hiringPlan": "Hiring Plan",
     "timeline": "Timeline",
+    "privacy": "Privacy Policy",
+    "contact": "Contact",
     "language": "Language"
   },
   "home": {
@@ -112,6 +114,91 @@
     "week": "Week",
     "day": "Day"
   },
+  "privacy": {
+    "title": "Privacy Policy",
+    "updated": "Last updated: November 11, 2025",
+    "intro": "JBRtechno is developing a large-scale digital project and is currently recruiting specialists to build the core team. This privacy notice explains how we handle personal information collected through our website, interest forms, and internal dashboards.",
+    "sections": [
+      {
+        "title": "1. Information we collect",
+        "items": [
+          "Contact details such as your name, email address, phone number, professional role, and preferred language when you register interest in collaborating on the project.",
+          "Project-related information you share about your expertise, availability, or expectations so we can evaluate team fit.",
+          "Application materials submitted by candidates, including CVs, portfolios, assessment responses, and follow-up notes from interviews.",
+          "Usage analytics and device data gathered from our internal dashboards to keep the platform secure and reliable."
+        ]
+      },
+      {
+        "title": "2. How we use information",
+        "items": [
+          "Assess your suitability for roles within the JBRtechno project and coordinate next steps in the recruitment process.",
+          "Plan team structure, onboarding timelines, and project delivery based on the expertise you provide.",
+          "Operate, maintain, and improve our applicant workflows, knowledge base, and collaboration dashboards.",
+          "Comply with legal obligations, prevent fraud, and protect the rights and safety of our team members and candidates."
+        ]
+      },
+      {
+        "title": "3. When we share data",
+        "items": [
+          "With trusted members of the internal project leadership team who participate in recruitment, onboarding, or project planning.",
+          "With specialised processors (for example: secure cloud storage, communication platforms, or analytics) that help us operate the project under strict confidentiality agreements.",
+          "When required by law, regulation, or a valid legal request."
+        ]
+      },
+      {
+        "title": "4. Data retention and security",
+        "items": [
+          "We retain candidate records and project enquiries only as long as necessary to complete the recruitment process or meet legal obligations.",
+          "All records are stored in encrypted systems with restricted administrative access and ongoing monitoring."
+        ]
+      },
+      {
+        "title": "5. Your rights",
+        "items": [
+          "Request access to, correction of, or deletion of your personal information.",
+          "Object to specific uses of your data or withdraw consent where processing relies on it.",
+          "Submit privacy enquiries at any time by contacting us directly."
+        ]
+      }
+    ],
+    "contact": "For any privacy questions or requests, email privacy@jbrtechno.com and we will respond within two business days."
+  },
+  "contact": {
+    "title": "Contact the JBRtechno Team",
+    "subtitle": "Share your questions about the project, collaboration opportunities, or anything else we can help clarify.",
+    "badge": "Questions & enquiries",
+    "infoTitle": "How to reach us",
+    "infoDescription": "We are building a large-scale digital venture and welcome thoughtful messages from potential collaborators, partners, and specialists.",
+    "addressLabel": "Location",
+    "addressValue": "Jeddah, Saudi Arabia (remote-first operations)",
+    "emailLabel": "Email",
+    "phoneLabel": "WhatsApp",
+    "formTitle": "Send us a message",
+    "formDescription": "Let us know how we can support you. We aim to reply within two business days.",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Your name",
+    "email": "Work email",
+    "emailPlaceholder": "you@company.com",
+    "phone": "WhatsApp number",
+    "phonePlaceholder": "+966 XX XXX XXXX",
+    "subject": "Topic",
+    "subjectPlaceholder": "Choose a topic",
+    "subjectOptions": {
+      "projectQuestion": "Question about the JBRtechno project",
+      "collaboration": "Collaboration or partnership idea",
+      "careerInterest": "Interest in future roles",
+      "other": "Other"
+    },
+    "message": "Message",
+    "messagePlaceholder": "Add relevant context, questions, or ideas.",
+    "submit": "Send message",
+    "submitting": "Sending...",
+    "successTitle": "Message sent",
+    "successDescription": "Thank you. Someone from the JBRtechno team will follow up soon.",
+    "errorTitle": "We could not send your message",
+    "errorDescription": "Please try again or email hello@jbrtechno.com so we can assist you.",
+    "requiredNote": "Required field"
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
@@ -163,7 +250,22 @@
     "noApplications": "No applications yet",
     "filteredBy": "Filtered by position",
     "clearFilters": "Clear Filters",
-    "cvPreview": "CV Preview"
+    "cvPreview": "CV Preview",
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "WhatsApp",
+    "subject": "Subject",
+    "contactMessages": "Contact Messages",
+    "contactMessagesDesc": "Review incoming enquiries and coordinate timely follow-ups.",
+    "noContactMessages": "No contact messages yet.",
+    "contactTotal": "Total enquiries",
+    "contactSubmitted": "Submitted",
+    "contactSubjectLabels": {
+      "projectQuestion": "Question about the JBRtechno project",
+      "collaboration": "Collaboration or partnership idea",
+      "careerInterest": "Interest in future roles",
+      "other": "Other request"
+    }
   },
   "applications": {
     "title": "Job Applications",

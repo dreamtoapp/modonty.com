@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FileText, Users, Network, Briefcase, CheckSquare, Calculator, UserCog, StickyNote, CreditCard, ListTodo, BarChart3, Settings, FileSignature } from 'lucide-react';
+import { FileText, Users, Network, Briefcase, CheckSquare, Calculator, UserCog, StickyNote, CreditCard, ListTodo, BarChart3, Settings, FileSignature, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from './ui/badge';
 
 interface AdminSidebarClientProps {
   locale: string;
   totalCount: number;
+  contactMessageCount: number;
   translations: {
     adminPanel: string;
     subscriptions: string;
@@ -16,6 +17,7 @@ interface AdminSidebarClientProps {
     tasks: string;
     organizationalStructure: string;
     applications: string;
+    contactMessages: string;
     generalPlan: string;
     hiringPlan: string;
     phase1Requirements: string;
@@ -40,6 +42,7 @@ interface NavItem {
 export function AdminSidebarClient({
   locale,
   totalCount,
+  contactMessageCount,
   translations
 }: AdminSidebarClientProps) {
   const pathname = usePathname();
@@ -72,6 +75,12 @@ export function AdminSidebarClient({
       label: translations.applications,
       icon: Briefcase,
       count: totalCount,
+    },
+    {
+      href: `/${locale}/admin/contact-messages`,
+      label: translations.contactMessages,
+      icon: Mail,
+      count: contactMessageCount,
     },
     {
       href: `/${locale}/admin/accounting`,

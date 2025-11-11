@@ -8,7 +8,7 @@ interface WhatsAppButtonProps {
 }
 
 // Official WhatsApp SVG Icon
-function WhatsAppIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+export function WhatsAppIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
     <svg
       viewBox="0 0 24 24"
