@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { getTeamPositions } from '@/helpers/extractMetrics';
+import { getCanonicalPositionTitle, getTeamPositions } from '@/helpers/extractMetrics';
 
 export default async function ApplicationsPage({
   params
@@ -36,9 +36,11 @@ export default async function ApplicationsPage({
 
   // Group applications by position
   const applicationsByPosition = applications.reduce((acc, app) => {
-    if (!acc[app.position]) {
-      acc[app.position] = {
-        position: app.position,
+    const canonicalPosition = getCanonicalPositionTitle(app.position);
+
+    if (!acc[canonicalPosition]) {
+      acc[canonicalPosition] = {
+        position: canonicalPosition,
         total: 0,
         pending: 0,
         reviewed: 0,
@@ -46,11 +48,11 @@ export default async function ApplicationsPage({
         rejected: 0,
       };
     }
-    acc[app.position].total++;
-    if (app.status === 'PENDING') acc[app.position].pending++;
-    if (app.status === 'REVIEWED') acc[app.position].reviewed++;
-    if (app.status === 'ACCEPTED') acc[app.position].accepted++;
-    if (app.status === 'REJECTED') acc[app.position].rejected++;
+    acc[canonicalPosition].total++;
+    if (app.status === 'PENDING') acc[canonicalPosition].pending++;
+    if (app.status === 'REVIEWED') acc[canonicalPosition].reviewed++;
+    if (app.status === 'ACCEPTED') acc[canonicalPosition].accepted++;
+    if (app.status === 'REJECTED') acc[canonicalPosition].rejected++;
     return acc;
   }, {} as Record<string, { position: string; total: number; pending: number; reviewed: number; accepted: number; rejected: number }>);
 

@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { getCanonicalPositionTitle, getPositionAliases, getTeamPositions } from '@/helpers/extractMetrics';
 
 export default async function PositionApplicationsPage({
   params
@@ -13,12 +14,18 @@ export default async function PositionApplicationsPage({
 }) {
   const { locale, position } = await params;
   const decodedPosition = decodeURIComponent(position);
+  const canonicalPosition = getCanonicalPositionTitle(decodedPosition);
+  const positionAliases = getPositionAliases(canonicalPosition);
+  const teamPositions = getTeamPositions();
+  const matchedPosition = teamPositions.find((pos) => pos.titleEn === canonicalPosition);
+  const displayPosition =
+    matchedPosition && locale === 'ar' ? matchedPosition.title : canonicalPosition;
 
   // Fetch statistics and applications for this position
   const [stats, applications] = await Promise.all([
-    getApplicationStatsByPosition(decodedPosition),
+    getApplicationStatsByPosition(canonicalPosition, positionAliases),
     prisma.application.findMany({
-      where: { position: decodedPosition },
+      where: { position: { in: positionAliases } },
       orderBy: { createdAt: 'desc' },
     }),
   ]);
@@ -39,13 +46,13 @@ export default async function PositionApplicationsPage({
             <Briefcase className="h-7 w-7 text-primary" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold">{decodedPosition}</h1>
+            <h1 className="text-4xl font-bold">{displayPosition}</h1>
           </div>
         </div>
         <p className="text-muted-foreground text-base">
           {locale === 'ar'
-            ? `إحصائيات وطلبات التوظيف لوظيفة ${decodedPosition}`
-            : `Application statistics and details for ${decodedPosition} position`}
+            ? `إحصائيات وطلبات التوظيف لوظيفة ${displayPosition}`
+            : `Application statistics and details for ${displayPosition} position`}
         </p>
       </div>
 

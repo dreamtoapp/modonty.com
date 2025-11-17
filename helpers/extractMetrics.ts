@@ -84,6 +84,49 @@ export interface Position {
   filledBy?: string;
 }
 
+type PositionAliasMaps = {
+  aliasToCanonical: Map<string, string>;
+  canonicalToAliases: Map<string, string[]>;
+};
+
+let cachedPositionAliasMaps: PositionAliasMaps | null = null;
+
+function buildPositionAliasMaps(): PositionAliasMaps {
+  const aliasToCanonical = new Map<string, string>();
+  const canonicalToAliases = new Map<string, string[]>();
+
+  getTeamPositions().forEach((position) => {
+    const aliases = Array.from(new Set([position.titleEn, position.title]));
+    canonicalToAliases.set(position.titleEn, aliases);
+    aliases.forEach((alias) => {
+      aliasToCanonical.set(alias, position.titleEn);
+    });
+  });
+
+  return {
+    aliasToCanonical,
+    canonicalToAliases,
+  };
+}
+
+function getPositionAliasMaps(): PositionAliasMaps {
+  if (!cachedPositionAliasMaps) {
+    cachedPositionAliasMaps = buildPositionAliasMaps();
+  }
+  return cachedPositionAliasMaps;
+}
+
+export function getCanonicalPositionTitle(position: string): string {
+  const { aliasToCanonical } = getPositionAliasMaps();
+  return aliasToCanonical.get(position) ?? position;
+}
+
+export function getPositionAliases(position: string): string[] {
+  const { aliasToCanonical, canonicalToAliases } = getPositionAliasMaps();
+  const canonical = aliasToCanonical.get(position) ?? position;
+  return canonicalToAliases.get(canonical) ?? [canonical];
+}
+
 export function getTeamPositions(): Position[] {
   return [
     // ========== LEADERSHIP & EXECUTIVE (Phase 0) ==========

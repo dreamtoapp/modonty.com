@@ -112,14 +112,24 @@ export function getCVFileType(cvUrl: string): 'PDF' | 'DOCX' | 'DOC' | 'UNKNOWN'
 /**
  * Get detailed application statistics for a specific position
  */
-export async function getApplicationStatsByPosition(position: string): Promise<ApplicationStatsByPosition> {
+export async function getApplicationStatsByPosition(
+  position: string,
+  aliases: string[] = [position]
+): Promise<ApplicationStatsByPosition> {
   try {
+    const positionsFilter = aliases.length > 0 ? Array.from(new Set(aliases)) : [position];
+    const baseWhere = {
+      position: {
+        in: positionsFilter,
+      },
+    };
+
     const [total, pending, reviewed, accepted, rejected] = await Promise.all([
-      prisma.application.count({ where: { position } }),
-      prisma.application.count({ where: { position, status: 'PENDING' } }),
-      prisma.application.count({ where: { position, status: 'REVIEWED' } }),
-      prisma.application.count({ where: { position, status: 'ACCEPTED' } }),
-      prisma.application.count({ where: { position, status: 'REJECTED' } }),
+      prisma.application.count({ where: baseWhere }),
+      prisma.application.count({ where: { ...baseWhere, status: 'PENDING' } }),
+      prisma.application.count({ where: { ...baseWhere, status: 'REVIEWED' } }),
+      prisma.application.count({ where: { ...baseWhere, status: 'ACCEPTED' } }),
+      prisma.application.count({ where: { ...baseWhere, status: 'REJECTED' } }),
     ]);
 
     return {

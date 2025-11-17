@@ -63,8 +63,15 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
 
   return (
     <Card className="hover:shadow-lg transition-shadow">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-4">
+      <div className="px-6 pt-6">
+        <ApplicationStatusBadge
+          status={application.status}
+          locale={locale}
+          className="w-full justify-center py-2 text-sm"
+        />
+      </div>
+      <CardHeader className="pt-4 pb-3">
+        <div className="flex items-start gap-4">
           <div className="flex items-start gap-3 flex-1">
             {/* Profile Image */}
             <div className="flex-shrink-0">
@@ -93,7 +100,6 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
               </div>
             </div>
           </div>
-          <ApplicationStatusBadge status={application.status} locale={locale} />
         </div>
       </CardHeader>
 

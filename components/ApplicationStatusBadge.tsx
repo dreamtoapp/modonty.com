@@ -5,6 +5,7 @@ import { CheckCircle2, Clock, XCircle, Eye } from 'lucide-react';
 interface ApplicationStatusBadgeProps {
   status: ApplicationStatus;
   locale?: string;
+  className?: string;
 }
 
 const statusConfig = {
@@ -34,13 +35,13 @@ const statusConfig = {
   },
 };
 
-export function ApplicationStatusBadge({ status, locale = 'en' }: ApplicationStatusBadgeProps) {
+export function ApplicationStatusBadge({ status, locale = 'en', className }: ApplicationStatusBadgeProps) {
   const config = statusConfig[status];
   const Icon = config.icon;
   const label = locale === 'ar' ? config.labelAr : config.labelEn;
 
   return (
-    <Badge variant="outline" className={`gap-1.5 ${config.className}`}>
+    <Badge variant="outline" className={`gap-1.5 ${config.className} ${className ?? ''}`}>
       <Icon className="h-3.5 w-3.5" />
       {label}
     </Badge>
