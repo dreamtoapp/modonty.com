@@ -44,6 +44,19 @@ model Application {
   status     ApplicationStatus @default(PENDING)
   adminNotes String?
 
+  // Interview Response
+  lastJobExitReason          String?
+  lastSalary                 String?
+  expectedSalary             String?
+  canWorkHard                Boolean?
+  noticePeriod               String?
+  preferredWorkLocation      String?
+  whyInterestedInPosition    String?
+  questionsAboutRole         String?
+  willingnessToRelocate      Boolean?
+  bestInterviewTime          String?
+  interviewResponseSubmittedAt DateTime?
+
   // Metadata
   locale String @default("ar") // ar or en
 

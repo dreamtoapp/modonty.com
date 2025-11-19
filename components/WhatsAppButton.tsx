@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { validateWhatsAppPhone, createWhatsAppUrl } from '@/helpers/whatsappPhone';
 
 interface WhatsAppButtonProps {
   phoneNumber?: string;
@@ -40,11 +41,24 @@ export function WhatsAppButton({ phoneNumber, locale = 'ar' }: WhatsAppButtonPro
 
   if (!phoneNumber) return null;
 
+  // Validate and format phone number
+  const phoneValidation = validateWhatsAppPhone(phoneNumber);
+  
+  if (!phoneValidation.valid) {
+    console.warn('Invalid WhatsApp phone number:', phoneValidation.error);
+    return null;
+  }
+
   const defaultMessage = locale === 'ar'
     ? 'اود الاستفسار'
     : 'I would like to inquire';
 
-  const whatsappUrl = `https://wa.me/${phoneNumber.replace(/\D/g, '')}?text=${encodeURIComponent(defaultMessage)}`;
+  const whatsappUrl = createWhatsAppUrl(phoneNumber, defaultMessage);
+  
+  if (!whatsappUrl) {
+    console.warn('Failed to create WhatsApp URL');
+    return null;
+  }
 
   return (
     <>
