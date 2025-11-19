@@ -4,6 +4,11 @@ import { use, useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { ApplicationStatusBadge } from '@/components/ApplicationStatusBadge';
 import { updateApplicationStatus, updateApplicationNotes } from '@/actions/updateApplicationStatus';
 import { deleteInterviewResponse } from '@/actions/deleteInterviewResponse';
@@ -70,6 +75,7 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
   const [linkCopied, setLinkCopied] = useState(false);
   const [deletingResponse, setDeletingResponse] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showImageDialog, setShowImageDialog] = useState(false);
 
   useEffect(() => {
     const fetchApplication = async () => {
@@ -235,14 +241,17 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-start gap-4 flex-1">
                 {application.profileImageUrl && (
-                  <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-primary/20 flex-shrink-0">
+                  <button
+                    onClick={() => setShowImageDialog(true)}
+                    className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-primary/20 flex-shrink-0 hover:border-primary/40 transition-colors cursor-pointer"
+                  >
                     <Image
                       src={application.profileImageUrl}
                       alt={application.applicantName}
                       fill
                       className="object-cover"
                     />
-                  </div>
+                  </button>
                 )}
                 {!application.profileImageUrl && (
                   <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
@@ -812,6 +821,26 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
           </CardContent>
         </Card>
       </div>
+
+      {/* Image Dialog */}
+      {application.profileImageUrl && (
+        <Dialog open={showImageDialog} onOpenChange={setShowImageDialog}>
+          <DialogContent className="max-w-4xl max-h-[90vh] w-[90vw] p-4 sm:p-6 overflow-auto">
+            <DialogTitle className="sr-only">
+              {locale === 'ar' ? 'صورة الملف الشخصي' : 'Profile Image'} - {application.applicantName}
+            </DialogTitle>
+            <div className="relative w-full h-[calc(90vh-8rem)] min-h-[300px] max-h-[calc(90vh-8rem)]">
+              <Image
+                src={application.profileImageUrl}
+                alt={application.applicantName}
+                fill
+                className="object-contain rounded-lg"
+                sizes="(max-width: 768px) 90vw, 80vw"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

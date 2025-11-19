@@ -47,3 +47,4 @@ export function SortApplications({ locale, currentSort = 'newest' }: SortApplica
 
 
 
+
