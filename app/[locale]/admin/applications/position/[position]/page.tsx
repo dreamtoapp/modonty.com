@@ -13,10 +13,10 @@ export default async function PositionApplicationsPage({
   searchParams
 }: {
   params: Promise<{ locale: string; position: string }>;
-  searchParams: Promise<{ sort?: string }>;
+  searchParams: Promise<{ sort?: string; status?: string }>;
 }) {
   const { locale, position } = await params;
-  const { sort } = await searchParams;
+  const { sort, status } = await searchParams;
   const decodedPosition = decodeURIComponent(position);
   const canonicalPosition = getCanonicalPositionTitle(decodedPosition);
   const positionAliases = getPositionAliases(canonicalPosition);
@@ -25,6 +25,34 @@ export default async function PositionApplicationsPage({
   const displayPosition =
     matchedPosition && locale === 'ar' ? matchedPosition.title : canonicalPosition;
 
+  type StatusFilterKey = 'pending' | 'reviewed' | 'accepted' | 'rejected' | 'total';
+  const statusValueMap: Record<Exclude<StatusFilterKey, 'total'>, 'PENDING' | 'REVIEWED' | 'ACCEPTED' | 'REJECTED'> = {
+    pending: 'PENDING',
+    reviewed: 'REVIEWED',
+    accepted: 'ACCEPTED',
+    rejected: 'REJECTED',
+  };
+  const allowedStatusKeys: StatusFilterKey[] = ['pending', 'reviewed', 'accepted', 'rejected', 'total'];
+  const normalizedStatus: StatusFilterKey =
+    status && allowedStatusKeys.includes(status.toLowerCase() as StatusFilterKey)
+      ? (status.toLowerCase() as StatusFilterKey)
+      : 'pending';
+  const selectedStatus =
+    normalizedStatus === 'total'
+      ? null
+      : statusValueMap[normalizedStatus as Exclude<StatusFilterKey, 'total'>];
+
+  const buildFilterHref = (statusKey: StatusFilterKey) => {
+    const params = new URLSearchParams();
+    if (sort === 'newest') {
+      params.set('sort', 'newest');
+    }
+    params.set('status', statusKey);
+    return `?${params.toString()}`;
+  };
+
+  const isActiveStatus = (statusKey: StatusFilterKey) => normalizedStatus === statusKey;
+
   // Determine sort order (default: oldest first)
   const sortOrder = sort === 'newest' ? 'desc' : 'asc';
 
@@ -32,7 +60,10 @@ export default async function PositionApplicationsPage({
   const [stats, applications] = await Promise.all([
     getApplicationStatsByPosition(canonicalPosition, positionAliases),
     prisma.application.findMany({
-      where: { position: { in: positionAliases } },
+      where: {
+        position: { in: positionAliases },
+        ...(selectedStatus ? { status: selectedStatus } : {}),
+      },
       orderBy: { createdAt: sortOrder },
     }),
   ]);
@@ -65,75 +96,89 @@ export default async function PositionApplicationsPage({
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {locale === 'ar' ? 'إجمالي الطلبات' : 'Total'}
-                </p>
-                <p className="text-3xl font-bold mt-1">{stats.total}</p>
+        <Link href={buildFilterHref('total')} className="block">
+          <Card className={isActiveStatus('total') ? 'ring-2 ring-primary' : ''}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {locale === 'ar' ? 'إجمالي الطلبات' : 'Total'}
+                  </p>
+                  <p className="text-3xl font-bold mt-1">{stats.total}</p>
+                </div>
+                <Users className="h-8 w-8 text-muted-foreground" />
               </div>
-              <Users className="h-8 w-8 text-muted-foreground" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {locale === 'ar' ? 'قيد المراجعة' : 'Pending'}
-                </p>
-                <p className="text-3xl font-bold mt-1 text-yellow-600">{stats.pending}</p>
+        <Link href={buildFilterHref('pending')} className="block">
+          <Card className={isActiveStatus('pending') ? 'ring-2 ring-primary' : ''}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {locale === 'ar' ? 'قيد المراجعة' : 'Pending'}
+                  </p>
+                  <p className="text-3xl font-bold mt-1 text-yellow-600">{stats.pending}</p>
+                </div>
+                <Clock className="h-8 w-8 text-yellow-600" />
               </div>
-              <Clock className="h-8 w-8 text-yellow-600" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {locale === 'ar' ? 'تمت المراجعة' : 'Reviewed'}
-                </p>
-                <p className="text-3xl font-bold mt-1 text-blue-600">{stats.reviewed}</p>
+        <Link href={buildFilterHref('reviewed')} className="block">
+          <Card className={isActiveStatus('reviewed') ? 'ring-2 ring-primary' : ''}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {locale === 'ar' ? 'تمت المراجعة' : 'Reviewed'}
+                  </p>
+                  <p className="text-3xl font-bold mt-1 text-blue-600">{stats.reviewed}</p>
+                </div>
+                <CheckCircle2 className="h-8 w-8 text-blue-600" />
               </div>
-              <CheckCircle2 className="h-8 w-8 text-blue-600" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {locale === 'ar' ? 'مقبول' : 'Accepted'}
-                </p>
-                <p className="text-3xl font-bold mt-1 text-green-600">{stats.accepted}</p>
+        <Link href={buildFilterHref('accepted')} className="block">
+          <Card className={isActiveStatus('accepted') ? 'ring-2 ring-primary' : ''}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {locale === 'ar' ? 'مقبول' : 'Accepted'}
+                  </p>
+                  <p className="text-3xl font-bold mt-1 text-green-600">{stats.accepted}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {locale === 'ar' ? 'الردود:' : 'Responses:'}{' '}
+                    <span className="text-green-500 font-semibold">{stats.acceptedWithResponses}</span>
+                  </p>
+                </div>
+                <CheckCircle2 className="h-8 w-8 text-green-600" />
               </div>
-              <CheckCircle2 className="h-8 w-8 text-green-600" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {locale === 'ar' ? 'مرفوض' : 'Rejected'}
-                </p>
-                <p className="text-3xl font-bold mt-1 text-red-600">{stats.rejected}</p>
+        <Link href={buildFilterHref('rejected')} className="block">
+          <Card className={isActiveStatus('rejected') ? 'ring-2 ring-primary' : ''}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {locale === 'ar' ? 'مرفوض' : 'Rejected'}
+                  </p>
+                  <p className="text-3xl font-bold mt-1 text-red-600">{stats.rejected}</p>
+                </div>
+                <XCircle className="h-8 w-8 text-red-600" />
               </div>
-              <XCircle className="h-8 w-8 text-red-600" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       {/* Sort and Applications List */}

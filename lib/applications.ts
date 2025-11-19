@@ -13,6 +13,7 @@ export interface ApplicationStatsByPosition {
   reviewed: number;
   accepted: number;
   rejected: number;
+  acceptedWithResponses: number;
 }
 
 /**
@@ -124,12 +125,21 @@ export async function getApplicationStatsByPosition(
       },
     };
 
-    const [total, pending, reviewed, accepted, rejected] = await Promise.all([
+    const [total, pending, reviewed, accepted, rejected, acceptedWithResponses] = await Promise.all([
       prisma.application.count({ where: baseWhere }),
       prisma.application.count({ where: { ...baseWhere, status: 'PENDING' } }),
       prisma.application.count({ where: { ...baseWhere, status: 'REVIEWED' } }),
       prisma.application.count({ where: { ...baseWhere, status: 'ACCEPTED' } }),
       prisma.application.count({ where: { ...baseWhere, status: 'REJECTED' } }),
+      prisma.application.count({
+        where: {
+          ...baseWhere,
+          status: 'ACCEPTED',
+          interviewResponseSubmittedAt: {
+            not: null,
+          },
+        },
+      }),
     ]);
 
     return {
@@ -139,6 +149,7 @@ export async function getApplicationStatsByPosition(
       reviewed,
       accepted,
       rejected,
+      acceptedWithResponses,
     };
   } catch (error) {
     console.error('Error fetching application stats for position:', error);
@@ -149,6 +160,7 @@ export async function getApplicationStatsByPosition(
       reviewed: 0,
       accepted: 0,
       rejected: 0,
+      acceptedWithResponses: 0,
     };
   }
 }

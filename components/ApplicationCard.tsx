@@ -19,6 +19,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { getCVFileType } from '@/lib/applications';
+import { cn } from '@/lib/utils';
 
 type ExtendedApplication = Application & {
   availabilityDate?: Date | string | null;
@@ -61,8 +62,15 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
     return locale === 'ar' ? labels.ar : labels.en;
   };
 
+  const hasNewInterviewResponse = Boolean(application.interviewResponseSubmittedAt);
+
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card
+      className={cn(
+        'hover:shadow-lg transition-shadow',
+        hasNewInterviewResponse && 'border-2 border-green-500'
+      )}
+    >
       <div className="px-6 pt-6">
         <ApplicationStatusBadge
           status={application.status}
