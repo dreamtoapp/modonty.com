@@ -263,3 +263,51 @@ export function validateAndFixWhatsAppPhone(
   return validation;
 }
 
+/**
+ * Analyzes and fixes phone number based on specific rules:
+ * - If starts with "05" → Saudi Arabia (966)
+ * - If starts with "01" → Egypt (20)
+ * Removes leading 0 and prepends appropriate country code
+ * 
+ * @param phoneNumber - Phone number to analyze and fix
+ * @returns Fixed phone number in international format, or original if already valid
+ */
+export function analyzeAndFixPhoneNumber(phoneNumber: string | null | undefined): string {
+  if (!phoneNumber) return '';
+
+  const digitsOnly = formatPhoneForWhatsApp(phoneNumber);
+  if (digitsOnly.length === 0) return phoneNumber || '';
+
+  // Check if already in international format (doesn't start with 0)
+  if (!digitsOnly.startsWith('0')) {
+    // Already in international format, return as-is
+    return digitsOnly;
+  }
+
+  // Remove leading 0
+  const withoutZero = digitsOnly.substring(1);
+  if (withoutZero.length === 0) return phoneNumber;
+
+  let countryCode: string;
+
+  // Apply specific rules: 05 → Saudi (966), 01 → Egypt (20)
+  if (digitsOnly.startsWith('05')) {
+    countryCode = '966'; // Saudi Arabia
+  } else if (digitsOnly.startsWith('01')) {
+    countryCode = '20'; // Egypt
+  } else {
+    // Default to Saudi if pattern doesn't match
+    countryCode = '966';
+  }
+
+  const fixedNumber = `${countryCode}${withoutZero}`;
+  
+  // Validate the fixed number meets WhatsApp requirements
+  if (fixedNumber.length >= 7 && fixedNumber.length <= 15) {
+    return fixedNumber;
+  }
+
+  // If fixed number doesn't meet requirements, return original
+  return phoneNumber;
+}
+

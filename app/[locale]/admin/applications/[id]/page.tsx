@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ApplicationStatusBadge } from '@/components/ApplicationStatusBadge';
-import { updateApplicationStatus, updateApplicationNotes } from '@/actions/updateApplicationStatus';
+import { updateApplicationStatus, updateApplicationNotes, updateApplicationPhone } from '@/actions/updateApplicationStatus';
 import { deleteInterviewResponse } from '@/actions/deleteInterviewResponse';
 import {
   ArrowLeft,
@@ -34,12 +34,13 @@ import {
   AlertTriangle,
   DollarSign,
   TrendingUp,
+  RefreshCw,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Application, ApplicationStatus } from '@prisma/client';
-import { validateAndFixWhatsAppPhone } from '@/helpers/whatsappPhone';
+import { validateAndFixWhatsAppPhone, analyzeAndFixPhoneNumber } from '@/helpers/whatsappPhone';
 
 interface ApplicationDetailPageProps {
   params: Promise<{ locale: string; id: string }>;
@@ -78,6 +79,7 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
   const [deletingResponse, setDeletingResponse] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showImageDialog, setShowImageDialog] = useState(false);
+  const [updatingPhone, setUpdatingPhone] = useState(false);
 
   useEffect(() => {
     const fetchApplication = async () => {
@@ -122,6 +124,26 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
     }
 
     setSavingNotes(false);
+  };
+
+  const handleAnalyzePhone = async () => {
+    if (!application) return;
+
+    setUpdatingPhone(true);
+    const fixedPhone = analyzeAndFixPhoneNumber(application.phone);
+
+    if (fixedPhone === application.phone) {
+      setUpdatingPhone(false);
+      return;
+    }
+
+    const result = await updateApplicationPhone(application.id, fixedPhone);
+
+    if (result.success) {
+      setApplication({ ...application, phone: fixedPhone });
+    }
+
+    setUpdatingPhone(false);
   };
 
   const handleCopyInterviewLink = async () => {
@@ -312,13 +334,29 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
 
               <div className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-muted-foreground" />
-                <div>
+                <div className="flex-1">
                   <p className="text-xs text-muted-foreground">
                     {locale === 'ar' ? 'الهاتف' : 'Phone'}
                   </p>
-                  <a href={`tel:${application.phone}`} className="text-sm font-medium hover:underline">
-                    {application.phone}
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <a href={`tel:${application.phone}`} className="text-sm font-medium hover:underline">
+                      {application.phone}
+                    </a>
+                    <Button
+                      onClick={handleAnalyzePhone}
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0"
+                      disabled={updatingPhone}
+                      title={locale === 'ar' ? 'تحليل وتحديث رقم الهاتف' : 'Analyze and update phone number'}
+                    >
+                      {updatingPhone ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <RefreshCw className="h-3 w-3" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
 

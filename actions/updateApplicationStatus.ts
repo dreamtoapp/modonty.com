@@ -54,3 +54,25 @@ export async function updateApplicationNotes(
   }
 }
 
+export async function updateApplicationPhone(
+  applicationId: string,
+  phone: string
+): Promise<UpdateApplicationResult> {
+  try {
+    await prisma.application.update({
+      where: { id: applicationId },
+      data: { phone },
+    });
+
+    revalidatePath(`/[locale]/admin/applications/${applicationId}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating application phone:', error);
+    return {
+      success: false,
+      error: 'Failed to update phone number. Please try again.',
+    };
+  }
+}
+
