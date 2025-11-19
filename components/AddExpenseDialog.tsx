@@ -89,7 +89,7 @@ export function AddExpenseDialog({ onSuccess }: AddExpenseDialogProps) {
       } else {
         setError(result.error || (isArabic ? 'فشل في إضافة المصروف' : 'Failed to add expense'));
       }
-    } catch (err) {
+    } catch {
       setError(isArabic ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred');
     } finally {
       setSubmitting(false);

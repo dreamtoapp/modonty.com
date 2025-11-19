@@ -82,7 +82,7 @@ export function AddRevenueDialog({ onSuccess }: AddRevenueDialogProps) {
       } else {
         setError(result.error || (isArabic ? 'فشل في إضافة الإيراد' : 'Failed to add revenue'));
       }
-    } catch (err) {
+    } catch {
       setError(isArabic ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred');
     } finally {
       setSubmitting(false);

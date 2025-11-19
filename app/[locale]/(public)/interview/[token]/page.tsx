@@ -1,8 +1,7 @@
 'use client';
 
 import { use, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Loader2, CheckCircle2, AlertCircle, ArrowRight, ArrowLeft, AlertTriangle, MessageCircle } from 'lucide-react';
 import { submitInterviewResponse } from '@/actions/submitInterviewResponse';
 import Link from 'next/link';
+import { ZodError } from 'zod';
 import {
   Select,
   SelectContent,
@@ -44,7 +44,6 @@ type Application = {
 export default function InterviewPage({ params }: InterviewPageProps) {
   const resolvedParams = use(params);
   const { locale, token } = resolvedParams;
-  const router = useRouter();
   
   const [application, setApplication] = useState<Application | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -136,16 +135,13 @@ export default function InterviewPage({ params }: InterviewPageProps) {
       const errors: Record<string, string> = {};
       
       // Zod errors have an 'issues' property with an array of error objects
-      if (validationError && typeof validationError === 'object' && 'issues' in validationError) {
-        const zodError = validationError as any;
-        if (Array.isArray(zodError.issues)) {
-          zodError.issues.forEach((issue: any) => {
-            const field = issue.path && issue.path.length > 0 ? issue.path[0] : null;
-            if (field) {
-              errors[field] = issue.message || 'Invalid value';
-            }
-          });
-        }
+      if (validationError instanceof ZodError) {
+        validationError.issues.forEach((issue) => {
+          const field = issue.path && issue.path.length > 0 ? issue.path[0] : null;
+          if (field && typeof field === 'string') {
+            errors[field] = issue.message || 'Invalid value';
+          }
+        });
       }
       
       if (Object.keys(errors).length > 0) {
@@ -615,7 +611,7 @@ export default function InterviewPage({ params }: InterviewPageProps) {
                     Hello <strong>{application.applicantName}</strong> 👋
                   </p>
                   <p className="text-sm leading-relaxed">
-                    Congratulations! We've carefully reviewed your CV and we're excited about the possibility of you joining our team.
+                    Congratulations! We&apos;ve carefully reviewed your CV and we&apos;re excited about the possibility of you joining our team.
                     <br />
                     <br />
                     <strong>Before scheduling the video interview</strong>, we need you to fill in the following information accurately and honestly. 

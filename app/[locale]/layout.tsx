@@ -1,4 +1,5 @@
 import Script from 'next/script';
+import Image from 'next/image';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -54,12 +55,13 @@ export default async function LocaleLayout({
           }}
         />
         <noscript>
-          <img
-            height="1"
-            width="1"
+          <Image
+            height={1}
+            width={1}
             style={{ display: 'none' }}
             src="https://www.facebook.com/tr?id=824909907058037&ev=PageView&noscript=1"
             alt=""
+            unoptimized
           />
         </noscript>
         <NextIntlClientProvider messages={messages}>

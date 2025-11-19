@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocale } from 'next-intl';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { AddExpenseDialog } from '@/components/AddExpenseDialog';
 import { AddRevenueDialog } from '@/components/AddRevenueDialog';
 import { EditTransactionDialog } from '@/components/EditTransactionDialog';
-import { Calculator, TrendingUp, TrendingDown, Receipt, Eye, Trash2, Loader2 } from 'lucide-react';
+import { Calculator, TrendingUp, TrendingDown, Eye, Trash2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import {
@@ -124,7 +124,7 @@ export function AccountingClient({
       } else {
         alert(result.error || (isArabic ? 'فشل في حذف المعاملة' : 'Failed to delete transaction'));
       }
-    } catch (error) {
+    } catch {
       alert(isArabic ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred');
     } finally {
       setDeleting(false);

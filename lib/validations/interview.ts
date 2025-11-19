@@ -157,7 +157,7 @@ export const interviewResponseSchema = z.object({
       }
     ),
 }).refine(
-  (data) => {
+  () => {
     // Cross-field validation: expected salary should be reasonable compared to last salary
     // This is a soft validation - we won't reject, but could flag for review
     return true; // Placeholder for future business logic

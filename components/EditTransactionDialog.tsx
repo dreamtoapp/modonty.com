@@ -109,7 +109,7 @@ export function EditTransactionDialog({ transaction, onSuccess }: EditTransactio
       } else {
         setError(result.error || (isArabic ? 'فشل في تعديل المعاملة' : 'Failed to update transaction'));
       }
-    } catch (err) {
+    } catch {
       setError(isArabic ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred');
     } finally {
       setSubmitting(false);
