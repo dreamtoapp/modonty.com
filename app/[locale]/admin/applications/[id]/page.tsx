@@ -37,6 +37,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Application, ApplicationStatus } from '@prisma/client';
 import { validateAndFixWhatsAppPhone } from '@/helpers/whatsappPhone';
 
@@ -66,6 +67,7 @@ type ExtendedApplication = Application & {
 export default function ApplicationDetailPage({ params }: ApplicationDetailPageProps) {
   const resolvedParams = use(params);
   const { locale, id } = resolvedParams;
+  const router = useRouter();
 
   const [application, setApplication] = useState<ExtendedApplication | null>(null);
   const [loading, setLoading] = useState(true);
@@ -178,12 +180,10 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
                 ? 'الطلب الذي تبحث عنه غير موجود'
                 : 'The application you are looking for does not exist'}
             </p>
-            <Link href={`/${locale}/admin/applications`}>
-              <Button>
-                {locale === 'ar' ? <ArrowRight className="h-4 w-4 ml-2" /> : <ArrowLeft className="h-4 w-4 mr-2" />}
-                {locale === 'ar' ? 'العودة للقائمة' : 'Back to List'}
-              </Button>
-            </Link>
+            <Button onClick={() => router.back()}>
+              {locale === 'ar' ? <ArrowRight className="h-4 w-4 ml-2" /> : <ArrowLeft className="h-4 w-4 mr-2" />}
+              {locale === 'ar' ? 'العودة للقائمة' : 'Back to List'}
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -226,12 +226,10 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       <div className="mb-8">
-        <Link href={`/${locale}/admin/applications`}>
-          <Button variant="ghost" size="sm">
-            {locale === 'ar' ? <ArrowRight className="h-4 w-4 ml-2" /> : <ArrowLeft className="h-4 w-4 mr-2" />}
-            {locale === 'ar' ? 'العودة للقائمة' : 'Back to List'}
-          </Button>
-        </Link>
+        <Button variant="ghost" size="sm" onClick={() => router.back()}>
+          {locale === 'ar' ? <ArrowRight className="h-4 w-4 ml-2" /> : <ArrowLeft className="h-4 w-4 mr-2" />}
+          {locale === 'ar' ? 'العودة للقائمة' : 'Back to List'}
+        </Button>
       </div>
 
       <div className="space-y-6">

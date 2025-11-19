@@ -25,8 +25,8 @@ export default async function PositionApplicationsPage({
   const displayPosition =
     matchedPosition && locale === 'ar' ? matchedPosition.title : canonicalPosition;
 
-  // Determine sort order (default: newest first)
-  const sortOrder = sort === 'oldest' ? 'asc' : 'desc';
+  // Determine sort order (default: oldest first)
+  const sortOrder = sort === 'newest' ? 'desc' : 'asc';
 
   // Fetch statistics and applications for this position
   const [stats, applications] = await Promise.all([
@@ -143,7 +143,7 @@ export default async function PositionApplicationsPage({
             <h2 className="text-xl font-semibold">
               {locale === 'ar' ? 'الطلبات' : 'Applications'}
             </h2>
-            <SortApplications locale={locale} currentSort={sort || 'newest'} />
+            <SortApplications locale={locale} currentSort={sort || 'oldest'} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {applications.map((application) => (

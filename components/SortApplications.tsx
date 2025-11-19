@@ -9,14 +9,14 @@ interface SortApplicationsProps {
   currentSort?: string;
 }
 
-export function SortApplications({ locale, currentSort = 'newest' }: SortApplicationsProps) {
+export function SortApplications({ locale, currentSort = 'oldest' }: SortApplicationsProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isArabic = locale === 'ar';
 
   const handleSortChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (value === 'newest') {
+    if (value === 'oldest') {
       params.delete('sort');
     } else {
       params.set('sort', value);
@@ -43,6 +43,7 @@ export function SortApplications({ locale, currentSort = 'newest' }: SortApplica
     </div>
   );
 }
+
 
 
 
