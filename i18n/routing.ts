@@ -1,5 +1,3 @@
-import { Pathnames } from 'next-intl/navigation';
-
 export const locales = ['ar', 'en'] as const;
 export const defaultLocale = 'ar' as const;
 
@@ -14,7 +12,7 @@ export const pathnames = {
   '/admin/general-plan': '/admin/general-plan',
   '/admin/hiring-plan': '/admin/hiring-plan',
   '/admin/timeline': '/admin/timeline',
-} satisfies Pathnames<typeof locales>;
+} as const;
 
 export const routing = {
   locales,

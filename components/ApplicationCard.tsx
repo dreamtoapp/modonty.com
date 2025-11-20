@@ -14,6 +14,10 @@ import {
   CalendarClock,
   Languages,
   ShieldCheck,
+  DollarSign,
+  TrendingUp,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -27,6 +31,9 @@ type ExtendedApplication = Application & {
   arabicProficiency?: string | null;
   englishProficiency?: string | null;
   consentToDataUsage?: boolean | null;
+  lastSalary?: string | null;
+  expectedSalary?: string | null;
+  interviewResponseSubmittedAt?: Date | string | null;
 };
 
 interface ApplicationCardProps {
@@ -71,7 +78,24 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
         hasNewInterviewResponse && 'border-2 border-green-500'
       )}
     >
-      <div className="px-6 pt-6">
+      <div className="px-6 pt-4 pb-2">
+        <div className="flex items-center justify-center gap-2 mb-3">
+          {hasNewInterviewResponse ? (
+            <div className="flex items-center gap-2 text-green-600">
+              <CheckCircle2 className="h-5 w-5" />
+              <span className="text-sm font-medium">
+                {locale === 'ar' ? 'تم الرد' : 'Responded'}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <XCircle className="h-5 w-5" />
+              <span className="text-sm font-medium">
+                {locale === 'ar' ? 'لم يتم الرد' : 'No Response'}
+              </span>
+            </div>
+          )}
+        </div>
         <ApplicationStatusBadge
           status={application.status}
           locale={locale}
@@ -179,6 +203,44 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
                 ? 'تمت الموافقة على استخدام البيانات'
                 : 'Data usage consent granted'}
             </span>
+          </div>
+        )}
+
+        {/* Salary Information */}
+        {(application.lastSalary || application.expectedSalary) && (
+          <div className="pt-3 border-t">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-lg p-3 space-y-2.5 border border-green-200/50 dark:border-green-900/30">
+              {application.lastSalary && (
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-md bg-blue-100 dark:bg-blue-900/30">
+                      <DollarSign className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {locale === 'ar' ? 'الراتب الأخير' : 'Last Salary'}
+                    </span>
+                  </div>
+                  <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-bold text-sm px-3 py-1">
+                    {application.lastSalary}
+                  </Badge>
+                </div>
+              )}
+              {application.expectedSalary && (
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-md bg-green-100 dark:bg-green-900/30">
+                      <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {locale === 'ar' ? 'الراتب المتوقع' : 'Expected Salary'}
+                    </span>
+                  </div>
+                  <Badge variant="secondary" className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 font-bold text-sm px-3 py-1">
+                    {application.expectedSalary}
+                  </Badge>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

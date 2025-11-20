@@ -8,15 +8,16 @@ import Link from 'next/link';
 import { getCanonicalPositionTitle, getPositionAliases, getTeamPositions } from '@/helpers/extractMetrics';
 import { SortApplications } from '@/components/SortApplications';
 
-export default async function PositionApplicationsPage({
-  params,
-  searchParams
-}: {
-  params: Promise<{ locale: string; position: string }>;
-  searchParams: Promise<{ sort?: string; status?: string }>;
-}) {
-  const { locale, position } = await params;
-  const { sort, status } = await searchParams;
+export default async function PositionApplicationsPage(
+  props: {
+    params: Promise<{ locale: string; position: string }>;
+    searchParams: Promise<{ sort?: string; status?: string }>;
+  }
+) {
+  const params = await props.params;
+  const { locale, position } = params;
+  const searchParams = await props.searchParams;
+  const { sort, status } = searchParams;
   const decodedPosition = decodeURIComponent(position);
   const canonicalPosition = getCanonicalPositionTitle(decodedPosition);
   const positionAliases = getPositionAliases(canonicalPosition);
