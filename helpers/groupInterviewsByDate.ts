@@ -33,6 +33,14 @@ export function groupInterviewsByDate(
   const dayGroups: DayGroup[] = Array.from(groups.entries()).map(([dateKey, interviews]) => {
     const date = new Date(dateKey + 'T00:00:00');
     
+    // Sort interviews within this day by time (ascending - earliest first)
+    const sortedInterviews = [...interviews].sort((a, b) => {
+      if (!a.scheduledInterviewDate || !b.scheduledInterviewDate) return 0;
+      const timeA = new Date(a.scheduledInterviewDate).getTime();
+      const timeB = new Date(b.scheduledInterviewDate).getTime();
+      return timeA - timeB;
+    });
+    
     // Get day name
     const dayName = new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-US', {
       weekday: 'long',
@@ -49,7 +57,7 @@ export function groupInterviewsByDate(
       dateKey,
       dayName,
       formattedDate,
-      interviews,
+      interviews: sortedInterviews,
     };
   });
 
