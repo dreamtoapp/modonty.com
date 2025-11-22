@@ -72,12 +72,14 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
   };
 
   const hasNewInterviewResponse = Boolean(application.interviewResponseSubmittedAt);
+  const hasInterview = Boolean(application.scheduledInterviewDate);
 
   return (
     <Card
       className={cn(
         'hover:shadow-lg transition-shadow',
-        hasNewInterviewResponse && 'border-2 border-green-500'
+        hasInterview && 'border-2 border-purple-500',
+        !hasInterview && hasNewInterviewResponse && 'border-2 border-green-500'
       )}
     >
       <div className="px-6 pt-4 pb-2">
