@@ -3,23 +3,23 @@ import { getApplicationStatsByPosition } from '@/lib/applications';
 import { ApplicationCard } from '@/components/ApplicationCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowLeft } from 'lucide-react';
+import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowLeft, CalendarClock } from 'lucide-react';
 import Link from 'next/link';
 import { getCanonicalPositionTitle, getPositionAliases, getTeamPositions } from '@/helpers/extractMetrics';
 import { SortApplications } from '@/components/SortApplications';
 import { SearchApplications } from '@/components/SearchApplications';
-import { FilterInterviewCheckbox } from '@/components/FilterInterviewCheckbox';
+import { FilterInterviewDropdown } from '@/components/FilterInterviewDropdown';
 
 export default async function PositionApplicationsPage(
   props: {
     params: Promise<{ locale: string; position: string }>;
-    searchParams: Promise<{ sort?: string; status?: string; search?: string; hasInterview?: string }>;
+    searchParams: Promise<{ sort?: string; status?: string; search?: string; interviewFilter?: string }>;
   }
 ) {
   const params = await props.params;
   const { locale, position } = params;
   const searchParams = await props.searchParams;
-  const { sort, status, search, hasInterview } = searchParams;
+  const { sort, status, search, interviewFilter } = searchParams;
   const decodedPosition = decodeURIComponent(position);
   const canonicalPosition = getCanonicalPositionTitle(decodedPosition);
   const positionAliases = getPositionAliases(canonicalPosition);
@@ -53,8 +53,8 @@ export default async function PositionApplicationsPage(
     if (search) {
       params.set('search', search);
     }
-    if (hasInterview === 'true') {
-      params.set('hasInterview', 'true');
+    if (interviewFilter && interviewFilter !== 'all') {
+      params.set('interviewFilter', interviewFilter);
     }
     params.set('status', statusKey);
     return `?${params.toString()}`;
@@ -65,37 +65,69 @@ export default async function PositionApplicationsPage(
   // Determine sort order (default: oldest first)
   const sortOrder = sort === 'newest' ? 'desc' : 'asc';
 
-  // Build where clause with search filter
-  const whereClause: any = {
+  // Build where clause
+  const baseConditions: any = {
     position: { in: positionAliases },
     ...(selectedStatus ? { status: selectedStatus } : {}),
   };
 
+  // Build final where clause
+  let whereClause: any = baseConditions;
+
   // Add interview filter
-  if (hasInterview === 'true') {
+  // Note: For "not-yet", we'll filter in JavaScript after fetching
+  // because Prisma MongoDB null filtering can be unreliable for missing fields
+  if (interviewFilter === 'has') {
     whereClause.scheduledInterviewDate = { not: null };
   }
+  // For "not-yet", we don't add the filter here - we'll filter after fetching
 
   // Add search filter for email or phone (supports partial text matching)
   // Users can enter any part of the email or phone number to search
+  // Restructure to properly combine AND conditions with OR
   if (search && search.trim()) {
     const searchTerm = search.trim();
     // Prisma's contains works for partial matching in MongoDB
     // It searches for the search term anywhere in the email or phone string
-    whereClause.OR = [
-      { email: { contains: searchTerm } },
-      { phone: { contains: searchTerm } },
-    ];
+    // Use AND to properly combine with other conditions
+    whereClause = {
+      AND: [
+        whereClause,
+        {
+          OR: [
+            { email: { contains: searchTerm } },
+            { phone: { contains: searchTerm } },
+          ],
+        },
+      ],
+    };
   }
 
   // Fetch statistics and applications for this position
-  const [stats, applications] = await Promise.all([
+  const [stats, fetchedApplications] = await Promise.all([
     getApplicationStatsByPosition(canonicalPosition, positionAliases),
     prisma.application.findMany({
       where: whereClause,
       orderBy: { createdAt: sortOrder },
     }),
   ]);
+
+  // Post-filter for "not-yet" - filter in JavaScript to ensure it works correctly
+  let applications = fetchedApplications;
+  if (interviewFilter === 'not-yet') {
+    // Filter to only include applications without scheduled interview dates
+    // This handles both null values and missing/undefined fields
+    applications = fetchedApplications.filter((app) => {
+      const interviewDate = app.scheduledInterviewDate;
+      // scheduledInterviewDate is DateTime? (Date | null), so we just check if it's null/undefined
+      return !interviewDate || interviewDate === null || interviewDate === undefined;
+    });
+  }
+
+  // Calculate interview statistics
+  const hasInterviewCount = fetchedApplications.filter(
+    (app) => app.scheduledInterviewDate != null
+  ).length;
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -124,7 +156,7 @@ export default async function PositionApplicationsPage(
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-8">
         <Link href={buildFilterHref('total')} className="block">
           <Card className={isActiveStatus('total') ? 'ring-2 ring-primary' : ''}>
             <CardContent className="p-6">
@@ -208,6 +240,20 @@ export default async function PositionApplicationsPage(
             </CardContent>
           </Card>
         </Link>
+
+        <Card className="border-purple-200 dark:border-purple-800 bg-gradient-to-br from-purple-50 to-transparent dark:from-purple-950/20">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  {locale === 'ar' ? 'لديهم موعد مقابلة' : 'With Interview'}
+                </p>
+                <p className="text-3xl font-bold mt-1 text-purple-600">{hasInterviewCount}</p>
+              </div>
+              <CalendarClock className="h-8 w-8 text-purple-600" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Sort and Applications List */}
@@ -219,7 +265,7 @@ export default async function PositionApplicationsPage(
           <div className="flex items-center gap-3 flex-1 min-w-[300px]">
             <SearchApplications locale={locale} currentSearch={search || ''} />
             <SortApplications locale={locale} currentSort={sort || 'oldest'} />
-            <FilterInterviewCheckbox locale={locale} currentValue={hasInterview === 'true'} />
+            <FilterInterviewDropdown locale={locale} currentValue={interviewFilter || 'all'} />
           </div>
         </div>
         {applications.length > 0 ? (

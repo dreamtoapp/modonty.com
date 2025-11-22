@@ -71,8 +71,20 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
     return locale === 'ar' ? labels.ar : labels.en;
   };
 
+  const hasValidInterviewDate = (date: Date | string | null | undefined): boolean => {
+    if (!date) return false;
+    if (date === 'null' || date === 'undefined') return false;
+    if (typeof date === 'string' && date.trim() === '') return false;
+    try {
+      const parsedDate = new Date(date);
+      return !isNaN(parsedDate.getTime());
+    } catch {
+      return false;
+    }
+  };
+
   const hasNewInterviewResponse = Boolean(application.interviewResponseSubmittedAt);
-  const hasInterview = Boolean(application.scheduledInterviewDate);
+  const hasInterview = hasValidInterviewDate(application.scheduledInterviewDate);
 
   return (
     <Card
@@ -102,7 +114,7 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
         </div>
         {application.status === 'ACCEPTED' && (
           <div className="flex items-center justify-center gap-1.5 text-xs mb-2">
-            {application.scheduledInterviewDate ? (
+            {hasValidInterviewDate(application.scheduledInterviewDate) ? (
               <>
                 <CalendarClock className="h-3.5 w-3.5 text-primary" />
                 <span className="text-muted-foreground font-medium">
@@ -110,13 +122,13 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
                     ? `${new Intl.DateTimeFormat('ar-SA', {
                         month: 'short',
                         day: 'numeric',
-                      }).format(new Date(application.scheduledInterviewDate))} - ${formatTimeWithArabicTime(application.scheduledInterviewDate, locale)}`
+                      }).format(new Date(application.scheduledInterviewDate!))} - ${formatTimeWithArabicTime(application.scheduledInterviewDate!, locale)}`
                     : new Intl.DateTimeFormat('en-US', {
                         month: 'short',
                         day: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit',
-                      }).format(new Date(application.scheduledInterviewDate))}
+                      }).format(new Date(application.scheduledInterviewDate!))}
                 </span>
               </>
             ) : (
