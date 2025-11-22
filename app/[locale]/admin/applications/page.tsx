@@ -1,9 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
+import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowRight, CalendarClock } from 'lucide-react';
 import Link from 'next/link';
 import { getCanonicalPositionTitle, getTeamPositions } from '@/helpers/extractMetrics';
+import { InterviewsModalClient } from '@/components/InterviewsModalClient';
 
 export default async function ApplicationsPage({
   params
@@ -30,6 +31,20 @@ export default async function ApplicationsPage({
     accepted: stats.find((s) => s.status === 'ACCEPTED')?._count || 0,
     rejected: stats.find((s) => s.status === 'REJECTED')?._count || 0,
   };
+
+  // Calculate interview statistics - only count actual scheduled interviews
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const totalInterviews = applications.filter(
+    (app) => app.scheduledInterviewDate !== null
+  ).length;
+
+  const upcomingInterviews = applications.filter(
+    (app) =>
+      app.scheduledInterviewDate !== null &&
+      new Date(app.scheduledInterviewDate) >= today
+  ).length;
 
   // Get all team positions
   const teamPositions = getTeamPositions();
@@ -98,7 +113,7 @@ export default async function ApplicationsPage({
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-8">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -168,6 +183,12 @@ export default async function ApplicationsPage({
             </div>
           </CardContent>
         </Card>
+
+        <InterviewsModalClient
+          totalInterviews={totalInterviews}
+          upcomingInterviews={upcomingInterviews}
+          locale={locale}
+        />
       </div>
 
       {/* Position Cards */}

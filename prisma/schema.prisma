@@ -143,3 +143,29 @@ model ContactMessage {
   @@index([locale])
 }
 
+model InterviewResult {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applicationId String @db.ObjectId
+  interviewDate DateTime
+  result        InterviewResultStatus
+  rating        Int?
+  interviewerName String?
+  strengths     String[]
+  weaknesses    String[]
+  notes         String?
+  recommendation String?
+
+  @@unique([applicationId])
+  @@index([result])
+  @@index([interviewDate])
+}
+
+enum InterviewResultStatus {
+  PASSED
+  FAILED
+  PENDING
+}
+

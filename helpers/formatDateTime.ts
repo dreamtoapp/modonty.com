@@ -15,8 +15,8 @@ export function formatDateTimeWithArabicTime(
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
   if (locale === 'ar') {
-    // Format date part
-    const dateFormatter = new Intl.DateTimeFormat('ar-SA', {
+    // Format date part - use ar-EG which defaults to Gregorian calendar (not Hijri)
+    const dateFormatter = new Intl.DateTimeFormat('ar-EG', {
       year: options.year || 'numeric',
       month: options.month || 'long',
       day: options.day || 'numeric',
