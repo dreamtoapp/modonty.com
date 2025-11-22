@@ -8,17 +8,18 @@ import Link from 'next/link';
 import { getCanonicalPositionTitle, getPositionAliases, getTeamPositions } from '@/helpers/extractMetrics';
 import { SortApplications } from '@/components/SortApplications';
 import { SearchApplications } from '@/components/SearchApplications';
+import { FilterInterviewCheckbox } from '@/components/FilterInterviewCheckbox';
 
 export default async function PositionApplicationsPage(
   props: {
     params: Promise<{ locale: string; position: string }>;
-    searchParams: Promise<{ sort?: string; status?: string; search?: string }>;
+    searchParams: Promise<{ sort?: string; status?: string; search?: string; hasInterview?: string }>;
   }
 ) {
   const params = await props.params;
   const { locale, position } = params;
   const searchParams = await props.searchParams;
-  const { sort, status, search } = searchParams;
+  const { sort, status, search, hasInterview } = searchParams;
   const decodedPosition = decodeURIComponent(position);
   const canonicalPosition = getCanonicalPositionTitle(decodedPosition);
   const positionAliases = getPositionAliases(canonicalPosition);
@@ -52,6 +53,9 @@ export default async function PositionApplicationsPage(
     if (search) {
       params.set('search', search);
     }
+    if (hasInterview === 'true') {
+      params.set('hasInterview', 'true');
+    }
     params.set('status', statusKey);
     return `?${params.toString()}`;
   };
@@ -66,6 +70,11 @@ export default async function PositionApplicationsPage(
     position: { in: positionAliases },
     ...(selectedStatus ? { status: selectedStatus } : {}),
   };
+
+  // Add interview filter
+  if (hasInterview === 'true') {
+    whereClause.scheduledInterviewDate = { not: null };
+  }
 
   // Add search filter for email or phone (supports partial text matching)
   // Users can enter any part of the email or phone number to search
@@ -210,6 +219,7 @@ export default async function PositionApplicationsPage(
           <div className="flex items-center gap-3 flex-1 min-w-[300px]">
             <SearchApplications locale={locale} currentSearch={search || ''} />
             <SortApplications locale={locale} currentSort={sort || 'oldest'} />
+            <FilterInterviewCheckbox locale={locale} currentValue={hasInterview === 'true'} />
           </div>
         </div>
         {applications.length > 0 ? (

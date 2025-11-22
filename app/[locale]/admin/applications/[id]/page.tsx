@@ -240,13 +240,35 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
     if (!application || !application.scheduledInterviewDate) return;
 
     const scheduledDate = new Date(application.scheduledInterviewDate);
-    const formattedDate = formatDateTimeWithArabicTime(scheduledDate, locale, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    
+    // Format date using Gregorian calendar (not Hijri) - use en-US for date to ensure Gregorian
+    let formattedDate: string;
+    if (locale === 'ar') {
+      // Use en-US locale for date part (always Gregorian), then format time in Arabic
+      const dateFormatter = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+      
+      const hours = scheduledDate.getHours();
+      const minutes = scheduledDate.getMinutes();
+      const hour12 = hours % 12 || 12;
+      const minuteStr = minutes.toString().padStart(2, '0');
+      const timePeriod = hours < 12 ? 'صباح' : 'مساء';
+      
+      const dateStr = dateFormatter.format(scheduledDate);
+      const timeStr = `${hour12}:${minuteStr} ${timePeriod}`;
+      formattedDate = `${dateStr} في ${timeStr}`;
+    } else {
+      formattedDate = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(scheduledDate);
+    }
 
     const message = locale === 'ar'
       ? `مرحباً ${application.applicantName}،\n\nنود إبلاغك بأنه تم تحديد موعد المقابلة الشخصية معنا.\n\n📅 *موعد المقابلة:*\n${formattedDate}\n\n⏱️ *مدة المقابلة:* 45 دقيقة\n\nيرجى التأكد من توفر اتصال إنترنت مستقر للمقابلة عبر الفيديو.\n\nهل يمكنك تأكيد الموعد؟`
