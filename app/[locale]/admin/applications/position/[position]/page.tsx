@@ -7,17 +7,18 @@ import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowLeft } from 'lucid
 import Link from 'next/link';
 import { getCanonicalPositionTitle, getPositionAliases, getTeamPositions } from '@/helpers/extractMetrics';
 import { SortApplications } from '@/components/SortApplications';
+import { SearchApplications } from '@/components/SearchApplications';
 
 export default async function PositionApplicationsPage(
   props: {
     params: Promise<{ locale: string; position: string }>;
-    searchParams: Promise<{ sort?: string; status?: string }>;
+    searchParams: Promise<{ sort?: string; status?: string; search?: string }>;
   }
 ) {
   const params = await props.params;
   const { locale, position } = params;
   const searchParams = await props.searchParams;
-  const { sort, status } = searchParams;
+  const { sort, status, search } = searchParams;
   const decodedPosition = decodeURIComponent(position);
   const canonicalPosition = getCanonicalPositionTitle(decodedPosition);
   const positionAliases = getPositionAliases(canonicalPosition);
@@ -48,6 +49,9 @@ export default async function PositionApplicationsPage(
     if (sort === 'newest') {
       params.set('sort', 'newest');
     }
+    if (search) {
+      params.set('search', search);
+    }
     params.set('status', statusKey);
     return `?${params.toString()}`;
   };
@@ -57,14 +61,29 @@ export default async function PositionApplicationsPage(
   // Determine sort order (default: oldest first)
   const sortOrder = sort === 'newest' ? 'desc' : 'asc';
 
+  // Build where clause with search filter
+  const whereClause: any = {
+    position: { in: positionAliases },
+    ...(selectedStatus ? { status: selectedStatus } : {}),
+  };
+
+  // Add search filter for email or phone (supports partial text matching)
+  // Users can enter any part of the email or phone number to search
+  if (search && search.trim()) {
+    const searchTerm = search.trim();
+    // Prisma's contains works for partial matching in MongoDB
+    // It searches for the search term anywhere in the email or phone string
+    whereClause.OR = [
+      { email: { contains: searchTerm } },
+      { phone: { contains: searchTerm } },
+    ];
+  }
+
   // Fetch statistics and applications for this position
   const [stats, applications] = await Promise.all([
     getApplicationStatsByPosition(canonicalPosition, positionAliases),
     prisma.application.findMany({
-      where: {
-        position: { in: positionAliases },
-        ...(selectedStatus ? { status: selectedStatus } : {}),
-      },
+      where: whereClause,
       orderBy: { createdAt: sortOrder },
     }),
   ]);
@@ -183,35 +202,48 @@ export default async function PositionApplicationsPage(
       </div>
 
       {/* Sort and Applications List */}
-      {applications.length > 0 ? (
-        <>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold">
-              {locale === 'ar' ? 'الطلبات' : 'Applications'}
-            </h2>
+      <>
+        <div className="flex items-center gap-4 mb-6 flex-wrap">
+          <h2 className="text-xl font-semibold">
+            {locale === 'ar' ? 'الطلبات' : 'Applications'}
+          </h2>
+          <div className="flex items-center gap-3 flex-1 min-w-[300px]">
+            <SearchApplications locale={locale} currentSearch={search || ''} />
             <SortApplications locale={locale} currentSort={sort || 'oldest'} />
           </div>
+        </div>
+        {applications.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {applications.map((application) => (
               <ApplicationCard key={application.id} application={application} locale={locale} />
             ))}
           </div>
-        </>
-      ) : (
+        ) : (
         <Card>
           <CardContent className="p-12 text-center">
             <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">
-              {locale === 'ar' ? 'لا توجد طلبات بعد' : 'No Applications Yet'}
+              {search
+                ? locale === 'ar'
+                  ? 'لم يتم العثور على نتائج'
+                  : 'No Results Found'
+                : locale === 'ar'
+                ? 'لا توجد طلبات بعد'
+                : 'No Applications Yet'}
             </h3>
             <p className="text-muted-foreground">
-              {locale === 'ar'
+              {search
+                ? locale === 'ar'
+                  ? `لا توجد طلبات تطابق البحث: "${search}"`
+                  : `No applications match the search: "${search}"`
+                : locale === 'ar'
                 ? 'لم يتم استلام أي طلبات توظيف لهذه الوظيفة'
                 : 'No job applications have been received for this position yet'}
             </p>
           </CardContent>
         </Card>
-      )}
+        )}
+      </>
     </div>
   );
 }

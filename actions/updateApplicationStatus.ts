@@ -76,3 +76,25 @@ export async function updateApplicationPhone(
   }
 }
 
+export async function updateScheduledInterviewDate(
+  applicationId: string,
+  scheduledDate: Date | null
+): Promise<UpdateApplicationResult> {
+  try {
+    await prisma.application.update({
+      where: { id: applicationId },
+      data: { scheduledInterviewDate: scheduledDate },
+    });
+
+    revalidatePath(`/[locale]/admin/applications/${applicationId}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating scheduled interview date:', error);
+    return {
+      success: false,
+      error: 'Failed to update scheduled interview date. Please try again.',
+    };
+  }
+}
+

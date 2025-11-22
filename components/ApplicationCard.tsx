@@ -24,6 +24,7 @@ import Image from 'next/image';
 import { Button } from './ui/button';
 import { getCVFileType } from '@/lib/applications';
 import { cn } from '@/lib/utils';
+import { formatTimeWithArabicTime } from '@/helpers/formatDateTime';
 
 type ExtendedApplication = Application & {
   availabilityDate?: Date | string | null;
@@ -34,6 +35,7 @@ type ExtendedApplication = Application & {
   lastSalary?: string | null;
   expectedSalary?: string | null;
   interviewResponseSubmittedAt?: Date | string | null;
+  scheduledInterviewDate?: Date | string | null;
 };
 
 interface ApplicationCardProps {
@@ -96,6 +98,35 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
             </div>
           )}
         </div>
+        {application.status === 'ACCEPTED' && (
+          <div className="flex items-center justify-center gap-1.5 text-xs mb-2">
+            {application.scheduledInterviewDate ? (
+              <>
+                <CalendarClock className="h-3.5 w-3.5 text-primary" />
+                <span className="text-muted-foreground font-medium">
+                  {locale === 'ar' 
+                    ? `${new Intl.DateTimeFormat('ar-SA', {
+                        month: 'short',
+                        day: 'numeric',
+                      }).format(new Date(application.scheduledInterviewDate))} - ${formatTimeWithArabicTime(application.scheduledInterviewDate, locale)}`
+                    : new Intl.DateTimeFormat('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      }).format(new Date(application.scheduledInterviewDate))}
+                </span>
+              </>
+            ) : (
+              <>
+                <CalendarClock className="h-3.5 w-3.5 text-muted-foreground" />
+                <span className="text-muted-foreground italic">
+                  {locale === 'ar' ? 'لم يتم تحديد موعد بعد' : 'No interview time yet'}
+                </span>
+              </>
+            )}
+          </div>
+        )}
         <ApplicationStatusBadge
           status={application.status}
           locale={locale}

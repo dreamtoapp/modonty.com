@@ -4,13 +4,15 @@ import { use, useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ApplicationStatusBadge } from '@/components/ApplicationStatusBadge';
-import { updateApplicationStatus, updateApplicationNotes, updateApplicationPhone } from '@/actions/updateApplicationStatus';
+import { updateApplicationStatus, updateApplicationNotes, updateApplicationPhone, updateScheduledInterviewDate } from '@/actions/updateApplicationStatus';
 import { deleteInterviewResponse } from '@/actions/deleteInterviewResponse';
 import {
   ArrowLeft,
@@ -41,6 +43,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Application, ApplicationStatus } from '@prisma/client';
 import { validateAndFixWhatsAppPhone, analyzeAndFixPhoneNumber } from '@/helpers/whatsappPhone';
+import { formatDateTimeWithArabicTime } from '@/helpers/formatDateTime';
 
 interface ApplicationDetailPageProps {
   params: Promise<{ locale: string; id: string }>;
@@ -63,6 +66,7 @@ type ExtendedApplication = Application & {
   willingnessToRelocate?: boolean | null;
   bestInterviewTime?: string | null;
   interviewResponseSubmittedAt?: Date | string | null;
+  scheduledInterviewDate?: Date | string | null;
 };
 
 export default function ApplicationDetailPage({ params }: ApplicationDetailPageProps) {
@@ -80,6 +84,9 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showImageDialog, setShowImageDialog] = useState(false);
   const [updatingPhone, setUpdatingPhone] = useState(false);
+  const [scheduledDate, setScheduledDate] = useState('');
+  const [scheduledTime, setScheduledTime] = useState('');
+  const [savingSchedule, setSavingSchedule] = useState(false);
 
   useEffect(() => {
     const fetchApplication = async () => {
@@ -89,6 +96,14 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
           const data: ExtendedApplication = await response.json();
           setApplication(data);
           setNotes(data.adminNotes || '');
+          if (data.scheduledInterviewDate) {
+            const scheduledDateObj = new Date(data.scheduledInterviewDate);
+            setScheduledDate(scheduledDateObj.toISOString().split('T')[0]);
+            setScheduledTime(scheduledDateObj.toTimeString().slice(0, 5));
+          } else {
+            setScheduledDate('');
+            setScheduledTime('');
+          }
         }
       } catch (error) {
         console.error('Error fetching application:', error);
@@ -146,6 +161,46 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
     setUpdatingPhone(false);
   };
 
+  const handleSaveSchedule = async () => {
+    if (!application) return;
+
+    setSavingSchedule(true);
+    
+    let scheduledDateTime: Date | null = null;
+    if (scheduledDate && scheduledTime) {
+      const [year, month, day] = scheduledDate.split('-').map(Number);
+      const [hours, minutes] = scheduledTime.split(':').map(Number);
+      scheduledDateTime = new Date(year, month - 1, day, hours, minutes);
+    }
+
+    const result = await updateScheduledInterviewDate(application.id, scheduledDateTime);
+
+    if (result.success) {
+      setApplication({ ...application, scheduledInterviewDate: scheduledDateTime });
+    } else {
+      alert(result.error || (locale === 'ar' ? 'فشل في حفظ تاريخ المقابلة' : 'Failed to save interview date'));
+    }
+
+    setSavingSchedule(false);
+  };
+
+  const handleClearSchedule = async () => {
+    if (!application) return;
+
+    setSavingSchedule(true);
+    const result = await updateScheduledInterviewDate(application.id, null);
+
+    if (result.success) {
+      setApplication({ ...application, scheduledInterviewDate: null });
+      setScheduledDate('');
+      setScheduledTime('');
+    } else {
+      alert(result.error || (locale === 'ar' ? 'فشل في حذف تاريخ المقابلة' : 'Failed to clear interview date'));
+    }
+
+    setSavingSchedule(false);
+  };
+
   const handleCopyInterviewLink = async () => {
     if (!application) return;
 
@@ -169,6 +224,33 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
     const message = locale === 'ar'
       ? `مرحباً ${application.applicantName}،\n\nلقد قمنا بدراسة سيرتك الذاتية وهي قابلة للتطبيق تقريباً معنا. يرجى ملء المعلومات التالية للمقابلة:\n\n${interviewLink}`
       : `Hello ${application.applicantName},\n\nWe have studied your CV and it is almost applicable to us. Please fill in the following information for the interview:\n\n${interviewLink}`;
+    
+    // Validate and attempt to fix phone number automatically
+    const phoneValidation = validateAndFixWhatsAppPhone(application.phone);
+    
+    // If phone is valid (or was fixed), use it; otherwise use generic share (no alert)
+    const whatsappUrl = phoneValidation.valid && phoneValidation.formatted
+      ? `https://wa.me/${phoneValidation.formatted}?text=${encodeURIComponent(message)}`
+      : `https://wa.me/?text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleShareScheduleViaWhatsApp = () => {
+    if (!application || !application.scheduledInterviewDate) return;
+
+    const scheduledDate = new Date(application.scheduledInterviewDate);
+    const formattedDate = formatDateTimeWithArabicTime(scheduledDate, locale, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    const message = locale === 'ar'
+      ? `مرحباً ${application.applicantName}،\n\nنود إبلاغك بأنه تم تحديد موعد المقابلة الشخصية معنا.\n\n📅 *موعد المقابلة:*\n${formattedDate}\n\n⏱️ *مدة المقابلة:* 45 دقيقة\n\nيرجى التأكد من توفر اتصال إنترنت مستقر للمقابلة عبر الفيديو.\n\nهل يمكنك تأكيد الموعد؟`
+      : `Hello ${application.applicantName},\n\nWe are pleased to inform you that your interview has been scheduled.\n\n📅 *Interview Date & Time:*\n${formattedDate}\n\n⏱️ *Interview Duration:* 45 minutes\n\nPlease ensure you have a stable internet connection for the video interview.\n\nCan you please confirm the appointment?`;
     
     // Validate and attempt to fix phone number automatically
     const phoneValidation = validateAndFixWhatsAppPhone(application.phone);
@@ -785,6 +867,129 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
             </CardContent>
           </Card>
         )}
+
+        {/* Interview Schedule Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <CalendarClock className="h-5 w-5" />
+              {locale === 'ar' ? 'جدولة المقابلة' : 'Interview Schedule'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {application.scheduledInterviewDate && (
+              <div className="flex items-center gap-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+                <CalendarClock className="h-5 w-5 text-primary" />
+                <div className="flex-1">
+                  <p className="text-xs text-muted-foreground">
+                    {locale === 'ar' ? 'تاريخ المقابلة المجدول' : 'Scheduled Interview Date'}
+                  </p>
+                  <p className="text-sm font-medium">
+                    {formatDateTimeWithArabicTime(application.scheduledInterviewDate, locale, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                  {locale === 'ar' ? (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      يمكنك تعديل التاريخ والوقت أدناه
+                    </p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      You can update the date and time below
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="scheduledDate">
+                  {locale === 'ar' ? 'تاريخ المقابلة' : 'Interview Date'}
+                </Label>
+                <Input
+                  id="scheduledDate"
+                  type="date"
+                  value={scheduledDate}
+                  onChange={(e) => setScheduledDate(e.target.value)}
+                  disabled={savingSchedule}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="scheduledTime">
+                  {locale === 'ar' ? 'وقت المقابلة' : 'Interview Time'}
+                </Label>
+                <Input
+                  id="scheduledTime"
+                  type="time"
+                  value={scheduledTime}
+                  onChange={(e) => setScheduledTime(e.target.value)}
+                  disabled={savingSchedule}
+                />
+                {locale === 'ar' && (
+                  <p className="text-xs text-muted-foreground">
+                    💡 تلميح: سيتم عرض الوقت بصيغة عربية (صباح/مساء) - AM = صباح، PM = مساء
+                  </p>
+                )}
+                {locale === 'en' && (
+                  <p className="text-xs text-muted-foreground">
+                    💡 Hint: Time will be displayed in Arabic format (صباح/مساء) - AM = صباح (Morning), PM = مساء (Evening)
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                onClick={handleSaveSchedule}
+                disabled={savingSchedule || (!scheduledDate || !scheduledTime)}
+              >
+                {savingSchedule ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    {locale === 'ar' ? 'جاري الحفظ...' : 'Saving...'}
+                  </>
+                ) : application.scheduledInterviewDate ? (
+                  locale === 'ar' ? 'تحديث الموعد' : 'Update Schedule'
+                ) : (
+                  locale === 'ar' ? 'حفظ الموعد' : 'Save Schedule'
+                )}
+              </Button>
+              {application.scheduledInterviewDate && (
+                <>
+                  <Button
+                    onClick={handleShareScheduleViaWhatsApp}
+                    variant="outline"
+                    className="gap-2 bg-green-50 hover:bg-green-100 border-green-200 text-green-700 hover:text-green-800"
+                    disabled={savingSchedule}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    {locale === 'ar' ? 'مشاركة عبر واتساب' : 'Share via WhatsApp'}
+                  </Button>
+                  <Button
+                    onClick={handleClearSchedule}
+                    variant="outline"
+                    disabled={savingSchedule}
+                  >
+                    {savingSchedule ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        {locale === 'ar' ? 'جاري الحذف...' : 'Clearing...'}
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {locale === 'ar' ? 'حذف الموعد' : 'Clear Schedule'}
+                      </>
+                    )}
+                  </Button>
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Status Update Card */}
         <Card>
