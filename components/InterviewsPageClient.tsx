@@ -28,9 +28,11 @@ interface Interview {
   id: string;
   applicantName: string;
   position: string;
+  phone: string;
   profileImageUrl: string;
   scheduledInterviewDate: Date | string | null;
   interviewResponseSubmittedAt: Date | string | null;
+  appointmentConfirmed?: boolean;
   lastSalary?: string | null;
   expectedSalary?: string | null;
   interviewResult?: {
@@ -302,9 +304,11 @@ export function InterviewsPageClient({
                       id: interview.id,
                       applicantName: interview.applicantName,
                       position: interview.position,
+                      phone: interview.phone,
                       profileImageUrl: interview.profileImageUrl,
                       scheduledInterviewDate: interview.scheduledInterviewDate,
                       interviewResponseSubmittedAt: interview.interviewResponseSubmittedAt,
+                      appointmentConfirmed: interview.appointmentConfirmed,
                       lastSalary: interview.lastSalary,
                       expectedSalary: interview.expectedSalary,
                     }}

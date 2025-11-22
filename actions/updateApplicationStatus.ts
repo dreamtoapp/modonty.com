@@ -98,3 +98,26 @@ export async function updateScheduledInterviewDate(
   }
 }
 
+export async function updateAppointmentConfirmed(
+  applicationId: string,
+  confirmed: boolean
+): Promise<UpdateApplicationResult> {
+  try {
+    await prisma.application.update({
+      where: { id: applicationId },
+      data: { appointmentConfirmed: confirmed },
+    });
+
+    revalidatePath('/[locale]/admin/applications/interviews');
+    revalidatePath(`/[locale]/admin/applications/${applicationId}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating appointment confirmation:', error);
+    return {
+      success: false,
+      error: 'Failed to update appointment confirmation. Please try again.',
+    };
+  }
+}
+

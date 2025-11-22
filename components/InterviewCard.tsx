@@ -1,8 +1,10 @@
 'use client';
 
+import { useState, useTransition } from 'react';
 import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   CalendarClock,
   User,
@@ -15,20 +17,24 @@ import {
   Send,
   DollarSign,
   TrendingUp,
+  Phone,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { formatTimeWithArabicTime, formatDateTimeWithArabicTime } from '@/helpers/formatDateTime';
 import { cn } from '@/lib/utils';
+import { updateAppointmentConfirmed } from '@/actions/updateApplicationStatus';
 
 interface InterviewCardProps {
   application: {
     id: string;
     applicantName: string;
     position: string;
+    phone: string;
     profileImageUrl: string;
     scheduledInterviewDate: Date | string | null;
     interviewResponseSubmittedAt: Date | string | null;
+    appointmentConfirmed?: boolean;
     lastSalary?: string | null;
     expectedSalary?: string | null;
   };
@@ -42,10 +48,19 @@ export function InterviewCard({ application, interviewResult, locale }: Intervie
   const isArabic = locale === 'ar';
   const hasScheduled = !!application.scheduledInterviewDate;
   const hasResponse = !!application.interviewResponseSubmittedAt;
+  const [isConfirmed, setIsConfirmed] = useState(application.appointmentConfirmed ?? false);
+  const [isPending, startTransition] = useTransition();
 
   const isUpcoming = hasScheduled && application.scheduledInterviewDate
     ? new Date(application.scheduledInterviewDate) >= new Date()
     : false;
+
+  const handleConfirmationChange = (checked: boolean) => {
+    setIsConfirmed(checked);
+    startTransition(async () => {
+      await updateAppointmentConfirmed(application.id, checked);
+    });
+  };
 
   const getResultBadge = () => {
     if (!interviewResult) {
@@ -87,7 +102,12 @@ export function InterviewCard({ application, interviewResult, locale }: Intervie
   };
 
   return (
-    <Card className="relative overflow-hidden border-2 bg-gradient-to-br from-card via-card/95 to-card/90 border-border/50">
+    <Card className={cn(
+      "relative overflow-hidden border-2 bg-gradient-to-br from-card via-card/95 to-card/90",
+      isConfirmed 
+        ? "border-green-500/60 shadow-green-500/20 shadow-lg" 
+        : "border-border/50"
+    )}>
       {/* Status indicator bar */}
       {isUpcoming && (
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-primary to-blue-500" />
@@ -97,10 +117,35 @@ export function InterviewCard({ application, interviewResult, locale }: Intervie
       <CardHeader className="pb-3 relative z-10">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
-            {/* Applicant Name */}
-            <h3 className="font-bold text-xl mb-2 line-clamp-1">
-              {application.applicantName}
-            </h3>
+            {/* Applicant Name with Confirmation Checkbox */}
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="font-bold text-xl line-clamp-1 flex-1">
+                {application.applicantName}
+              </h3>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Checkbox
+                  id={`confirm-${application.id}`}
+                  checked={isConfirmed}
+                  onCheckedChange={handleConfirmationChange}
+                  disabled={isPending}
+                  className={cn(
+                    "h-4 w-4",
+                    isConfirmed && "border-green-500 data-[state=checked]:bg-green-500"
+                  )}
+                />
+                <label
+                  htmlFor={`confirm-${application.id}`}
+                  className={cn(
+                    "text-xs font-medium cursor-pointer select-none",
+                    isConfirmed 
+                      ? "text-green-600 dark:text-green-400" 
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {isArabic ? 'مؤكد' : 'Confirmed'}
+                </label>
+              </div>
+            </div>
             {/* Job Title */}
             <div className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-2">
               <div className="p-1 rounded-md bg-primary/20 flex-shrink-0">
@@ -153,6 +198,16 @@ export function InterviewCard({ application, interviewResult, locale }: Intervie
           </div>
 
           <div className="flex-1 min-w-0 space-y-2">
+            {/* Phone Number */}
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200/50 dark:border-purple-800/50">
+              <Phone className="h-4 w-4 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-foreground">
+                  {application.phone}
+                </p>
+              </div>
+            </div>
+
             {hasResponse && (
               <div className="flex items-center gap-2 p-2 rounded-lg bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/50 dark:border-blue-800/50">
                 <Send className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />

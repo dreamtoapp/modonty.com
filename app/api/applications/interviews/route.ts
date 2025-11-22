@@ -11,9 +11,13 @@ export async function GET() {
         id: true,
         applicantName: true,
         position: true,
+        phone: true,
         profileImageUrl: true,
         scheduledInterviewDate: true,
         interviewResponseSubmittedAt: true,
+        appointmentConfirmed: true,
+        lastSalary: true,
+        expectedSalary: true,
       },
       orderBy: [
         { scheduledInterviewDate: 'desc' },

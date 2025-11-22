@@ -91,9 +91,13 @@ export function InterviewsModal({ open, onOpenChange, locale }: InterviewsModalP
                     id: interview.id,
                     applicantName: interview.applicantName,
                     position: interview.position,
+                    phone: interview.phone,
                     profileImageUrl: interview.profileImageUrl,
                     scheduledInterviewDate: interview.scheduledInterviewDate,
                     interviewResponseSubmittedAt: interview.interviewResponseSubmittedAt,
+                    appointmentConfirmed: interview.appointmentConfirmed ?? false,
+                    lastSalary: interview.lastSalary || null,
+                    expectedSalary: interview.expectedSalary || null,
                   }}
                   interviewResult={interview.interviewResult || null}
                   locale={locale}

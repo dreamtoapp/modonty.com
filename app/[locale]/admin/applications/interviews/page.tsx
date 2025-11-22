@@ -21,9 +21,11 @@ export default async function InterviewsPage({ params }: InterviewsPageProps) {
       id: true,
       applicantName: true,
       position: true,
+      phone: true,
       profileImageUrl: true,
       scheduledInterviewDate: true,
       interviewResponseSubmittedAt: true,
+      appointmentConfirmed: true,
       lastSalary: true,
       expectedSalary: true,
     },
@@ -106,6 +108,7 @@ export default async function InterviewsPage({ params }: InterviewsPageProps) {
       <InterviewsPageClient
         interviews={interviews.map((interview) => ({
           ...interview,
+          appointmentConfirmed: interview.appointmentConfirmed ?? false,
           lastSalary: interview.lastSalary || null,
           expectedSalary: interview.expectedSalary || null,
         }))}

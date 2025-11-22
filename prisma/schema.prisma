@@ -57,6 +57,7 @@ model Application {
   bestInterviewTime          String?
   interviewResponseSubmittedAt DateTime?
   scheduledInterviewDate     DateTime?
+  appointmentConfirmed       Boolean @default(false)
 
   // Metadata
   locale String @default("ar") // ar or en
