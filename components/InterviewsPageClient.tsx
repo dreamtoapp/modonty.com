@@ -290,9 +290,14 @@ export function InterviewsPageClient({
                     </p>
                   </div>
                 </div>
-                <Badge variant="secondary" className="text-sm font-semibold px-3 py-1">
-                  {dayGroup.interviews.length} {isArabic ? 'مقابلة' : dayGroup.interviews.length === 1 ? 'interview' : 'interviews'}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="text-sm font-semibold px-3 py-1">
+                    {dayGroup.interviews.length} {isArabic ? 'مقابلة' : dayGroup.interviews.length === 1 ? 'interview' : 'interviews'}
+                  </Badge>
+                  <Badge variant="outline" className="text-sm font-semibold px-3 py-1 border-green-500/50 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/20">
+                    {isArabic ? 'مؤكدة' : 'Confirmed'}: {dayGroup.interviews.filter((i) => i.appointmentConfirmed).length}
+                  </Badge>
+                </div>
               </div>
 
               {/* Interview Cards for this day */}
