@@ -10,10 +10,14 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
 } from '@/components/ui/dialog';
 import { ApplicationStatusBadge } from '@/components/ApplicationStatusBadge';
 import { updateApplicationStatus, updateApplicationNotes, updateApplicationPhone, updateScheduledInterviewDate } from '@/actions/updateApplicationStatus';
 import { deleteInterviewResponse } from '@/actions/deleteInterviewResponse';
+import { getInterviewResult } from '@/actions/interviewResult';
 import {
   ArrowLeft,
   ArrowRight,
@@ -37,6 +41,22 @@ import {
   DollarSign,
   TrendingUp,
   RefreshCw,
+  ClipboardCheck,
+  Edit,
+  Star,
+  ThumbsUp,
+  ThumbsDown,
+  FileText,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  AlertCircle,
+  ChevronRight,
+  ChevronLeft,
+  PlayCircle,
+  Target,
+  TrendingDown,
+  Eye,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -87,6 +107,24 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
   const [scheduledDate, setScheduledDate] = useState('');
   const [scheduledTime, setScheduledTime] = useState('');
   const [savingSchedule, setSavingSchedule] = useState(false);
+  const [interviewResult, setInterviewResult] = useState<{
+    id: string;
+    applicationId: string;
+    interviewDate: Date | string;
+    result: 'PASSED' | 'FAILED' | 'PENDING';
+    rating: number | null;
+    interviewerName: string | null;
+    strengths: string[];
+    weaknesses: string[];
+    notes: string | null;
+    recommendation: string | null;
+    createdAt: Date | string;
+    updatedAt: Date | string;
+  } | null>(null);
+  const [loadingResult, setLoadingResult] = useState(false);
+  const [showStatusConfirm, setShowStatusConfirm] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState<ApplicationStatus | null>(null);
+  const [showRejectWarning, setShowRejectWarning] = useState(false);
 
   useEffect(() => {
     const fetchApplication = async () => {
@@ -112,10 +150,46 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
       }
     };
 
+    const fetchInterviewResult = async () => {
+      setLoadingResult(true);
+      try {
+        const result = await getInterviewResult(id);
+        if (result.success && result.interviewResult) {
+          setInterviewResult(result.interviewResult);
+        }
+      } catch (error) {
+        console.error('Error fetching interview result:', error);
+      } finally {
+        setLoadingResult(false);
+      }
+    };
+
     fetchApplication();
+    fetchInterviewResult();
   }, [id]);
 
   const handleStatusChange = async (newStatus: ApplicationStatus) => {
+    if (!application) return;
+
+    // Check if rejecting a candidate who passed interview
+    if (newStatus === 'REJECTED' && interviewResult?.result === 'PASSED') {
+      setPendingStatus(newStatus);
+      setShowRejectWarning(true);
+      return;
+    }
+
+    // Show confirmation for critical status changes
+    if (newStatus === 'ACCEPTED' || newStatus === 'REJECTED') {
+      setPendingStatus(newStatus);
+      setShowStatusConfirm(true);
+      return;
+    }
+
+    // Direct update for non-critical status changes
+    await performStatusChange(newStatus);
+  };
+
+  const performStatusChange = async (newStatus: ApplicationStatus) => {
     if (!application) return;
 
     setUpdating(true);
@@ -126,6 +200,53 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
     }
 
     setUpdating(false);
+    setShowStatusConfirm(false);
+    setPendingStatus(null);
+  };
+
+  const getSuggestedNextAction = () => {
+    if (!application) return null;
+
+    if (application.status === 'PENDING') {
+      return {
+        label: locale === 'ar' ? 'مراجعة الطلب' : 'Review Application',
+        action: () => handleStatusChange('REVIEWED'),
+        icon: Eye,
+        variant: 'default' as const,
+      };
+    }
+
+    if (application.status === 'REVIEWED' && !application.scheduledInterviewDate) {
+      return {
+        label: locale === 'ar' ? 'جدولة مقابلة' : 'Schedule Interview',
+        action: () => {
+          const scheduleSection = document.getElementById('interview-schedule-section');
+          scheduleSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        },
+        icon: CalendarClock,
+        variant: 'default' as const,
+      };
+    }
+
+    if (application.scheduledInterviewDate && !interviewResult) {
+      return {
+        label: locale === 'ar' ? 'تسجيل نتيجة المقابلة' : 'Record Interview Result',
+        action: () => router.push(`/${locale}/admin/applications/interview-result/${application.id}`),
+        icon: ClipboardCheck,
+        variant: 'default' as const,
+      };
+    }
+
+    if (interviewResult?.result === 'PASSED' && application.status !== 'ACCEPTED') {
+      return {
+        label: locale === 'ar' ? 'قبول المرشح' : 'Accept Candidate',
+        action: () => handleStatusChange('ACCEPTED'),
+        icon: CheckCircle2,
+        variant: 'default' as const,
+      };
+    }
+
+    return null;
   };
 
   const handleSaveNotes = async () => {
@@ -349,6 +470,30 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
     return locale === 'ar' ? labels.ar : labels.en;
   };
 
+  const suggestedAction = getSuggestedNextAction();
+
+  const getWorkflowProgress = () => {
+    const steps = [];
+    steps.push({ label: locale === 'ar' ? 'الطلب' : 'Application', completed: true });
+    steps.push({ 
+      label: locale === 'ar' ? 'المراجعة' : 'Review', 
+      completed: application.status !== 'PENDING' 
+    });
+    steps.push({ 
+      label: locale === 'ar' ? 'المقابلة' : 'Interview', 
+      completed: !!application.scheduledInterviewDate 
+    });
+    steps.push({ 
+      label: locale === 'ar' ? 'النتيجة' : 'Result', 
+      completed: !!interviewResult 
+    });
+    steps.push({ 
+      label: locale === 'ar' ? 'القرار' : 'Decision', 
+      completed: application.status === 'ACCEPTED' || application.status === 'REJECTED' 
+    });
+    return steps;
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       <div className="mb-8">
@@ -357,6 +502,99 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
           {locale === 'ar' ? 'العودة للقائمة' : 'Back to List'}
         </Button>
       </div>
+
+      {/* Quick Actions Bar */}
+      <Card className="mb-6 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
+        <CardContent className="pt-6">
+          <div className="flex flex-col gap-4">
+            {/* Workflow Progress */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {getWorkflowProgress().map((step, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <div
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                      step.completed
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
+                    {step.completed ? (
+                      <CheckCircle2 className="h-3 w-3" />
+                    ) : (
+                      <Clock className="h-3 w-3" />
+                    )}
+                    {step.label}
+                  </div>
+                  {idx < getWorkflowProgress().length - 1 && (
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Quick Actions */}
+            <div className="flex flex-wrap items-center gap-2">
+              {suggestedAction && (
+                <Button
+                  onClick={suggestedAction.action}
+                  size="sm"
+                  variant={suggestedAction.variant}
+                  className="gap-2"
+                >
+                  <suggestedAction.icon className="h-4 w-4" />
+                  {suggestedAction.label}
+                </Button>
+              )}
+              
+              <Button
+                onClick={() => window.open(application.cvUrl, '_blank')}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <FileText className="h-4 w-4" />
+                {locale === 'ar' ? 'عرض السيرة الذاتية' : 'View CV'}
+              </Button>
+
+              <Button
+                onClick={handleShareViaWhatsApp}
+                variant="outline"
+                size="sm"
+                className="gap-2 bg-green-50 hover:bg-green-100 border-green-200 text-green-700"
+              >
+                <MessageCircle className="h-4 w-4" />
+                {locale === 'ar' ? 'واتساب' : 'WhatsApp'}
+              </Button>
+
+              <a
+                href={`mailto:${application.email}`}
+                className="inline-flex items-center justify-center gap-2 rounded-md border border-input bg-background px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              >
+                <Mail className="h-4 w-4" />
+                {locale === 'ar' ? 'بريد إلكتروني' : 'Email'}
+              </a>
+
+              {application.scheduledInterviewDate && !interviewResult && (
+                <Link href={`/${locale}/admin/applications/interview-result/${application.id}`}>
+                  <Button variant="outline" size="sm" className="gap-2 border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100">
+                    <ClipboardCheck className="h-4 w-4" />
+                    {locale === 'ar' ? 'تسجيل النتيجة' : 'Record Result'}
+                  </Button>
+                </Link>
+              )}
+
+              {interviewResult && (
+                <Link href={`/${locale}/admin/applications/interview-result/${application.id}`}>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Edit className="h-4 w-4" />
+                    {locale === 'ar' ? 'تعديل النتيجة' : 'Edit Result'}
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="space-y-6">
         {/* Header Card */}
@@ -544,106 +782,102 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
           </CardContent>
         </Card>
 
-        {/* Links Card */}
-        {(application.portfolioUrl || application.githubUrl || application.linkedinUrl) && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">
-                {locale === 'ar' ? 'الروابط' : 'Links'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {application.portfolioUrl && (
-                <a
-                  href={application.portfolioUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
-                  <Link2 className="h-4 w-4" />
-                  {locale === 'ar' ? 'معرض الأعمال' : 'Portfolio'}
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              )}
-              {application.githubUrl && (
-                <a
-                  href={application.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
-                  <Link2 className="h-4 w-4" />
-                  GitHub
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              )}
-              {application.linkedinUrl && (
-                <a
-                  href={application.linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
-                  <Link2 className="h-4 w-4" />
-                  LinkedIn
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              )}
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Skills Card */}
-        <Card>
+        {/* At-a-Glance Summary Card */}
+        <Card className="border-2 border-primary/20">
           <CardHeader>
-            <CardTitle className="text-lg">
-              {locale === 'ar' ? 'المهارات' : 'Skills'}
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Target className="h-5 w-5 text-primary" />
+              {locale === 'ar' ? 'ملخص سريع' : 'At-a-Glance Summary'}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {application.skills.map((skill, idx) => (
-                <Badge key={idx} variant="secondary">
-                  {skill}
-                </Badge>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground">
+                  {locale === 'ar' ? 'الخبرة' : 'Experience'}
+                </p>
+                <p className="text-lg font-bold">{application.yearsOfExperience} {locale === 'ar' ? 'سنة' : 'yrs'}</p>
+              </div>
+              {interviewResult && interviewResult.rating !== null && (
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">
+                    {locale === 'ar' ? 'التقييم' : 'Rating'}
+                  </p>
+                  <div className="flex items-center gap-1">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <p className="text-lg font-bold">{interviewResult.rating}/10</p>
+                  </div>
+                </div>
+              )}
+              {application.interviewResponseSubmittedAt && (
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">
+                    {locale === 'ar' ? 'تم الرد' : 'Responded'}
+                  </p>
+                  <p className="text-lg font-bold text-green-600">
+                    <CheckCircle2 className="h-4 w-4 inline" /> {locale === 'ar' ? 'نعم' : 'Yes'}
+                  </p>
+                </div>
+              )}
+              {interviewResult && (
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">
+                    {locale === 'ar' ? 'نتيجة المقابلة' : 'Interview Result'}
+                  </p>
+                  <div>
+                    {interviewResult.result === 'PASSED' && (
+                      <Badge className="bg-green-600 text-white">
+                        <ThumbsUp className="h-3 w-3 mr-1" />
+                        {locale === 'ar' ? 'نجح' : 'Passed'}
+                      </Badge>
+                    )}
+                    {interviewResult.result === 'FAILED' && (
+                      <Badge className="bg-red-600 text-white">
+                        <ThumbsDown className="h-3 w-3 mr-1" />
+                        {locale === 'ar' ? 'فشل' : 'Failed'}
+                      </Badge>
+                    )}
+                    {interviewResult.result === 'PENDING' && (
+                      <Badge variant="secondary">
+                        {locale === 'ar' ? 'قيد المراجعة' : 'Pending'}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Cover Letter Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">
-              {locale === 'ar' ? 'خطاب التقديم' : 'Cover Letter'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
-              {application.coverLetter}
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* CV Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">
-              {locale === 'ar' ? 'السيرة الذاتية' : 'CV / Resume'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <a
-              href={application.cvUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button variant="outline" className="gap-2">
-                <ExternalLink className="h-4 w-4" />
-                {locale === 'ar' ? 'عرض السيرة الذاتية' : 'View CV'}
-              </Button>
-            </a>
+            
+            {/* Decision Support Info */}
+            {interviewResult && (interviewResult.strengths.length > 0 || interviewResult.weaknesses.length > 0) && (
+              <div className="mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-2 gap-4">
+                {interviewResult.strengths.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-green-700 mb-1 flex items-center gap-1">
+                      <TrendingUp className="h-3 w-3" />
+                      {locale === 'ar' ? 'نقاط القوة الرئيسية' : 'Key Strengths'}
+                    </p>
+                    <ul className="text-xs text-muted-foreground space-y-0.5">
+                      {interviewResult.strengths.slice(0, 3).map((s, idx) => (
+                        <li key={idx}>• {s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {interviewResult.weaknesses.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-red-700 mb-1 flex items-center gap-1">
+                      <TrendingDown className="h-3 w-3" />
+                      {locale === 'ar' ? 'نقاط تحتاج تحسين' : 'Areas to Improve'}
+                    </p>
+                    <ul className="text-xs text-muted-foreground space-y-0.5">
+                      {interviewResult.weaknesses.slice(0, 3).map((w, idx) => (
+                        <li key={idx}>• {w}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -891,15 +1125,34 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
         )}
 
         {/* Interview Schedule Card */}
-        <Card>
+        <Card id="interview-schedule-section" className={!application.scheduledInterviewDate ? 'border-dashed border-2 border-muted-foreground/20' : ''}>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <CalendarClock className="h-5 w-5" />
-              {locale === 'ar' ? 'جدولة المقابلة' : 'Interview Schedule'}
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <CalendarClock className="h-5 w-5" />
+                {locale === 'ar' ? 'جدولة المقابلة' : 'Interview Schedule'}
+              </CardTitle>
+              {!application.scheduledInterviewDate && application.status === 'REVIEWED' && (
+                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                  {locale === 'ar' ? 'إجراء مطلوب' : 'Action Required'}
+                </Badge>
+              )}
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            {application.scheduledInterviewDate && (
+            {!application.scheduledInterviewDate ? (
+              <div className="text-center py-6 px-4 bg-muted/30 rounded-lg border-2 border-dashed border-muted">
+                <CalendarClock className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                <p className="text-sm font-medium mb-1">
+                  {locale === 'ar' ? 'لم يتم جدولة مقابلة بعد' : 'No interview scheduled yet'}
+                </p>
+                <p className="text-xs text-muted-foreground mb-4">
+                  {locale === 'ar' 
+                    ? 'يُنصح بجدولة مقابلة مع المرشح للمتابعة في عملية التوظيف'
+                    : 'Schedule an interview with the candidate to proceed with the hiring process'}
+                </p>
+              </div>
+            ) : (
               <div className="flex items-center gap-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
                 <CalendarClock className="h-5 w-5 text-primary" />
                 <div className="flex-1">
@@ -1013,12 +1266,219 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
           </CardContent>
         </Card>
 
+        {/* Interview Result Card */}
+        <Card className={!interviewResult && application.scheduledInterviewDate ? 'border-dashed border-2 border-orange-200 bg-orange-50/30' : ''}>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <ClipboardCheck className="h-5 w-5" />
+                {locale === 'ar' ? 'نتيجة المقابلة' : 'Interview Result'}
+              </CardTitle>
+              {interviewResult ? (
+                <Link href={`/${locale}/admin/applications/interview-result/${application.id}`}>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Edit className="h-4 w-4" />
+                    {locale === 'ar' ? 'تعديل' : 'Edit'}
+                  </Button>
+                </Link>
+              ) : application.scheduledInterviewDate ? (
+                <>
+                  <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
+                    {locale === 'ar' ? 'إجراء مطلوب' : 'Action Required'}
+                  </Badge>
+                </>
+              ) : null}
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {!interviewResult && application.scheduledInterviewDate ? (
+              <div className="text-center py-6 px-4 bg-orange-50/50 rounded-lg border-2 border-dashed border-orange-200">
+                <ClipboardCheck className="h-12 w-12 mx-auto mb-3 text-orange-500" />
+                <p className="text-sm font-medium mb-1">
+                  {locale === 'ar' ? 'لم يتم تسجيل نتيجة المقابلة بعد' : 'Interview result not recorded yet'}
+                </p>
+                <p className="text-xs text-muted-foreground mb-4">
+                  {locale === 'ar'
+                    ? 'تم جدولة المقابلة - يُرجى تسجيل النتيجة بعد إجراء المقابلة'
+                    : 'Interview is scheduled - Please record the result after conducting the interview'}
+                </p>
+                <Link href={`/${locale}/admin/applications/interview-result/${application.id}`}>
+                  <Button variant="default" className="gap-2">
+                    <ClipboardCheck className="h-4 w-4" />
+                    {locale === 'ar' ? 'تسجيل النتيجة الآن' : 'Record Result Now'}
+                  </Button>
+                </Link>
+              </div>
+            ) : !interviewResult ? (
+              <div className="text-center py-6 px-4 bg-muted/30 rounded-lg border-2 border-dashed border-muted">
+                <ClipboardCheck className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                <p className="text-sm font-medium mb-1">
+                  {locale === 'ar' ? 'لا توجد نتيجة مقابلة' : 'No interview result'}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {locale === 'ar'
+                    ? 'سيتم عرض نتيجة المقابلة هنا بعد تسجيلها'
+                    : 'Interview result will appear here after recording'}
+                </p>
+              </div>
+            ) : (
+              <>
+              {/* Interview Date and Result */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    {locale === 'ar' ? 'تاريخ المقابلة' : 'Interview Date'}
+                  </p>
+                  <p className="text-sm font-medium">
+                    {formatDateTimeWithArabicTime(interviewResult.interviewDate, locale, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    {locale === 'ar' ? 'النتيجة' : 'Result'}
+                  </p>
+                  <div>
+                    {interviewResult.result === 'PASSED' && (
+                      <Badge className="bg-green-600 hover:bg-green-700 text-white">
+                        <ThumbsUp className="h-3 w-3 mr-1" />
+                        {locale === 'ar' ? 'نجح' : 'Passed'}
+                      </Badge>
+                    )}
+                    {interviewResult.result === 'FAILED' && (
+                      <Badge className="bg-red-600 hover:bg-red-700 text-white">
+                        <ThumbsDown className="h-3 w-3 mr-1" />
+                        {locale === 'ar' ? 'فشل' : 'Failed'}
+                      </Badge>
+                    )}
+                    {interviewResult.result === 'PENDING' && (
+                      <Badge variant="secondary" className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                        {locale === 'ar' ? 'قيد المراجعة' : 'Pending'}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Rating and Interviewer */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {interviewResult.rating !== null && (
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">
+                      {locale === 'ar' ? 'التقييم' : 'Rating'}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <p className="text-sm font-medium">
+                        {interviewResult.rating}/10
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {interviewResult.interviewerName && (
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">
+                      {locale === 'ar' ? 'اسم المقابل' : 'Interviewer'}
+                    </p>
+                    <p className="text-sm font-medium">{interviewResult.interviewerName}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Strengths */}
+              {interviewResult.strengths && interviewResult.strengths.length > 0 && (
+                <div>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {locale === 'ar' ? 'نقاط القوة' : 'Strengths'}
+                  </p>
+                  <ul className="space-y-1">
+                    {interviewResult.strengths.map((strength, idx) => (
+                      <li key={idx} className="text-sm flex items-start gap-2">
+                        <span className="text-green-600 mt-1">•</span>
+                        <span>{strength}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Weaknesses */}
+              {interviewResult.weaknesses && interviewResult.weaknesses.length > 0 && (
+                <div>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {locale === 'ar' ? 'نقاط الضعف' : 'Weaknesses'}
+                  </p>
+                  <ul className="space-y-1">
+                    {interviewResult.weaknesses.map((weakness, idx) => (
+                      <li key={idx} className="text-sm flex items-start gap-2">
+                        <span className="text-red-600 mt-1">•</span>
+                        <span>{weakness}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Notes */}
+              {interviewResult.notes && (
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    {locale === 'ar' ? 'ملاحظات' : 'Notes'}
+                  </p>
+                  <p className="text-sm whitespace-pre-wrap bg-muted/50 p-3 rounded-md">
+                    {interviewResult.notes}
+                  </p>
+                </div>
+              )}
+
+              {/* Recommendation */}
+              {interviewResult.recommendation && (
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    {locale === 'ar' ? 'التوصية' : 'Recommendation'}
+                  </p>
+                  <p className="text-sm whitespace-pre-wrap bg-primary/10 p-3 rounded-md border border-primary/20">
+                    {interviewResult.recommendation}
+                  </p>
+                </div>
+              )}
+
+              {/* Last Updated */}
+              <div className="pt-2 border-t">
+                <p className="text-xs text-muted-foreground">
+                  {locale === 'ar' ? 'آخر تحديث:' : 'Last updated:'}{' '}
+                  {formatDateTimeWithArabicTime(interviewResult.updatedAt, locale, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </p>
+              </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Status Update Card */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Target className="h-5 w-5" />
               {locale === 'ar' ? 'تحديث الحالة' : 'Update Status'}
             </CardTitle>
+            {interviewResult?.result === 'PASSED' && application.status !== 'ACCEPTED' && (
+              <p className="text-sm text-green-600 flex items-center gap-1 mt-2">
+                <AlertCircle className="h-4 w-4" />
+                {locale === 'ar' 
+                  ? '💡 المرشح نجح في المقابلة - يُنصح بقبوله'
+                  : '💡 Candidate passed interview - Consider accepting'}
+              </p>
+            )}
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
@@ -1055,6 +1515,117 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
             </div>
           </CardContent>
         </Card>
+
+        {/* Supporting Information Section */}
+        <div className="border-t pt-6 space-y-6">
+          <h2 className="text-xl font-semibold flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            {locale === 'ar' ? 'معلومات إضافية' : 'Additional Information'}
+          </h2>
+
+          {/* Skills Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">
+                {locale === 'ar' ? 'المهارات' : 'Skills'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                {application.skills.map((skill, idx) => (
+                  <Badge key={idx} variant="secondary">
+                    {skill}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Cover Letter Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">
+                {locale === 'ar' ? 'خطاب التقديم' : 'Cover Letter'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                {application.coverLetter}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* CV Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">
+                {locale === 'ar' ? 'السيرة الذاتية' : 'CV / Resume'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <a
+                href={application.cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block"
+              >
+                <Button variant="outline" className="gap-2">
+                  <ExternalLink className="h-4 w-4" />
+                  {locale === 'ar' ? 'عرض السيرة الذاتية' : 'View CV'}
+                </Button>
+              </a>
+            </CardContent>
+          </Card>
+
+          {/* Links Card */}
+          {(application.portfolioUrl || application.githubUrl || application.linkedinUrl) && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">
+                  {locale === 'ar' ? 'الروابط' : 'Links'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {application.portfolioUrl && (
+                  <a
+                    href={application.portfolioUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-primary hover:underline"
+                  >
+                    <Link2 className="h-4 w-4" />
+                    {locale === 'ar' ? 'معرض الأعمال' : 'Portfolio'}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
+                {application.githubUrl && (
+                  <a
+                    href={application.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-primary hover:underline"
+                  >
+                    <Link2 className="h-4 w-4" />
+                    GitHub
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
+                {application.linkedinUrl && (
+                  <a
+                    href={application.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-primary hover:underline"
+                  >
+                    <Link2 className="h-4 w-4" />
+                    LinkedIn
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </div>
 
         {/* Admin Notes Card */}
         <Card>
@@ -1104,6 +1675,114 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Status Change Confirmation Dialog */}
+      <Dialog open={showStatusConfirm} onOpenChange={setShowStatusConfirm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {locale === 'ar' ? 'تأكيد تغيير الحالة' : 'Confirm Status Change'}
+            </DialogTitle>
+            <DialogDescription>
+              {pendingStatus === 'ACCEPTED' && (
+                <>
+                  {locale === 'ar' 
+                    ? `هل أنت متأكد من قبول المرشح "${application.applicantName}"؟ سيتم تغيير حالة الطلب إلى "مقبول".`
+                    : `Are you sure you want to accept candidate "${application.applicantName}"? The application status will be changed to "Accepted".`}
+                </>
+              )}
+              {pendingStatus === 'REJECTED' && (
+                <>
+                  {locale === 'ar'
+                    ? `هل أنت متأكد من رفض المرشح "${application.applicantName}"؟ سيتم تغيير حالة الطلب إلى "مرفوض".`
+                    : `Are you sure you want to reject candidate "${application.applicantName}"? The application status will be changed to "Rejected".`}
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowStatusConfirm(false);
+                setPendingStatus(null);
+              }}
+            >
+              {locale === 'ar' ? 'إلغاء' : 'Cancel'}
+            </Button>
+            <Button
+              onClick={() => pendingStatus && performStatusChange(pendingStatus)}
+              className={pendingStatus === 'REJECTED' ? 'bg-red-600 hover:bg-red-700' : ''}
+            >
+              {locale === 'ar' ? 'تأكيد' : 'Confirm'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reject Warning Dialog (for candidates who passed interview) */}
+      <Dialog open={showRejectWarning} onOpenChange={setShowRejectWarning}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-yellow-600">
+              <AlertTriangle className="h-5 w-5" />
+              {locale === 'ar' ? 'تحذير' : 'Warning'}
+            </DialogTitle>
+            <DialogDescription className="space-y-2">
+              <p>
+                {locale === 'ar'
+                  ? `هذا المرشح "${application.applicantName}" نجح في المقابلة (التقييم: ${interviewResult?.rating}/10).`
+                  : `This candidate "${application.applicantName}" passed the interview (Rating: ${interviewResult?.rating}/10).`}
+              </p>
+              <p className="font-semibold">
+                {locale === 'ar'
+                  ? 'هل أنت متأكد من رفضه؟'
+                  : 'Are you sure you want to reject them?'}
+              </p>
+              {interviewResult?.strengths && interviewResult.strengths.length > 0 && (
+                <div className="mt-3 pt-3 border-t">
+                  <p className="text-xs font-semibold mb-1">
+                    {locale === 'ar' ? 'نقاط القوة:' : 'Strengths:'}
+                  </p>
+                  <ul className="text-xs text-muted-foreground space-y-0.5">
+                    {interviewResult.strengths.slice(0, 3).map((s, idx) => (
+                      <li key={idx}>• {s}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowRejectWarning(false);
+                setPendingStatus(null);
+              }}
+              className="w-full sm:w-auto"
+            >
+              {locale === 'ar' ? 'إلغاء' : 'Cancel'}
+            </Button>
+            <Button
+              onClick={() => {
+                setShowRejectWarning(false);
+                setShowStatusConfirm(true);
+              }}
+              variant="outline"
+              className="bg-yellow-600 hover:bg-yellow-700 text-white w-full sm:w-auto"
+            >
+              {locale === 'ar' ? 'متابعة مع التحذير' : 'Continue with Warning'}
+            </Button>
+            <Button
+              onClick={() => pendingStatus && performStatusChange(pendingStatus)}
+              className="bg-red-600 hover:bg-red-700 text-white w-full sm:w-auto"
+            >
+              {locale === 'ar' ? 'رفض مباشرة' : 'Reject Anyway'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
