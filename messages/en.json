@@ -314,6 +314,10 @@
     "submitApplication": "Submit Application",
     "positionNotFound": "Position Not Found",
     "positionNotFoundDesc": "The position you are looking for does not exist or has been removed"
+  },
+  "whatsapp": {
+    "interviewLink": "Hello {applicantName},\n\nWe have studied your CV and it is almost applicable to us. Please fill in the following information for the interview:\n\n{interviewLink}",
+    "scheduledInterview": "Hello {applicantName},\n\nWe are pleased to inform you that your interview has been scheduled.\n\n📅 *Interview Date & Time:*\n{formattedDate} (Saudi Arabia time)\n\n⏱️ *Interview Duration:* {interviewDuration} minutes\n\nPlease ensure you have a stable internet connection for the video interview.\n\nCan you please confirm the appointment?"
   }
 }
 

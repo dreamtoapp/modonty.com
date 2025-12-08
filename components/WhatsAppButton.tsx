@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { validateWhatsAppPhone, createWhatsAppUrl } from '@/helpers/whatsappPhone';
 
 interface WhatsAppButtonProps {
@@ -31,6 +32,12 @@ export function WhatsAppIcon({ className, style }: { className?: string; style?:
 export function WhatsAppButton({ phoneNumber, locale = 'ar' }: WhatsAppButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
+  const pathname = usePathname();
+
+  // Hide on modonty route
+  if (pathname?.includes('/modonty')) {
+    return null;
+  }
 
   // Hide pulse after 10 seconds
   useEffect(() => {

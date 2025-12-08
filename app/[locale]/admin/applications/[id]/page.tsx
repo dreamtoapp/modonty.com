@@ -1,6 +1,7 @@
 'use client';
 
 import { use, useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -93,6 +94,7 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
   const resolvedParams = use(params);
   const { locale, id } = resolvedParams;
   const router = useRouter();
+  const t = useTranslations('whatsapp');
 
   const [application, setApplication] = useState<ExtendedApplication | null>(null);
   const [loading, setLoading] = useState(true);
@@ -342,9 +344,10 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
     const interviewLink = `${window.location.origin}/${locale}/interview/${application.id}`;
     // Format message with link on separate line to make it clickable in WhatsApp
     // WhatsApp recognizes URLs when they are on their own line with proper spacing
-    const message = locale === 'ar'
-      ? `مرحباً ${application.applicantName}،\n\nلقد قمنا بدراسة سيرتك الذاتية وهي قابلة للتطبيق تقريباً معنا. يرجى ملء المعلومات التالية للمقابلة:\n\n${interviewLink}`
-      : `Hello ${application.applicantName},\n\nWe have studied your CV and it is almost applicable to us. Please fill in the following information for the interview:\n\n${interviewLink}`;
+    const message = t('interviewLink', {
+      applicantName: application.applicantName,
+      interviewLink: interviewLink,
+    });
     
     // Validate and attempt to fix phone number automatically
     const phoneValidation = validateAndFixWhatsAppPhone(application.phone);
@@ -391,9 +394,11 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
       }).format(scheduledDate);
     }
 
-    const message = locale === 'ar'
-      ? `مرحباً ${application.applicantName}،\n\nنود إبلاغك بأنه تم تحديد موعد المقابلة الشخصية معنا.\n\n📅 *موعد المقابلة:*\n${formattedDate}\n\n⏱️ *مدة المقابلة:* 45 دقيقة\n\nيرجى التأكد من توفر اتصال إنترنت مستقر للمقابلة عبر الفيديو.\n\nهل يمكنك تأكيد الموعد؟`
-      : `Hello ${application.applicantName},\n\nWe are pleased to inform you that your interview has been scheduled.\n\n📅 *Interview Date & Time:*\n${formattedDate}\n\n⏱️ *Interview Duration:* 45 minutes\n\nPlease ensure you have a stable internet connection for the video interview.\n\nCan you please confirm the appointment?`;
+    const message = t('scheduledInterview', {
+      applicantName: application.applicantName,
+      formattedDate: formattedDate,
+      interviewDuration: '45',
+    });
     
     // Validate and attempt to fix phone number automatically
     const phoneValidation = validateAndFixWhatsAppPhone(application.phone);

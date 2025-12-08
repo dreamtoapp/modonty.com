@@ -6,6 +6,7 @@ export const pathnames = {
   '/careers': '/careers',
   '/careers/apply/[position]': '/careers/apply/[position]',
   '/interview/[token]': '/interview/[token]',
+  '/modonty': '/modonty',
   '/admin': '/admin',
   '/admin/applications': '/admin/applications',
   '/admin/applications/[id]': '/admin/applications/[id]',
