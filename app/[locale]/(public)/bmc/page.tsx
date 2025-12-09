@@ -9,6 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { GoToTop } from "@/components/go-to-top";
 import { getFinanceData } from "@/lib/finance-data";
 import { 
+  calculateFinanceTotals,
+  calculateCategoryTotal,
+  formatCurrency,
+} from "@/helpers/financialCalculations";
+import { 
   TrendingUp, 
   DollarSign, 
   Users, 
@@ -68,27 +73,25 @@ export default async function BMCPresentationPage({
               </div>
 
               {/* Key Metrics Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 items-stretch">
                 <MetricDisplay
                   label={content.uiLabels.investmentRequired}
-                  value={`${locale === 'ar' ? 'ريال' : 'SAR'} ${(content.executiveSummary.investmentRequired.min / 1000).toFixed(0)}K-${
-                    (content.executiveSummary.investmentRequired.max / 1000).toFixed(0)
-                  }K`}
+                  value={`${formatCurrency(finance.investment?.total.min || 0, finance.currency)} - ${formatCurrency(finance.investment?.total.max || 0, finance.currency)}`}
                   variant="primary"
                 />
                 <MetricDisplay
                   label={content.uiLabels.breakEven}
-                  value={content.executiveSummary.breakEvenPoint}
+                  value={finance.breakEven?.point || (breakEvenClients ? (typeof breakEvenClients === 'object' ? `${breakEvenClients.clientsPerYear} ${locale === 'ar' ? 'عميل/سنة' : 'clients/year'}` : String(breakEvenClients)) : '—')}
                   variant="success"
                 />
                 <MetricDisplay
                   label={content.uiLabels.year1TargetClients}
-                  value={content.executiveSummary.year1Target.clients}
+                  value={finance.revenue.year1Target.clients}
                   variant="primary"
                 />
                 <MetricDisplay
                   label={content.uiLabels.year1MRRTarget}
-                  value={`${locale === 'ar' ? 'ريال' : 'SAR'} ${(content.executiveSummary.year1Target.mrr / 1000).toFixed(0)}K/month`}
+                  value={`${formatCurrency(finance.revenue.year1Target.monthlyRecognizedRevenue, finance.currency)}/M`}
                   variant="success"
                 />
               </div>
@@ -107,31 +110,55 @@ export default async function BMCPresentationPage({
                         : 'Data pulled directly from the admin Costs page to keep BMC in sync.'}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    <MetricDisplay
-                      label={locale === 'ar' ? 'إجمالي التكاليف الشهرية' : 'Total Monthly Costs'}
-                      value={`${totals.total.toLocaleString()} ${finance.currency}`}
-                      variant="primary"
-                    />
-                    <MetricDisplay
-                      label={locale === 'ar' ? 'نقطة التعادل (عملاء)' : 'Break-even Clients'}
-                      value={breakEvenClients ? (typeof breakEvenClients === 'object' ? `${breakEvenClients.clientsPerYear} ${locale === 'ar' ? 'عميل/سنة' : 'clients/year'}` : String(breakEvenClients)) : '—'}
-                      variant="success"
-                    />
-                    <MetricDisplay
-                      label={locale === 'ar' ? 'عدد البنود' : 'Line Items'}
-                      value={[
-                        finance.costs.fixed.leadership,
-                        finance.costs.fixed.technical,
-                        finance.costs.fixed.content,
-                        finance.costs.fixed.marketingSales,
-                        finance.costs.fixed.operations,
-                        finance.costs.fixed.infrastructure,
-                        finance.costs.fixed.overhead,
-                        finance.costs.variable.marketing,
-                      ].reduce((sum, cat) => sum + cat.items.length, 0)}
-                      variant="default"
-                    />
+                  <CardContent className="grid gap-4 md:grid-cols-2">
+                    <Card className="bg-primary/5 h-full">
+                      <CardContent className="p-4 md:p-6 flex flex-col h-full">
+                        <div className="text-xs md:text-sm text-muted-foreground mb-2 break-words leading-tight min-h-[2.5rem]">
+                          {locale === 'ar' ? 'إجمالي التكاليف' : 'Total Costs'}
+                        </div>
+                        <div className="space-y-2">
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">{locale === 'ar' ? 'شهرياً' : 'Monthly'}</p>
+                            <p className="text-2xl font-bold text-foreground">{formatCurrency(totals.total, finance.currency)}</p>
+                          </div>
+                          <div className="border-t pt-2">
+                            <p className="text-xs text-muted-foreground mb-1">{locale === 'ar' ? 'سنوياً' : 'Yearly'}</p>
+                            <p className="text-xl font-semibold text-foreground">{formatCurrency(totals.total * 12, finance.currency)}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    {breakEvenClients && typeof breakEvenClients === 'object' ? (
+                      <Card className="bg-success/5 h-full">
+                        <CardContent className="p-4 md:p-6 flex flex-col h-full">
+                          <div className="text-xs md:text-sm text-muted-foreground mb-2 break-words leading-tight min-h-[2.5rem]">
+                            {locale === 'ar' ? 'نقطة التعادل (عملاء)' : 'Break-even Clients'}
+                          </div>
+                          <div className="space-y-2">
+                            <div>
+                              <p className="text-xs text-muted-foreground mb-1">{locale === 'ar' ? 'يحتاج اكتساب شهرياً' : 'Clients per Month'}</p>
+                              <div className="flex items-center gap-2">
+                                <p className="text-2xl font-bold text-foreground">{breakEvenClients.clientsPerMonth.toFixed(1)}</p>
+                                <span className="text-xs text-muted-foreground">{locale === 'ar' ? 'عميل/شهر' : 'clients/M'}</span>
+                              </div>
+                            </div>
+                            <div className="border-t pt-2">
+                              <p className="text-xs text-muted-foreground mb-1">{locale === 'ar' ? 'إجمالي العملاء المطلوبين سنوياً' : 'Total Clients per Year'}</p>
+                              <div className="flex items-center gap-2">
+                                <p className="text-xl font-semibold text-foreground">{breakEvenClients.clientsPerYear}</p>
+                                <span className="text-xs text-muted-foreground">{locale === 'ar' ? 'عميل/سنة' : 'clients/year'}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <MetricDisplay
+                        label={locale === 'ar' ? 'نقطة التعادل (عملاء)' : 'Break-even Clients'}
+                        value="—"
+                        variant="success"
+                      />
+                    )}
                   </CardContent>
                 </Card>
               </div>
@@ -191,7 +218,7 @@ export default async function BMCPresentationPage({
               </h2>
               <BMCVisualCanvas 
               canvas={content.bmcCanvas} 
-              monthlyRecognizedRevenue={content.executiveSummary.year1Target.mrr}
+              monthlyRecognizedRevenue={finance.revenue.year1Target.monthlyRecognizedRevenue}
             />
             </div>
           </div>
@@ -209,6 +236,19 @@ export default async function BMCPresentationPage({
                   </li>
                 ))}
               </ul>
+              {content.keyPartners.marketingAgencies.value && (
+                <div className="mt-4 pt-4 border-t">
+                  <div className="text-xs font-semibold text-muted-foreground mb-2">قيمة الشراكة:</div>
+                  <ul className="space-y-1">
+                    {content.keyPartners.marketingAgencies.value.map((val, idx) => (
+                      <li key={idx} className="text-xs text-foreground flex items-start gap-2">
+                        <TrendingUp className="h-3 w-3 text-success flex-shrink-0 mt-0.5" />
+                        <span>{val}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </BMCCard>
 
             <BMCCard title={content.keyPartners.contentPartners.title} variant="warning">
@@ -274,50 +314,72 @@ export default async function BMCPresentationPage({
           <div className="space-y-6">
             <Card className="bg-primary/5 border-2 border-primary/20">
               <CardHeader>
-                <CardTitle>{content.keyResources.humanResources.title}</CardTitle>
+                <CardTitle>{locale === 'ar' ? 'الموارد البشرية' : 'Human Resources'}</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-semibold mb-3">{content.keyResources.humanResources.leadershipTeam.title}</h4>
-                    <div className="space-y-2">
-                      {content.keyResources.humanResources.leadershipTeam.members.map((member, idx) => (
-                        <div key={idx} className="p-3 bg-background rounded-lg">
-                          <div className="font-semibold">{member.role}</div>
-                          <div className="text-sm text-muted-foreground">{member.responsibilities}</div>
-                          <div className="text-xs text-primary mt-1">{member.salaryRange}</div>
-                        </div>
-                      ))}
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="p-4 bg-background rounded-lg">
+                    <div className="text-xs text-muted-foreground mb-1">{locale === 'ar' ? 'فريق القيادة' : 'Leadership Team'}</div>
+                    <div className="text-2xl font-bold text-primary">
+                      {finance.costs.fixed.leadership.items.length}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {formatCurrency(calculateCategoryTotal(finance.costs.fixed.leadership.items), finance.currency)}/M
                     </div>
                   </div>
-
-                  <div>
-                    <h4 className="font-semibold mb-3">{content.keyResources.humanResources.totals.teamSize}</h4>
-                    <div className="p-4 bg-background rounded-lg">
-                      <div className="text-2xl font-bold text-primary mb-1">
-                        {content.keyResources.humanResources.totals.monthlyPayroll}
-                      </div>
-                      <div className="text-sm text-muted-foreground">Monthly Payroll</div>
+                  <div className="p-4 bg-background rounded-lg">
+                    <div className="text-xs text-muted-foreground mb-1">{locale === 'ar' ? 'الفريق التقني' : 'Technical Team'}</div>
+                    <div className="text-2xl font-bold text-primary">
+                      {finance.costs.fixed.technical.items.length}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {formatCurrency(calculateCategoryTotal(finance.costs.fixed.technical.items), finance.currency)}/M
+                    </div>
+                  </div>
+                  <div className="p-4 bg-background rounded-lg">
+                    <div className="text-xs text-muted-foreground mb-1">{locale === 'ar' ? 'فريق المحتوى' : 'Content Team'}</div>
+                    <div className="text-2xl font-bold text-primary">
+                      {finance.costs.fixed.content.items.length}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {formatCurrency(calculateCategoryTotal(finance.costs.fixed.content.items), finance.currency)}/M
+                    </div>
+                  </div>
+                  <div className="p-4 bg-background rounded-lg">
+                    <div className="text-xs text-muted-foreground mb-1">{locale === 'ar' ? 'التسويق والمبيعات' : 'Marketing & Sales'}</div>
+                    <div className="text-2xl font-bold text-primary">
+                      {finance.costs.fixed.marketingSales.items.length}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {formatCurrency(calculateCategoryTotal(finance.costs.fixed.marketingSales.items), finance.currency)}/M
                     </div>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">{content.keyResources.humanResources.technicalTeam.title}</h4>
-                    <ul className="space-y-1">
-                      {content.keyResources.humanResources.technicalTeam.members.map((member, idx) => (
-                        <li key={idx} className="text-sm text-muted-foreground">• {member}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">{content.keyResources.humanResources.contentTeam.title}</h4>
-                    <ul className="space-y-1">
-                      {content.keyResources.humanResources.contentTeam.members.map((member, idx) => (
-                        <li key={idx} className="text-sm text-muted-foreground">• {member}</li>
-                      ))}
-                    </ul>
+                <div className="mt-6 p-4 bg-primary/10 rounded-lg border-2 border-primary/20">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-1">{locale === 'ar' ? 'إجمالي الفريق' : 'Total Team Size'}</div>
+                      <div className="text-2xl font-bold text-primary">
+                        {finance.costs.fixed.leadership.items.length +
+                         finance.costs.fixed.technical.items.length +
+                         finance.costs.fixed.content.items.length +
+                         finance.costs.fixed.marketingSales.items.length +
+                         finance.costs.fixed.operations.items.length} {locale === 'ar' ? 'شخص' : 'people'}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm text-muted-foreground mb-1">{locale === 'ar' ? 'إجمالي الرواتب الشهرية' : 'Total Monthly Payroll'}</div>
+                      <div className="text-2xl font-bold text-primary">
+                        {formatCurrency(
+                          calculateCategoryTotal(finance.costs.fixed.leadership.items) +
+                          calculateCategoryTotal(finance.costs.fixed.technical.items) +
+                          calculateCategoryTotal(finance.costs.fixed.content.items) +
+                          calculateCategoryTotal(finance.costs.fixed.marketingSales.items) +
+                          calculateCategoryTotal(finance.costs.fixed.operations.items),
+                          finance.currency
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -351,8 +413,43 @@ export default async function BMCPresentationPage({
 
         {/* Value Propositions */}
         <BMCSection id="value-propositions" title={content.valuePropositions.title}>
+          {/* Authority Blog - Primary Value Proposition (Highlighted) */}
+          {content.valuePropositions.primary[0] && (
+            <Card className="mb-6 bg-gradient-to-br from-primary/20 to-primary/5 border-4 border-primary shadow-xl">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <Badge className="bg-primary text-primary-foreground text-lg px-4 py-2">#1</Badge>
+                  <CardTitle className="text-2xl text-primary">{content.valuePropositions.primary[0].title}</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <div className="text-xs font-semibold text-muted-foreground mb-1">What:</div>
+                    <div className="text-sm font-medium text-foreground">{content.valuePropositions.primary[0].what}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-muted-foreground mb-1">Value:</div>
+                    <div className="text-sm font-medium text-foreground">{content.valuePropositions.primary[0].value}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-muted-foreground mb-1">Benefit:</div>
+                    <div className="text-sm font-medium text-foreground">{content.valuePropositions.primary[0].benefit}</div>
+                  </div>
+                </div>
+                {content.valuePropositions.primary[0].uniqueFactor && (
+                  <div className="pt-3 border-t border-primary/30">
+                    <div className="text-xs font-semibold text-primary mb-1">Unique Factor:</div>
+                    <div className="text-sm font-semibold text-primary">{content.valuePropositions.primary[0].uniqueFactor}</div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Other Value Propositions */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {content.valuePropositions.primary.map((prop, idx) => (
+            {content.valuePropositions.primary.slice(1).map((prop, idx) => (
               <Card key={idx} className="bg-card border-2 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-lg">{prop.title}</CardTitle>
@@ -556,21 +653,34 @@ export default async function BMCPresentationPage({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="p-4 bg-muted rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">Team Salaries</div>
-                    <div className="text-2xl font-bold">{content.costStructure.fixedCosts.teamSalaries.total.range}</div>
+                    <div className="text-2xl font-bold">
+                      {formatCurrency(
+                        calculateCategoryTotal(finance.costs.fixed.leadership.items) +
+                        calculateCategoryTotal(finance.costs.fixed.technical.items) +
+                        calculateCategoryTotal(finance.costs.fixed.content.items) +
+                        calculateCategoryTotal(finance.costs.fixed.marketingSales.items) +
+                        calculateCategoryTotal(finance.costs.fixed.operations.items),
+                        finance.currency
+                      )}
+                    </div>
                     <div className="text-xs text-muted-foreground mt-1">per month</div>
                   </div>
                   <div className="p-4 bg-muted rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">Infrastructure</div>
-                    <div className="text-2xl font-bold">{content.costStructure.fixedCosts.infrastructure.total}</div>
+                    <div className="text-2xl font-bold">
+                      {formatCurrency(totals.byCategory.infrastructure || 0, finance.currency)}
+                    </div>
                   </div>
                   <div className="p-4 bg-muted rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">Overhead</div>
-                    <div className="text-2xl font-bold">{content.costStructure.fixedCosts.overhead.total}</div>
+                    <div className="text-2xl font-bold">
+                      {formatCurrency(totals.byCategory.overhead || 0, finance.currency)}
+                    </div>
                   </div>
                 </div>
                 <div className="mt-6 p-4 bg-primary/5 rounded-lg border-2 border-primary/20">
                   <div className="text-lg font-semibold text-primary">
-                    {content.uiLabels.totalFixedCosts}: {content.costStructure.fixedCosts.totalFixed}
+                    {content.uiLabels.totalFixedCosts}: {formatCurrency(totals.total, finance.currency)}
                   </div>
                 </div>
               </CardContent>
@@ -582,26 +692,43 @@ export default async function BMCPresentationPage({
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {Object.entries(content.costStructure.totalByPhase).map(([key, phase]) => (
+                  {[
+                    { key: 'launch', phase: finance.costs.byPhase.launch },
+                    { key: 'growth', phase: finance.costs.byPhase.growth },
+                    { key: 'scale', phase: finance.costs.byPhase.scale },
+                  ].map(({ key, phase }) => (
                     <div key={key} className="p-4 bg-muted rounded-lg">
                       <div className="font-semibold mb-3">{phase.months}</div>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span>Team:</span>
-                          <span className="font-medium">{phase.team}</span>
+                          <span className="font-medium">
+                            {formatCurrency(
+                              (phase.leadership || 0) +
+                              (phase.technical || 0) +
+                              (phase.content || 0) +
+                              (phase.marketingSales || 0) +
+                              (phase.operations || 0),
+                              finance.currency
+                            )}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Marketing:</span>
-                          <span className="font-medium">{phase.marketing}</span>
+                          <span className="font-medium">
+                            {formatCurrency(phase.marketing, finance.currency)}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Infrastructure:</span>
-                          <span className="font-medium">{phase.infrastructure}</span>
+                          <span className="font-medium">
+                            {formatCurrency(phase.infrastructure, finance.currency)}
+                          </span>
                         </div>
                         <div className="pt-2 border-t mt-2">
                           <div className="flex justify-between font-bold">
                             <span>Total:</span>
-                            <span>{phase.total}</span>
+                            <span>{formatCurrency(phase.total, finance.currency)}</span>
                           </div>
                         </div>
                       </div>
@@ -624,22 +751,28 @@ export default async function BMCPresentationPage({
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {((content.revenueStreams.subscription as any).plans || []).map((plan: any, idx: number) => (
+                    {finance.revenue.pricingPlans.map((plan, idx) => (
                       <div key={idx} className="p-3 bg-background rounded-lg">
                         <div className="font-semibold">{plan.name}</div>
-                        <div className="text-2xl font-bold text-primary">{plan.annualPrice.toLocaleString()} {plan.currency}/year</div>
-                        <div className="text-sm text-muted-foreground">{plan.articlesPerMonth} articles/month for {plan.contentDuration} months</div>
-                        <div className="text-xs text-muted-foreground mt-1">Monthly recognized: {plan.monthlyRecognizedRevenue.toLocaleString()} {plan.currency}</div>
+                        <div className="text-2xl font-bold text-primary">
+                          {formatCurrency(plan.annualPrice, plan.currency)}/year
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {plan.articlesPerMonth} articles/M for {plan.contentDuration} months
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Monthly recognized: {formatCurrency(plan.monthlyRecognizedRevenue || 0, plan.currency)}
+                        </div>
                       </div>
                     ))}
                     <div className="pt-3 border-t">
                       <div className="text-sm text-muted-foreground">Average Annual Price:</div>
                       <div className="text-xl font-bold text-primary">
-                        {locale === 'ar' ? 'ريال' : 'SAR'} {((content.revenueStreams.subscription as any).averageAnnualPrice || 0).toLocaleString()}/year
+                        {formatCurrency(finance.revenue.averageAnnualPrice, finance.currency)}/year
                       </div>
                       <div className="text-sm text-muted-foreground mt-2">Average Monthly Recognized Revenue:</div>
                       <div className="text-lg font-semibold text-primary">
-                        {locale === 'ar' ? 'ريال' : 'SAR'} {((content.revenueStreams.subscription as any).averageMonthlyRecognizedRevenue || 0).toLocaleString()}/month
+                        {formatCurrency(finance.revenue.averageMonthlyPerClient, finance.currency)}/M
                       </div>
                     </div>
                   </div>
@@ -653,6 +786,72 @@ export default async function BMCPresentationPage({
         {/* Financial Summary */}
         <BMCSection id="financial-summary" title={content.financialSummary.title}>
           <div className="space-y-6">
+            {/* 18-Month Financial Model Explanation */}
+            <Card className="bg-gradient-to-br from-success/20 to-success/5 border-4 border-success shadow-xl">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <Badge className="bg-success text-success-foreground text-lg px-4 py-2">💰</Badge>
+                  <CardTitle className="text-2xl text-success">نموذج مالي فريد: ادفع 12، احصل على 18</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <div>
+                      <div className="text-sm font-semibold text-success mb-2">المفهوم:</div>
+                      <div className="text-sm text-foreground">
+                        الاشتراك السنوي يوفر 18 شهراً من تسليم المحتوى (6 أشهر مجانية = 50% قيمة إضافية)
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold text-success mb-2">الفوائد المالية:</div>
+                      <ul className="space-y-1 text-sm text-foreground">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0 mt-0.5" />
+                          <span>تدفق نقدي إيجابي فوري (دفع سنوي مقدماً)</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0 mt-0.5" />
+                          <span>استرداد CAC فوري (لا انتظار لاسترداد التكلفة)</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0 mt-0.5" />
+                          <span>تقليل مخاطر الانقطاع (18 شهر تعطي وقت لظهور نتائج SEO)</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0 mt-0.5" />
+                          <span>الإيرادات معترف بها على 18 شهر (نموذج محاسبي مستدام)</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="text-sm font-semibold text-success mb-2">مثال عملي:</div>
+                      <div className="p-4 bg-background rounded-lg space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">دفع العميل:</span>
+                          <span className="font-bold text-success">{formatCurrency(3999, finance.currency)}/سنة</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">محتوى يحصل عليه:</span>
+                          <span className="font-bold">18 شهر</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2">
+                          <span className="text-muted-foreground">القيمة الإضافية:</span>
+                          <span className="font-bold text-success">6 أشهر مجانية (50%)</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2">
+                          <span className="text-muted-foreground">الإيراد المعترف به شهرياً:</span>
+                          <span className="font-bold">{formatCurrency(222, finance.currency)}/M</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader>
                 <CardTitle>{content.uiLabels.investmentRequired}</CardTitle>
@@ -660,24 +859,61 @@ export default async function BMCPresentationPage({
               <CardContent>
                 <div className="p-6 bg-primary/5 rounded-lg border-2 border-primary/20 mb-6">
                   <div className="text-3xl font-bold text-primary mb-2">
-                    {locale === 'ar' ? 'ريال' : 'SAR'} {(content.financialSummary.investment.total.min / 1000).toFixed(0)}K - {locale === 'ar' ? 'ريال' : 'SAR'} {(content.financialSummary.investment.total.max / 1000).toFixed(0)}K
+                    {formatCurrency(finance.investment?.total.min || 0, finance.currency)} - {formatCurrency(finance.investment?.total.max || 0, finance.currency)}
                   </div>
                   <div className="text-sm text-muted-foreground">Total Initial Investment</div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {content.financialSummary.investment.breakdown.map((item, idx) => (
+                  {finance.investment?.breakdown.map((item, idx) => (
                     <div key={idx} className="p-4 bg-muted rounded-lg">
                       <div className="text-xs text-muted-foreground mb-1">{item.phase}</div>
-                      <div className="text-lg font-bold">{item.amount}</div>
+                      <div className="text-lg font-bold">{formatCurrency(item.amount, item.currency || finance.currency)}</div>
+                      {item.description && (
+                        <div className="text-xs text-muted-foreground mt-1">{item.description}</div>
+                      )}
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
+            {/* Competitive Advantages */}
+            <Card className="bg-primary/5 border-2 border-primary/20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  المزايا التنافسية الرئيسية
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="p-4 bg-background rounded-lg border-2 border-success/20">
+                    <div className="text-xs text-muted-foreground mb-1">توفير التكلفة</div>
+                    <div className="text-2xl font-bold text-success">90%</div>
+                    <div className="text-xs text-muted-foreground mt-1">أرخص من الوكالات التقليدية</div>
+                  </div>
+                  <div className="p-4 bg-background rounded-lg border-2 border-primary/20">
+                    <div className="text-xs text-muted-foreground mb-1">نسبة LTV:CAC</div>
+                    <div className="text-2xl font-bold text-primary">{finance.metrics?.ltvCacRatio?.value || "16:1"}</div>
+                    <div className="text-xs text-muted-foreground mt-1">{finance.metrics?.ltvCacRatio?.note || "نسبة ممتازة للاستدامة"}</div>
+                  </div>
+                  <div className="p-4 bg-background rounded-lg border-2 border-chart-3/20">
+                    <div className="text-xs text-muted-foreground mb-1">أصل مركب</div>
+                    <div className="text-2xl font-bold text-chart-3">∞</div>
+                    <div className="text-xs text-muted-foreground mt-1">مدونة السلطة تنمو مع الوقت</div>
+                  </div>
+                  <div className="p-4 bg-background rounded-lg border-2 border-warning/20">
+                    <div className="text-xs text-muted-foreground mb-1">استرداد CAC</div>
+                    <div className="text-2xl font-bold text-warning">فوري</div>
+                    <div className="text-xs text-muted-foreground mt-1">{finance.metrics?.cac?.note || "دفع سنوي مقدماً"}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <FinancialCharts 
-              projections={content.financialSummary.revenueProjections}
-              breakEven={content.financialSummary.breakEven}
+              finance={finance}
+              breakEven={breakEvenClients}
             />
           </div>
         </BMCSection>

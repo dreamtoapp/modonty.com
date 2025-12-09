@@ -70,7 +70,8 @@ export function BMCVisualCanvas({ canvas, monthlyRecognizedRevenue }: BMCVisualC
                 <CardTitle className="text-sm font-bold text-chart-3">KEY RESOURCES</CardTitle>
               </CardHeader>
               <CardContent className="p-3 space-y-1">
-                {canvas.keyResources.slice(0, 6).map((resource, idx) => (
+                <div className="text-xs font-bold text-chart-3 mb-1">★ {canvas.keyResources[1] || canvas.keyResources[0]}</div>
+                {canvas.keyResources.filter((r, i) => i !== 1).slice(0, 5).map((resource, idx) => (
                   <div key={idx} className="text-xs text-muted-foreground">• {resource}</div>
                 ))}
               </CardContent>
@@ -83,7 +84,8 @@ export function BMCVisualCanvas({ canvas, monthlyRecognizedRevenue }: BMCVisualC
                 <CardTitle className="text-sm font-bold text-chart-4">VALUE PROPOSITIONS</CardTitle>
               </CardHeader>
               <CardContent className="p-3 space-y-1">
-                {canvas.valuePropositions.slice(0, 6).map((prop, idx) => (
+                <div className="text-xs font-bold text-chart-4 mb-1">★ {canvas.valuePropositions[0]}</div>
+                {canvas.valuePropositions.slice(1, 6).map((prop, idx) => (
                   <div key={idx} className="text-xs text-muted-foreground">• {prop}</div>
                 ))}
               </CardContent>
@@ -152,8 +154,9 @@ export function BMCVisualCanvas({ canvas, monthlyRecognizedRevenue }: BMCVisualC
               </CardHeader>
               <CardContent className="p-3">
                 <div className="text-xs text-muted-foreground space-y-1">
+                  <div className="font-bold text-primary">• Pay 12, Get 18</div>
                   <div>• Annual Subscriptions</div>
-                  <div>• 18-Month Content</div>
+                  <div>• Upfront Payment</div>
                   <div className="mt-2">
                     <Badge variant="outline" className="text-xs">
                       {(monthlyRecognizedRevenue 

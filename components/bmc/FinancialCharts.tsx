@@ -1,42 +1,28 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-interface RevenueProjection {
-  month: string | number;
-  clients: string | number;
-  avgPrice: number;
-  subscriptionMRR: string | number;
-  addOnsMRR: number;
-  totalMRR: string | number;
-  cumulativeRevenue: string | number;
-}
+import type { FinanceData } from "@/helpers/financialCalculations";
+import { formatCurrency } from "@/helpers/financialCalculations";
 
 interface FinancialChartsProps {
-  projections: RevenueProjection[];
+  finance: FinanceData;
   breakEven: {
-    point: string;
-    monthlyCosts: string;
-    mrrNeeded: number;
-  };
+    clientsPerYear: number;
+    clientsPerMonth: number;
+    monthlyCosts: number;
+    annualCosts: number;
+    annualPricePerClient: number;
+  } | null;
 }
 
-export function FinancialCharts({ projections, breakEven }: FinancialChartsProps) {
-  const formatCurrency = (value: string | number) => {
-    if (typeof value === "string") {
-      return value;
-    }
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-
+export function FinancialCharts({ finance, breakEven }: FinancialChartsProps) {
+  const projections = finance.revenue.projections || [];
+  
   const maxMRR = Math.max(
     ...projections.map((p) => {
-      const mrr = typeof p.totalMRR === "string" ? parseFloat(p.totalMRR.replace(/[^0-9.]/g, "")) : p.totalMRR;
+      const mrr = typeof p.monthlyRecognizedRevenue === "string" 
+        ? parseFloat(p.monthlyRecognizedRevenue.replace(/[^0-9.]/g, "")) 
+        : (typeof p.monthlyRecognizedRevenue === "number" ? p.monthlyRecognizedRevenue : 0);
       return mrr || 0;
     })
   );
@@ -53,16 +39,16 @@ export function FinancialCharts({ projections, breakEven }: FinancialChartsProps
             {/* Chart Bars */}
             <div className="space-y-3">
               {projections.map((proj, idx) => {
-                const mrr = typeof proj.totalMRR === "string" 
-                  ? parseFloat(proj.totalMRR.replace(/[^0-9.]/g, "")) 
-                  : proj.totalMRR;
+                const mrr = typeof proj.monthlyRecognizedRevenue === "string" 
+                  ? parseFloat(proj.monthlyRecognizedRevenue.replace(/[^0-9.]/g, "")) 
+                  : (typeof proj.monthlyRecognizedRevenue === "number" ? proj.monthlyRecognizedRevenue : 0);
                 const percentage = maxMRR > 0 ? (mrr / maxMRR) * 100 : 0;
                 
                 return (
                   <div key={idx} className="space-y-1">
                     <div className="flex justify-between text-sm">
                       <span className="font-medium">Month {proj.month}</span>
-                      <span className="text-muted-foreground">{formatCurrency(proj.totalMRR)}</span>
+                      <span className="text-muted-foreground">{formatCurrency(mrr, finance.currency)}</span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-6 overflow-hidden">
                       <div
@@ -92,15 +78,25 @@ export function FinancialCharts({ projections, breakEven }: FinancialChartsProps
                   </tr>
                 </thead>
                 <tbody>
-                  {projections.map((proj, idx) => (
-                    <tr key={idx} className="border-b hover:bg-muted/50">
-                      <td className="p-2 text-sm">{proj.month}</td>
-                      <td className="p-2 text-sm text-right">{proj.clients}</td>
-                      <td className="p-2 text-sm text-right">{formatCurrency(proj.avgPrice)}</td>
-                      <td className="p-2 text-sm text-right font-medium">{formatCurrency(proj.totalMRR)}</td>
-                      <td className="p-2 text-sm text-right">{formatCurrency(proj.cumulativeRevenue)}</td>
-                    </tr>
-                  ))}
+                  {projections.map((proj, idx) => {
+                    const mrr = typeof proj.monthlyRecognizedRevenue === "string" 
+                      ? parseFloat(proj.monthlyRecognizedRevenue.replace(/[^0-9.]/g, "")) 
+                      : (typeof proj.monthlyRecognizedRevenue === "number" ? proj.monthlyRecognizedRevenue : 0);
+                    const cumulative = typeof proj.cumulativeAnnualRevenue === "string"
+                      ? parseFloat(proj.cumulativeAnnualRevenue.replace(/[^0-9.]/g, ""))
+                      : (typeof proj.cumulativeAnnualRevenue === "number" ? proj.cumulativeAnnualRevenue : 0);
+                    const avgPrice = finance.revenue.averageAnnualPrice;
+                    
+                    return (
+                      <tr key={idx} className="border-b hover:bg-muted/50">
+                        <td className="p-2 text-sm">{proj.month}</td>
+                        <td className="p-2 text-sm text-right">{proj.clients}</td>
+                        <td className="p-2 text-sm text-right">{formatCurrency(avgPrice, finance.currency)}</td>
+                        <td className="p-2 text-sm text-right font-medium">{formatCurrency(mrr, finance.currency)}</td>
+                        <td className="p-2 text-sm text-right">{formatCurrency(cumulative, finance.currency)}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -114,20 +110,30 @@ export function FinancialCharts({ projections, breakEven }: FinancialChartsProps
           <CardTitle>Break-Even Analysis</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-muted rounded-lg">
-              <div className="text-sm text-muted-foreground mb-1">Break-Even Point</div>
-              <div className="text-2xl font-bold">{breakEven.point}</div>
+          {breakEven ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 bg-muted rounded-lg">
+                <div className="text-sm text-muted-foreground mb-1">Clients Needed Per Year</div>
+                <div className="text-2xl font-bold">{breakEven.clientsPerYear}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {breakEven.clientsPerMonth.toFixed(1)} clients/M to acquire
+                </div>
+              </div>
+              <div className="p-4 bg-muted rounded-lg">
+                <div className="text-sm text-muted-foreground mb-1">Monthly Costs</div>
+                <div className="text-2xl font-bold">{formatCurrency(breakEven.monthlyCosts, finance.currency)}</div>
+              </div>
+              <div className="p-4 bg-muted rounded-lg">
+                <div className="text-sm text-muted-foreground mb-1">Annual Costs</div>
+                <div className="text-2xl font-bold">{formatCurrency(breakEven.annualCosts, finance.currency)}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Price per client: {formatCurrency(breakEven.annualPricePerClient, finance.currency)}/year
+                </div>
+              </div>
             </div>
-            <div className="p-4 bg-muted rounded-lg">
-              <div className="text-sm text-muted-foreground mb-1">Monthly Costs</div>
-              <div className="text-2xl font-bold">{breakEven.monthlyCosts}</div>
-            </div>
-            <div className="p-4 bg-muted rounded-lg">
-              <div className="text-sm text-muted-foreground mb-1">MRR Needed</div>
-              <div className="text-2xl font-bold">{formatCurrency(breakEven.mrrNeeded)}</div>
-            </div>
-          </div>
+          ) : (
+            <div className="p-4 text-center text-muted-foreground">Break-even data not available</div>
+          )}
         </CardContent>
       </Card>
     </div>

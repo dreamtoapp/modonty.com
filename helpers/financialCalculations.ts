@@ -198,6 +198,14 @@ export function calculateTotals(costs: CostsData): CostsTotals {
 }
 
 export function formatCurrency(amount: number, currency: string): string {
+  // If currency is SAR (default), return formatted number without currency symbol
+  if (currency === "SAR") {
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  }
+  // For other currencies, include currency symbol
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,

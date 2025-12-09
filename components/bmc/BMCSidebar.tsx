@@ -59,7 +59,7 @@ export function BMCSidebar({ content }: BMCSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("hero");
   const [openGroups, setOpenGroups] = useState<Set<string>>(
-    new Set(["Overview"])
+    new Set([content.uiLabels.overview || "Overview"])
   );
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -138,15 +138,15 @@ export function BMCSidebar({ content }: BMCSidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 h-full w-80 bg-card border-r border-border z-40 transition-transform duration-300 overflow-y-auto",
+          "fixed left-0 top-16 h-[calc(100vh-4rem)] w-80 bg-card border-r border-border z-40 transition-transform duration-300 overflow-y-auto",
           "lg:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="p-4">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6 pt-12 lg:pt-4">
-            <h2 className="text-lg font-bold text-foreground">Table of Contents</h2>
+          <div className="flex items-center justify-between mb-6 pt-4">
+            <h2 className="text-lg font-bold text-foreground">{content.uiLabels.overview || "Table of Contents"}</h2>
             <Button
               onClick={() => setIsOpen(false)}
               variant="ghost"

@@ -96,6 +96,7 @@ export interface KeyPartners {
   marketingAgencies: {
     title: string;
     partners: string[];
+    value?: string[];
   };
   contentPartners: {
     title: string;

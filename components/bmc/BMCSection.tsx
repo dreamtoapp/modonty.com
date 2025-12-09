@@ -79,12 +79,12 @@ export function MetricDisplay({ label, value, description, variant = "default" }
   };
 
   return (
-    <Card className={variantStyles[variant]}>
-      <CardContent className="p-6">
-        <div className="text-sm text-muted-foreground mb-1">{label}</div>
-        <div className="text-3xl font-bold text-foreground mb-1">{value}</div>
+    <Card className={`${variantStyles[variant]} h-full`}>
+      <CardContent className="p-4 md:p-6 flex flex-col h-full">
+        <div className="text-xs md:text-sm text-muted-foreground mb-2 break-words leading-tight min-h-[2.5rem]">{label}</div>
+        <div className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground break-words leading-tight flex-1">{value}</div>
         {description && (
-          <div className="text-xs text-muted-foreground">{description}</div>
+          <div className="text-xs text-muted-foreground mt-2 break-words">{description}</div>
         )}
       </CardContent>
     </Card>
