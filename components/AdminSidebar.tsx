@@ -34,6 +34,7 @@ export async function AdminSidebar({ locale }: AdminSidebarProps) {
         hiringPlan: t('hiringPlan'),
         phase1Requirements: t('phase1Requirements'),
         accounting: t('accounting'),
+        costs: t('costs'),
         employeeAffairs: t('employeeAffairs'),
         administrativeNotes: t('administrativeNotes'),
         contracts: t('contracts'),

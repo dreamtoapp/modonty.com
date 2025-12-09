@@ -34,8 +34,8 @@ export function WhatsAppButton({ phoneNumber, locale = 'ar' }: WhatsAppButtonPro
   const [showPulse, setShowPulse] = useState(true);
   const pathname = usePathname();
 
-  // Hide on modonty route
-  if (pathname?.includes('/modonty')) {
+  // Hide on modonty and bmc routes
+  if (pathname?.includes('/modonty') || pathname?.includes('/bmc')) {
     return null;
   }
 

@@ -233,6 +233,7 @@
     "customers": "العملاء",
     "tasks": "المهام",
     "accounting": "المحاسبة",
+    "costs": "التكاليف",
     "employeeAffairs": "شئون الموظفين",
     "administrativeNotes": "الملاحظات الإدارية",
     "contracts": "العقود والاتفاقيات",
@@ -265,6 +266,14 @@
       "collaboration": "فكرة تعاون أو شراكة",
       "careerInterest": "الاهتمام بوظائف مستقبلية",
       "other": "طلب آخر"
+    },
+    "costsDashboard": {
+      "monthlyCostsSource": "التكاليف الشهرية (مصدر رئيسي)",
+      "syncNote": "يتم عرض البيانات مباشرة من صفحة تكاليف الإدارة لضمان التوافق.",
+      "totalMonthlyCosts": "إجمالي التكاليف الشهرية",
+      "breakEvenClients": "نقطة التعادل (عملاء)",
+      "lineItems": "عدد البنود",
+      "minRequired": "الحد الأدنى المطلوب"
     }
   },
   "applications": {

@@ -233,6 +233,7 @@
     "customers": "Customers",
     "tasks": "Tasks",
     "accounting": "Accounting",
+    "costs": "Costs",
     "employeeAffairs": "Employee Affairs",
     "administrativeNotes": "Administrative Notes",
     "contracts": "Contracts & Agreements",
@@ -265,6 +266,14 @@
       "collaboration": "Collaboration or partnership idea",
       "careerInterest": "Interest in future roles",
       "other": "Other request"
+    },
+    "costsDashboard": {
+      "monthlyCostsSource": "Monthly Costs (Source of Truth)",
+      "syncNote": "Data pulled directly from the admin Costs page to keep BMC in sync.",
+      "totalMonthlyCosts": "Total Monthly Costs",
+      "breakEvenClients": "Break-even Clients",
+      "lineItems": "Line Items",
+      "minRequired": "Minimum required"
     }
   },
   "applications": {

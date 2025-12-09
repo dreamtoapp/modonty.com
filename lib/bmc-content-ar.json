@@ -1,0 +1,1397 @@
+{
+  "meta": {
+    "version": "1.0",
+    "date": "January 2025",
+    "status": "نموذج عمل نشط",
+    "title": "Modonty - نموذج العمل التجاري (BMC)"
+  },
+  "uiLabels": {
+    "badge": "نموذج العمل التجاري",
+    "printButton": "طباعة العرض",
+    "investmentRequired": "الاستثمار المطلوب",
+    "breakEven": "نقطة التعادل",
+    "year1TargetClients": "الهدف السنة الأولى - العملاء",
+    "year1MRRTarget": "الهدف السنة الأولى - MRR",
+    "businessModel": "نموذج العمل",
+    "targetMarket": "السوق المستهدف",
+    "revenueModel": "نموذج الإيرادات",
+    "partnershipBenefits": "فوائد الشراكة",
+    "fixedCosts": "التكاليف الثابتة",
+    "channelMixByStage": "مزيج القنوات حسب المرحلة",
+    "totalFixedCosts": "إجمالي التكاليف الثابتة",
+    "totalInitialInvestment": "إجمالي الاستثمار الأولي",
+    "overview": "نظرة عامة",
+    "executiveSummary": "الملخص التنفيذي",
+    "bmcBuildingBlocks": "كتل بناء BMC",
+    "financialStrategy": "المالية والاستراتيجية"
+  },
+  "executiveSummary": {
+    "description": "Modonty هي منصة محتوى عربي احترافية تقدم مقالات جاهزة للنشر تبني حضور مشروعك بدون تعقيد. منصة اشتراك سنوي توفر مقالات عربية احترافية مكتوبة خصيصاً لمشروعك، مدعومة بنظام Authority Blog يبني لك روابط استراتيجية وزيارات حقيقية من Google.",
+    "businessModelType": "B2B SaaS (برمجيات كخدمة) - نموذج اشتراك سنوي",
+    "targetMarket": "أصحاب المواقع والمشاريع في السعودية والأسواق العربية (متاجر إلكترونية، عيادات طبية، مكاتب محاماة، شركات خدمات، وأي صاحب موقع يحتاج محتوى عربي)",
+    "revenueModel": "إيرادات اشتراك سنوي معترف بها على مدى 18 شهر (ادفع 12 شهر، احصل على 18 شهر محتوى)",
+    "investmentRequired": {
+      "min": 600000,
+      "max": 720000,
+      "currency": "SAR",
+      "breakdown": {
+        "monthlySalaries": "50,000 ريال/شهر × 12 شهر = 600,000 ريال",
+        "toolsAndInfrastructure": "~8,000 ريال/شهر × 12 شهر = ~96,000 ريال",
+        "marketingAndLaunch": "~24,000 ريال (السنة الأولى)"
+      }
+    },
+    "breakEvenPoint": "الشهر 5-6",
+    "year1Target": {
+      "clients": 500,
+      "mrr": 136085,
+      "annualRevenue": 2449530,
+      "profitMargins": 45,
+      "currency": "SAR"
+    }
+  },
+  "bmcCanvas": {
+    "keyPartners": [
+      "وكالات التسويق",
+      "مواقع النشر الضيفي",
+      "شركات تطوير المواقع",
+      "استشاريو الأعمال",
+      "المؤثرون/المبدعون",
+      "الكتّاب والمحررون"
+    ],
+    "keyActivities": [
+      "إنشاء المحتوى",
+      "تحسين محركات البحث",
+      "تطوير المنصة",
+      "إدماج العملاء",
+      "ضمان الجودة",
+      "تحليلات الأداء",
+      "دعم العملاء"
+    ],
+    "keyResources": [
+      "الفريق (20-25 شخصاً)",
+      "مدونة السلطة",
+      "منصة SaaS",
+      "مكتبة المحتوى",
+      "أصول العلامة التجارية",
+      "مجموعة التقنيات",
+      "سلطة النطاق"
+    ],
+    "valuePropositions": [
+      "نظام مدونة السلطة (بناء DA)",
+      "محتوى 18 شهراً (ادفع 12، احصل على 18)",
+      "توفير 90% في التكلفة مقارنة بالوكالات",
+      "الشفافية (تكامل GTM/Analytics)",
+      "لا حاجة لمعرفة SEO",
+      "تميز المحتوى العربي",
+      "روابط خلفية من مواقع موثوقة",
+      "حاسبة عائد الاستثمار التنبؤية"
+    ],
+    "customerRelationships": [
+      "نموذج اشتراك سنوي SaaS",
+      "إدماج تلقائي",
+      "مديرو حسابات مخصصون",
+      "دعم البريد الإلكتروني/الهاتف",
+      "مكالمات استراتيجية شهرية",
+      "برنامج نجاح العملاء"
+    ],
+    "channels": [
+      "الموقع (تسجيل ذاتي)",
+      "الشراكات (برامج الإحالة)",
+      "الإعلانات المدفوعة (Google، LinkedIn، FB)",
+      "تسويق المحتوى (المدونة، LinkedIn، YouTube)",
+      "برنامج الإحالة (20% عمولة متكررة)",
+      "الفعاليات والندوات",
+      "فريق المبيعات (استكشاف خارجي)",
+      "وسائل التواصل الاجتماعي (نمو عضوي)"
+    ],
+    "customerSegments": [
+      "متاجر تجارة إلكترونية صغيرة (إيرادات 50-500 ألف ريال)",
+      "متاجر تجارة إلكترونية متوسطة (إيرادات 500 ألف - 5 مليون ريال)",
+      "وكالات التسويق",
+      "تجار المؤسسات",
+      "عيادات طبية/تجمالية",
+      "مكاتب محاماة/استشاريون"
+    ],
+    "costStructure": {
+      "teamSalaries": "50K/mo",
+      "infrastructure": "8K/mo",
+      "marketing": "2-8K/mo",
+      "overhead": "1.5-8K/mo",
+      "total": "~58K/month"
+    },
+    "revenueStreams": {
+      "pricingModel": "اشتراك سنوي (ادفع 12 شهر، احصل على 18 شهر محتوى)",
+      "plans": [
+        {
+          "name": "الخطة الأساسية",
+          "price": 2499,
+          "priceType": "annual",
+          "currency": "SAR",
+          "articlesPerMonth": 2,
+          "contentDuration": 18
+        },
+        {
+          "name": "الخطة القياسية",
+          "price": 3999,
+          "priceType": "annual",
+          "currency": "SAR",
+          "articlesPerMonth": 4,
+          "contentDuration": 18
+        },
+        {
+          "name": "الخطة الاحترافية",
+          "price": 6999,
+          "priceType": "annual",
+          "currency": "SAR",
+          "articlesPerMonth": 8,
+          "contentDuration": 18
+        },
+        {
+          "name": "الخطة المميزة",
+          "price": 9999,
+          "priceType": "annual",
+          "currency": "SAR",
+          "articlesPerMonth": 12,
+          "contentDuration": 18
+        }
+      ]
+    }
+  },
+  "keyPartners": {
+    "title": "الشركاء الرئيسيون",
+    "marketingAgencies": {
+      "title": "شركاء التسويق والوكالات",
+      "partners": [
+        "وكالات تطوير المواقع (برنامج إحالة - 20% عمولة متكررة)",
+        "استشاريو أعمال يخدمون عملاء التجارة الإلكترونية",
+        "وكالات التسويق (عملاء حل العلامة البيضاء)"
+      ]
+    },
+    "contentPartners": {
+      "title": "شركاء بناء المحتوى والسلطة",
+      "partners": [
+        "مواقع ذات سلطة نطاق عالية (DA 50+) للنشر الضيفي",
+        "مدونات ومنشورات الصناعة للحصول على روابط خلفية",
+        "المؤثرون ومنشئو المحتوى للوعي بالعلامة التجارية"
+      ]
+    },
+    "technologyPartners": {
+      "title": "الشركاء التقنيون",
+      "partners": [
+        "مزودو الاستضافة السحابية (Vercel، AWS، إلخ)",
+        "معالجات الدفع (Mada، Visa، Mastercard - مع Tamara و Tabby للدفع بالتقسيط)",
+        "منصات التحليلات (Google Analytics، Search Console)",
+        "أدوات SEO (Ahrefs، SEMrush APIs)"
+      ]
+    },
+    "benefits": [
+      "وصول مباشر للعملاء المستهدفين",
+      "بناء المصداقية والثقة",
+      "قنوات توزيع المحتوى",
+      "فرص إيرادات الإحالة"
+    ]
+  },
+  "keyActivities": {
+    "title": "الأنشطة الرئيسية",
+    "activities": [
+      {
+        "title": "إنشاء وإنتاج المحتوى",
+        "items": [
+          "كتابة مقالات عربية احترافية (50-60 مقالاً/أسبوع على نطاق واسع)",
+          "إنشاء نسخ مخصصة لكل عميل",
+          "تحسين المحتوى لـ SEO (بحث عن الكلمات المفتاحية، تحسين الصفحة)",
+          "ضمان الجودة والتحرير (محرران لضبط الجودة)",
+          "تخطيط استراتيجية المحتوى (خرائط طريق 18 شهراً لكل عميل)"
+        ]
+      },
+      {
+        "title": "تحسين SEO والعمل التقني",
+        "items": [
+          "بحث عن الكلمات المفتاحية وتحديد الفرص",
+          "تحسين SEO على الصفحة",
+          "استراتيجية الروابط الخلفية ووضعها",
+          "بناء سلطة النطاق لمدونة Modonty السلطة",
+          "تحليل المنافسين وتحديد الفجوات",
+          "تدقيقات SEO التقنية"
+        ]
+      },
+      {
+        "title": "تطوير المنصة والصيانة",
+        "items": [
+          "تطوير لوحة تحكم SaaS وتحديثات الميزات",
+          "تطوير تطبيق الهاتف المحمول (React Native)",
+          "تكاملات API (Google Analytics، Search Console، معالجات الدفع)",
+          "مراقبة الأداء والتحسين",
+          "الأمان والامتثال"
+        ]
+      },
+      {
+        "title": "إدارة العملاء والإدماج",
+        "items": [
+          "عملية المبيعات (مكالمات تجريبية، عروض، إغلاق)",
+          "إدماج العملاء والإعداد",
+          "إدارة الحسابات (للمستويات المدعومة)",
+          "نجاح العملاء والاحتفاظ بهم",
+          "حل تذاكر الدعم"
+        ]
+      },
+      {
+        "title": "التسويق والنمو",
+        "items": [
+          "تسويق المحتوى (المدونة، LinkedIn، YouTube)",
+          "حملات إعلانية مدفوعة (Google Ads، LinkedIn، Facebook)",
+          "تطوير الشراكات",
+          "المشاركة في الفعاليات والندوات",
+          "إدارة برنامج الإحالة"
+        ]
+      },
+      {
+        "title": "عمليات الأعمال",
+        "items": [
+          "الإدارة المالية والتقارير",
+          "توظيف الفريق وإدارته",
+          "تحسين العمليات",
+          "القانونية والامتثال",
+          "التخطيط الاستراتيجي"
+        ]
+      }
+    ]
+  },
+  "keyResources": {
+    "title": "الموارد الرئيسية",
+    "humanResources": {
+      "title": "الموارد البشرية",
+      "leadershipTeam": {
+        "title": "فريق القيادة (4 أشخاص)",
+        "members": [
+          {
+            "role": "CEO",
+            "responsibilities": "الاستراتيجية، جمع التمويل، الرؤية",
+            "salaryRange": "0-6K/شهر"
+          },
+          {
+            "role": "CTO",
+            "responsibilities": "تطوير المنتج، الاستراتيجية التقنية",
+            "salaryRange": "5-6K/شهر"
+          },
+          {
+            "role": "رئيس المحتوى",
+            "responsibilities": "استراتيجية المحتوى، إدارة الفريق",
+            "salaryRange": "3-4K/شهر"
+          },
+          {
+            "role": "رئيس التسويق",
+            "responsibilities": "النمو، الاستحواذ، العلامة التجارية",
+            "salaryRange": "3-4K/شهر"
+          }
+        ]
+      },
+      "technicalTeam": {
+        "title": "الفريق التقني (5-6 أشخاص)",
+        "members": [
+          "2-3 مطورين Full-stack (3-4K لكل/شهر)",
+          "1 مطور Backend رئيسي (3.5-4.5K/شهر)",
+          "1 مطور React Native (3-3.5K/شهر)",
+          "2 مصممين (2-3K لكل/شهر)"
+        ]
+      },
+      "contentTeam": {
+        "title": "فريق المحتوى (6 أشخاص)",
+        "members": ["4 كتّاب محتوى (1-1.5K لكل/شهر)", "2 محررين (1.25-1.75K لكل/شهر)"]
+      },
+      "salesMarketingTeam": {
+        "title": "فريق المبيعات والتسويق (5-6 أشخاص)",
+        "members": [
+          "2 مندوبي مبيعات (1.5-2K + عمولة/شهر)",
+          "1 أخصائي تسويق رقمي (2.5-3K/شهر)",
+          "1 مدير نجاح العملاء (2-2.5K/شهر)",
+          "1 مدير وسائل التواصل الاجتماعي (1.5-2K/شهر)"
+        ]
+      },
+      "operationsTeam": {
+        "title": "فريق العمليات (2 أشخاص)",
+        "members": [
+          "1 مدير عمليات (2.5-3K/شهر)",
+          "1 دعم العملاء (1-1.25K/شهر)",
+          "1 محلل بيانات بدوام جزئي (0.75-1K/شهر)"
+        ]
+      },
+      "totals": {
+        "teamSize": "20-25 شخصاً",
+        "monthlyPayroll": "55,000-70,000"
+      }
+    },
+    "intellectualResources": {
+      "title": "الموارد الفكرية",
+      "authorityBlog": {
+        "title": "مدونة السلطة (Modonty.com)",
+        "features": [
+          "سلطة نطاق عالية (الهدف: DA 45-50 بحلول الشهر 12)",
+          "مكتبة محتوى كبيرة (2,500+ مقال بحلول السنة الأولى)",
+          "ترتيبات Google قوية للكلمات المفتاحية المستهدفة",
+          "أصل قيمة مركب (يزداد قوة مع كل مقال)"
+        ]
+      },
+      "contentLibrary": {
+        "title": "مكتبة المحتوى",
+        "features": [
+          "قوالب وأطر مقالات قابلة لإعادة الاستخدام",
+          "استراتيجيات محتوى خاصة بالصناعة",
+          "قاعدة بيانات بحث الكلمات المفتاحية",
+          "بيانات الأداء والرؤى"
+        ]
+      },
+      "technology": {
+        "title": "التقنية والبرمجيات",
+        "features": [
+          "منصة SaaS (Next.js، React، Node.js، PostgreSQL)",
+          "تطبيق الهاتف المحمول (React Native)",
+          "أدوات التحليلات والتتبع",
+          "أدوات SEO وAPIs",
+          "سير عمل الأتمتة"
+        ]
+      },
+      "brandAssets": {
+        "title": "أصول العلامة التجارية والتسويق",
+        "features": [
+          "هوية العلامة التجارية ونظام التصميم",
+          "موقع التسويق وصفحات الهبوط",
+          "دراسات الحالة والشهادات",
+          "مواد وقوالب التسويق"
+        ]
+      },
+      "proprietarySystems": {
+        "title": "الأنظمة الخاصة",
+        "features": [
+          "سير عمل إنتاج المحتوى",
+          "عملية إدماج العملاء",
+          "إطار ضمان الجودة",
+          "أنظمة قياس الأداء"
+        ]
+      }
+    }
+  },
+  "valuePropositions": {
+    "title": "العروض القيمة",
+    "primary": [
+      {
+        "title": "نظام مدونة السلطة (المميز الفريد)",
+        "what": "مدونة سلطة مركزية (Modonty.com) تكتسب قوة شهرياً",
+        "value": "كل مقال منشور يقوي المدونة، مما يفيد جميع العملاء",
+        "benefit": "روابط خلفية موثوقة من نطاق قوي ومتنامي",
+        "uniqueFactor": "ليس مجرد كتابة مقالات - بناء أصل مركب"
+      },
+      {
+        "title": "تسليم المحتوى المزدوج",
+        "what": "مقال رئيسي على مدونة السلطة + نسخة مخصصة لموقع العميل",
+        "value": "العميل يحصل على روابط خلفية ومحتوى جاهز للنشر لموقعه",
+        "benefit": "أقصى تأثير SEO (روابط خلفية + محتوى على الموقع)",
+        "efficiency": "جهد إنتاج محتوى واحد يخدم غرضين"
+      },
+      {
+        "title": "حزمة محتوى 18 شهراً (ادفع 12، احصل على 18)",
+        "what": "الاشتراك السنوي يوفر 18 شهراً من تسليم المحتوى",
+        "value": "محتوى إضافي 50% (6 أشهر مجاناً)",
+        "benefit": "وقت لظهور نتائج SEO، تقليل مخاطر الانقطاع",
+        "psychology": "يظهر الثقة في النتائج طويلة الأجل"
+      },
+      {
+        "title": "توفير ضخم في التكلفة (حتى 90%)",
+        "what": "2,499-9,999 ريال/سنة مقابل 36,000-96,000 ريال/سنة للوكالات",
+        "value": "نفس النتائج أو أفضل بكسر من التكلفة",
+        "benefit": "بأسعار معقولة للمتاجر الإلكترونية الصغيرة/المتوسطة",
+        "comparison": "الوكالات التقليدية: 3,000-10,000$/شهر مقابل Modonty: 333-833$/شهر"
+      },
+      {
+        "title": "شفافية كاملة",
+        "what": "تكامل Google Tag Manager وAnalytics",
+        "value": "العملاء يرون أرقام حركة المرور الحقيقية في حساباتهم الخاصة",
+        "benefit": "يبني الثقة، يبرر الاشتراك، يقلل الشك",
+        "differentiation": "معظم الوكالات تقدم تقارير غامضة؛ Modonty تظهر بيانات حقيقية"
+      },
+      {
+        "title": "لا حاجة لمعرفة SEO",
+        "what": "خدمة كاملة جاهزة لك",
+        "value": "أصحاب الأعمال لا يحتاجون لتعلم أو إدارة SEO",
+        "benefit": "يوفر الوقت ويقضي على التعقيد التقني",
+        "target": "رجال الأعمال المشغولون الذين يريدون النتائج، وليس التعليم"
+      },
+      {
+        "title": "تميز المحتوى العربي",
+        "what": "محتوى عربي احترافي مكتوب من قبل متحدثين أصليين",
+        "value": "ذو صلة ثقافية، لغة طبيعية، جودة عالية",
+        "benefit": "مشاركة أفضل، ترتيبات أعلى، صوت أصيل",
+        "marketFit": "مصمم خصيصاً لسوق التجارة الإلكترونية العربية"
+      },
+      {
+        "title": "التخطيط الاستراتيجي للمحتوى",
+        "what": "استراتيجية محتوى 18 شهراً لكل عميل",
+        "value": "نهج منهجي مقابل مقالات عشوائية",
+        "benefit": "متوافق مع أهداف الأعمال، تغطية شاملة",
+        "result": "نتائج SEO أفضل من خلال التخطيط الاستراتيجي"
+      },
+      {
+        "title": "نظام قابل للتوسع",
+        "what": "عمليات وأتمتة فعالة",
+        "value": "جودة ثابتة على نطاق واسع",
+        "benefit": "تسليم موثوق، لا اعتماد على كتّاب فرديين",
+        "reliability": "قائم على النظام، وليس على الشخص"
+      },
+      {
+        "title": "فوائد متعددة القنوات",
+        "what": "محتوى معاد استخدامه لوسائل التواصل الاجتماعي، البريد الإلكتروني، إلخ",
+        "value": "مقال واحد ينشئ قطع محتوى متعددة",
+        "benefit": "أقصى عائد استثمار من استثمار المحتوى",
+        "addOn": "متوفر كميزة متميزة"
+      }
+    ],
+    "summary": {
+      "smallStores": {
+        "title": "للمتاجر الإلكترونية الصغيرة (إيرادات 50-500 ألف ريال)",
+        "benefits": [
+          "حل SEO بأسعار معقولة (أرخص 90% من الوكالات)",
+          "لا حاجة لمعرفة تقنية",
+          "نتائج شفافة",
+          "قيمة طويلة الأجل (حزمة 18 شهراً)"
+        ]
+      },
+      "mediumStores": {
+        "title": "للمتاجر الإلكترونية المتوسطة (إيرادات 500 ألف - 5 مليون ريال)",
+        "benefits": [
+          "خدمة مدعومة بدعم مخصص",
+          "استراتيجية محتوى مخصصة",
+          "إنتاج محتوى بحجم أعلى",
+          "تحليلات وتقارير متقدمة"
+        ]
+      },
+      "agenciesEnterprise": {
+        "title": "للوكالات والمؤسسات",
+        "benefits": [
+          "حل العلامة البيضاء",
+          "بنية تحتية قابلة للتوسع",
+          "فريق محتوى مخصص",
+          "تطوير ميزات مخصصة"
+        ]
+      }
+    }
+  },
+  "customerRelationships": {
+    "title": "علاقات العملاء",
+    "models": [
+      {
+        "type": "SaaS ذاتي الخدمة",
+        "percentage": 80,
+        "description": "إدماج تلقائي، وصول للوحة التحكم، دعم البريد الإلكتروني",
+        "touchpoints": [
+          "تسجيل الموقع والدفع",
+          "رسائل الترحيب التلقائية",
+          "إشعارات تسليم المحتوى الشهرية",
+          "الوصول إلى لوحة التحكم للمتابعة",
+          "دعم البريد الإلكتروني للأسئلة"
+        ],
+        "effort": "لمس منخفض، قابل للتوسع",
+        "target": "متاجر تجارة إلكترونية صغيرة (399-1,499$/شهر)"
+      },
+      {
+        "type": "خدمة مدعومة",
+        "percentage": 15,
+        "description": "مدير حساب مخصص، مكالمات شهرية، استراتيجية مخصصة",
+        "touchpoints": [
+          "مكالمة إدماج شخصية",
+          "مدير حساب مخصص",
+          "مكالمات مراجعة استراتيجية شهرية",
+          "إنتاج محتوى ذو أولوية",
+          "دعم الهاتف والبريد الإلكتروني",
+          "تقارير متقدمة"
+        ],
+        "effort": "لمس عالي، مخصص",
+        "target": "متاجر تجارة إلكترونية متوسطة (2,999-4,999$/شهر)"
+      },
+      {
+        "type": "حل العلامة البيضاء",
+        "percentage": 5,
+        "description": "شراكة كاملة، فريق مخصص، تطوير مخصص",
+        "touchpoints": [
+          "عملية إدماج مخصصة",
+          "فريق محتوى مخصص (4-6 كتّاب)",
+          "تطوير ميزات مخصصة",
+          "التدريب والدعم المستمر",
+          "مراجعات أعمال ربع سنوية"
+        ],
+        "effort": "لمس عالي جداً، شراكة استراتيجية",
+        "target": "وكالات التسويق، تجار المؤسسات (9,999-19,999$/شهر)"
+      }
+    ],
+    "buildingActivities": {
+      "onboarding": [
+        "تسلسل الترحيب (تلقائي لـ SaaS، شخصي للمدعوم)",
+        "مساعدة إعداد الحساب والتكامل",
+        "استشارة استراتيجية أولية",
+        "الوصول إلى مكتبة الموارد"
+      ],
+      "ongoingEngagement": [
+        "تقارير أداء شهرية (تلقائية)",
+        "إشعارات تسليم المحتوى الأسبوعية",
+        "مراجعات استراتيجية ربع سنوية (خدمة مدعومة)",
+        "محتوى تعليمي وندوات",
+        "بناء المجتمع (مجموعات Facebook، منتديات)"
+      ],
+      "retention": [
+        "برنامج نجاح العملاء",
+        "مراقبة درجة الصحة",
+        "تواصل استباقي للعملاء المعرضين للخطر",
+        "فرص البيع الإضافي (إضافات، ترقيات المستوى)",
+        "حوافز الإحالة"
+      ],
+      "supportChannels": [
+        "دعم البريد الإلكتروني (جميع المستويات)",
+        "دعم الهاتف (خدمة مدعومة+)",
+        "دردشة مباشرة (مستويات متميزة)",
+        "قاعدة المعرفة والوثائق",
+        "دروس فيديو"
+      ]
+    }
+  },
+  "channels": {
+    "title": "القنوات",
+    "direct": {
+      "website": {
+        "title": "الموقع (القناة الرئيسية للخدمة الذاتية)",
+        "features": [
+          "صفحة هبوط بعرض قيمة واضح",
+          "صفحة تسعير بمستويات شفافة",
+          "تسجيل ودفع ذاتي",
+          "تسويق المحتوى (منشورات مدونة ترتيبها في Google)",
+          "صفحات محسّنة لـ SEO للكلمات المفتاحية المستهدفة",
+          "معدل التحويل: الهدف 2-3%"
+        ]
+      },
+      "salesTeam": {
+        "title": "فريق المبيعات (التواصل المباشر)",
+        "features": [
+          "استكشاف خارجي (LinkedIn، بريد إلكتروني، مكالمات باردة)",
+          "مكالمات تجريبية وعروض منتج",
+          "مبيعات المؤسسات للصفقات الكبيرة",
+          "الهدف: 10-15 عميل/شهر من فريق المبيعات",
+          "CAC: 400-600$ لكل عميل"
+        ]
+      }
+    },
+    "partner": {
+      "agenciesConsultants": {
+        "title": "إحالات الوكالات والاستشاريين",
+        "features": [
+          "برنامج إحالة (20% عمولة متكررة)",
+          "تدريب الشركاء وتمكينهم",
+          "مواد مشتركة العلامة",
+          "الهدف: 15-20% من العملاء الجدد"
+        ]
+      }
+    },
+    "marketing": {
+      "paidAdvertising": {
+        "title": "الإعلانات المدفوعة",
+        "features": [
+          "Google Ads: استهداف كلمات مفتاحية \"SEO للتجارة الإلكترونية السعودية\"",
+          "LinkedIn Ads: استهداف صانعي قرارات التجارة الإلكترونية",
+          "Facebook/Instagram Ads: دراسات حالة مرئية، إعادة استهداف",
+          "الميزانية: 5,000-15,000$/شهر (يتناسب مع الإيرادات)",
+          "الهدف CAC: 400-500$",
+          "المتوقع: 30-40% من العملاء الجدد"
+        ]
+      },
+      "contentMarketing": {
+        "title": "تسويق المحتوى",
+        "features": [
+          "مدونة Modonty (مقالات محسّنة لـ SEO)",
+          "منشورات ومقالات LinkedIn (يومياً)",
+          "قناة YouTube (نصائح SEO أسبوعية، دراسات حالة)",
+          "ظهور البودكاست (نقاط ضيف)",
+          "الهدف: عملاء محتملين عضويين",
+          "المتوقع: 20-30% من العملاء الجدد (ينمو مع الوقت)"
+        ]
+      }
+    },
+    "community": {
+      "eventsWebinars": {
+        "title": "الفعاليات والندوات",
+        "features": [
+          "ندوة شهرية: \"فصل SEO للتجارة الإلكترونية\"",
+          "رعاية المؤتمرات",
+          "لقاءات التجارة الإلكترونية السعودية",
+          "المشاركة في المعارض التجارية",
+          "الهدف: الوعي بالعلامة التجارية + تسجيلات مباشرة"
+        ]
+      },
+      "socialMedia": {
+        "title": "وسائل التواصل الاجتماعي",
+        "features": [
+          "حضور عضوي في وسائل التواصل الاجتماعي",
+          "بناء المجتمع (مجموعات Facebook)",
+          "شراكات المؤثرين",
+          "إعادة استخدام المحتوى وتوزيعه"
+        ]
+      }
+    },
+    "retention": {
+      "referralProgram": {
+        "title": "برنامج الإحالة",
+        "features": [
+          "العملاء الحاليون يحيلون عملاء جدد",
+          "الحافز: شهر مجاني للطرفين",
+          "الهدف: 20-30% من العملاء الجدد من الإحالات",
+          "CAC أقل: 0$ (تكلفة المكافأة فقط)"
+        ]
+      },
+      "upselling": {
+        "title": "البيع الإضافي",
+        "features": [
+          "مبيعات إضافات (وسائل التواصل الاجتماعي، البريد الإلكتروني، الفيديو)",
+          "ترقيات المستوى (Starter → Growth → Scale)",
+          "توسيع الحساب (المزيد من المقالات، الميزات)",
+          "الهدف: 30% من العملاء يشترون إضافات"
+        ]
+      }
+    },
+    "channelMix": {
+      "months0to3": {
+        "phase": "الإطلاق",
+        "breakdown": {
+          "paidAdvertising": 40,
+          "directSales": 30,
+          "partnerships": 20,
+          "contentMarketing": 10
+        }
+      },
+      "months4to6": {
+        "phase": "النمو",
+        "breakdown": {
+          "paidAdvertising": 35,
+          "partnerships": 25,
+          "contentMarketing": 20,
+          "referrals": 15,
+          "directSales": 5
+        }
+      },
+      "months7to12": {
+        "phase": "التوسع",
+        "breakdown": {
+          "contentMarketing": 30,
+          "referrals": 25,
+          "partnerships": 20,
+          "paidAdvertising": 15,
+          "directSales": 10
+        }
+      }
+    }
+  },
+  "customerSegments": {
+    "title": "شرائح العملاء",
+    "primary": [
+      {
+        "id": 1,
+        "name": "متاجر تجارة إلكترونية صغيرة",
+        "characteristics": {
+          "annualRevenue": "50,000-500,000 ريال",
+          "productCount": "10-500 منتج",
+          "teamSize": "مملوكة أو فريق صغير",
+          "marketingBudget": "محدود"
+        },
+        "painPoints": [
+          "لا يمكن تحمل تكلفة الوكالات (3K-10K$/شهر)",
+          "نقص في معرفة SEO والوقت",
+          "صعوبة في الظهور على Google",
+          "الاعتماد على الإعلانات المدفوعة (مكلفة)"
+        ],
+        "solution": {
+          "tier": "مستوى SaaS ذاتي الخدمة (399-1,499$/شهر)",
+          "features": ["إدماج تلقائي", "تسعير شفاف", "موارد تعليمية"]
+        },
+        "target": "40% من العملاء (40 عميل من 100)",
+        "examples": ["متاجر الإلكترونيات", "محلات الأزياء", "متاجر مستلزمات المنزل"]
+      },
+      {
+        "id": 2,
+        "name": "متاجر تجارة إلكترونية متوسطة",
+        "characteristics": {
+          "annualRevenue": "500,000-5,000,000 ريال",
+          "productCount": "500-5,000 منتج",
+          "teamSize": "فريق تسويق مخصص أو مدير",
+          "seoEfforts": "بعض جهود SEO الموجودة"
+        },
+        "painPoints": [
+          "الحاجة لنهج استراتيجي أكثر",
+          "يريدون دعم مخصص",
+          "يتطلبون حجم محتوى أعلى",
+          "يبحثون عن عائد استثمار قابل للقياس"
+        ],
+        "solution": {
+          "tier": "مستوى خدمة مدعومة (2,999-4,999$/شهر)",
+          "features": ["مدير حساب مخصص", "استراتيجية محتوى مخصصة", "تحليلات متقدمة"]
+        },
+        "target": "15% من العملاء (15 عميل من 100)",
+        "examples": ["تجار متعددو الفئات", "علامات تجارية راسخة", "متاجر متنامية"]
+      },
+      {
+        "id": 3,
+        "name": "وكالات التسويق",
+        "characteristics": {
+          "clientBase": "خدمة عملاء تجارة إلكترونية متعددين",
+          "needs": "حل العلامة البيضاء",
+          "goal": "إضافة خدمة محتوى SEO",
+          "focus": "بنية تحتية قابلة للتوسع"
+        },
+        "painPoints": [
+          "بناء فريق محتوى مكلف",
+          "الحفاظ على الجودة على نطاق واسع صعب",
+          "الحاجة لحل قابل لإعادة العلامة التجارية",
+          "يريدون التركيز على إدارة العملاء، وليس الإنتاج"
+        ],
+        "solution": {
+          "tier": "حل العلامة البيضاء (9,999-19,999$/شهر)",
+          "features": [
+            "فريق محتوى مخصص",
+            "منصة قابلة لإعادة العلامة التجارية",
+            "ميزات مخصصة",
+            "التدريب والدعم"
+          ]
+        },
+        "target": "5% من العملاء (5 عملاء من 100)",
+        "examples": ["وكالات التسويق الرقمي", "شركات تطوير المواقع"]
+      },
+      {
+        "id": 4,
+        "name": "تجار المؤسسات",
+        "characteristics": {
+          "size": "علامات تجارة إلكترونية كبيرة",
+          "structure": "علامات فرعية أو أقسام متعددة",
+          "budget": "ميزانية تسويق كبيرة",
+          "needs": "حل SEO شامل"
+        },
+        "painPoints": [
+          "توسيع نطاق المحتوى عبر العلامات",
+          "الحفاظ على الاتساق",
+          "الحاجة لدعم على مستوى المؤسسة",
+          "متطلبات مخصصة"
+        ],
+        "solution": {
+          "tier": "حل العلامة البيضاء للمؤسسات",
+          "features": ["مقالات غير محدودة (ضمن المعقول)", "فريق مخصص لكل علامة", "تكاملات مخصصة"]
+        },
+        "target": "5% من العملاء (صفقات المؤسسات)",
+        "examples": ["سلاسل التجزئة الكبيرة", "شركات متعددة العلامات"]
+      }
+    ],
+    "secondary": [
+      {
+        "name": "عيادات طبية/تجمالية",
+        "needs": "محتوى طبي/تجمالي",
+        "requirements": "متطلبات محتوى احترافي",
+        "target": "10% من العملاء"
+      },
+      {
+        "name": "مكاتب محاماة/استشاريون",
+        "needs": "محتوى خدمات احترافية",
+        "focus": "التركيز على بناء السلطة",
+        "target": "5% من العملاء"
+      },
+      {
+        "name": "أعمال قائمة على الخدمات",
+        "needs": "خدمات منزلية، تنظيف، صيانة",
+        "focus": "التركيز على SEO المحلي",
+        "target": "10% من العملاء"
+      },
+      {
+        "name": "متاجر إلكترونية جديدة",
+        "stage": "تم إطلاقها للتو (1-2 سنوات)",
+        "challenges": "صعوبة في الظهور",
+        "needs": "انتصارات سريعة",
+        "target": "10% من العملاء"
+      }
+    ],
+    "prioritization": {
+      "phase1": {
+        "months": "0-3",
+        "focus": "متاجر تجارة إلكترونية صغيرة",
+        "reasons": ["أسهل في الاستحواذ", "نقطة سعر أقل = قرارات أسرع", "لعب الحجم"]
+      },
+      "phase2": {
+        "months": "4-6",
+        "focus": "متاجر متوسطة + وكالات",
+        "reasons": ["إيرادات أعلى لكل عميل", "هوامش أفضل", "علاقات طويلة الأجل"]
+      },
+      "phase3": {
+        "months": "7-12",
+        "focus": "المؤسسات + شرائح متخصصة",
+        "reasons": ["أقصى إيرادات لكل عميل", "شراكات استراتيجية", "القيادة السوقية"]
+      }
+    }
+  },
+  "costStructure": {
+    "title": "هيكل التكلفة",
+    "fixedCosts": {
+      "teamSalaries": {
+        "leadership": {
+          "people": 4,
+          "range": "37,500-52,500",
+          "currency": "SAR"
+        },
+        "technical": {
+          "people": "5-6",
+          "range": "67,500-86,250",
+          "currency": "SAR"
+        },
+        "content": {
+          "people": 6,
+          "range": "48,750-71,250",
+          "currency": "SAR"
+        },
+        "salesMarketing": {
+          "people": "5-6",
+          "range": "41,250-56,250",
+          "currency": "SAR"
+        },
+        "operations": {
+          "people": "2-3",
+          "range": "12,188-15,938",
+          "currency": "SAR"
+        },
+        "total": {
+          "range": "207,188-282,188",
+          "period": "month",
+          "currency": "SAR"
+        }
+      },
+      "infrastructure": {
+        "cloudHosting": "1,875-3,750/month",
+        "saasSubscriptions": "3,750-5,625/month",
+        "paymentProcessing": "~3% of revenue",
+        "domainSSL": "375/month",
+        "developmentTools": "1,875/month",
+        "total": "7,875-11,625/month"
+      },
+      "overhead": {
+        "officeRent": "7,500-11,250/month",
+        "utilities": "1,875/month",
+        "insuranceLegal": "1,875/month",
+        "miscellaneous": "1,875/month",
+        "total": "13,125-16,875/month"
+      },
+      "totalFixed": "228,188-310,688/month"
+    },
+    "variableCosts": {
+      "marketing": {
+        "paidAdvertising": "18,750-56,250/month (15-20% of revenue)",
+        "contentMarketing": "7,500/month",
+        "eventsSponsorships": "3,750/month",
+        "agencyFees": "3,750/month",
+        "total": "33,750-71,250/month"
+      },
+      "contentProduction": {
+        "perArticle": {
+          "writer": "225-338",
+          "editor": "75-113",
+          "qualityAssurance": "38",
+          "total": "338-488"
+        },
+        "atScale": {
+          "articlesPerWeek": "50-60",
+          "articlesPerMonth": "200-240",
+          "costPerMonth": "67,500-117,000"
+        }
+      },
+      "salesCommissions": {
+        "rate": "10-15% of first-year revenue per closed deal",
+        "estimated": "7,500-18,750/month (at scale)"
+      },
+      "cac": {
+        "target": "1,125-1,500 per client",
+        "includes": "Marketing spend, sales team time, tools",
+        "at20ClientsPerMonth": "22,500-30,000/month"
+      }
+    },
+    "totalByPhase": {
+      "launch": {
+        "months": "0-3",
+        "team": "225,000/month",
+        "marketing": "33,750/month",
+        "infrastructure": "9,375/month",
+        "overhead": "13,125/month",
+        "total": "~281,250/month"
+      },
+      "growth": {
+        "months": "4-6",
+        "team": "243,750/month",
+        "marketing": "45,000/month",
+        "infrastructure": "11,250/month",
+        "overhead": "15,000/month",
+        "total": "~315,000/month"
+      },
+      "scale": {
+        "months": "7-12",
+        "team": "50,000/month",
+        "marketing": "4,000-8,000/month",
+        "infrastructure": "8,000/month",
+        "overhead": "1,500-8,000/month",
+        "total": "~58,000-74,000/month"
+      }
+    },
+    "optimization": {
+      "efficiency": [
+        "Automate repetitive tasks",
+        "Optimize content production workflow",
+        "Use AI tools for research and optimization",
+        "Scale infrastructure efficiently"
+      ],
+      "economiesOfScale": [
+        "Fixed costs spread across more clients",
+        "Content library reuse",
+        "Bulk tool licenses",
+        "Team specialization and expertise"
+      ],
+      "targetMargins": {
+        "month6": "Break-even (0% margin)",
+        "month12": "45%+ profit margins",
+        "year2": "50-55% profit margins"
+      }
+    }
+  },
+  "revenueStreams": {
+    "title": "تدفقات الإيرادات",
+    "subscription": {
+      "model": "اشتراك سنوي مع تسليم محتوى لمدة 18 شهر",
+      "description": "العملاء يدفعون الرسوم السنوية مقدماً (12 شهر)، يحصلون على محتوى لمدة 18 شهر (6 شهور مجانية). الإيرادات معترف بها شهرياً على مدى فترة 18 شهر.",
+      "plans": [
+        {
+          "name": "الخطة الأساسية",
+          "annualPrice": 2499,
+          "currency": "SAR",
+          "articlesPerMonth": 2,
+          "contentDuration": 18,
+          "monthlyRecognizedRevenue": 139,
+          "description": "مقالين شهرياً لمدة 18 شهر"
+        },
+        {
+          "name": "الخطة القياسية",
+          "annualPrice": 3999,
+          "currency": "SAR",
+          "articlesPerMonth": 4,
+          "contentDuration": 18,
+          "monthlyRecognizedRevenue": 222,
+          "description": "4 مقالات شهرياً لمدة 18 شهر"
+        },
+        {
+          "name": "الخطة الاحترافية",
+          "annualPrice": 6999,
+          "currency": "SAR",
+          "articlesPerMonth": 8,
+          "contentDuration": 18,
+          "monthlyRecognizedRevenue": 389,
+          "description": "8 مقالات شهرياً لمدة 18 شهر"
+        },
+        {
+          "name": "الخطة المميزة",
+          "annualPrice": 9999,
+          "currency": "SAR",
+          "articlesPerMonth": 12,
+          "contentDuration": 18,
+          "monthlyRecognizedRevenue": 556,
+          "description": "12 مقال شهرياً لمدة 18 شهر"
+        }
+      ],
+      "averageAnnualPrice": 4899,
+      "averageMonthlyRecognizedRevenue": 272,
+      "clientDistribution": {
+        "basic": {
+          "percentage": 20,
+          "annualPrice": 2499,
+          "monthlyRecognizedRevenue": 139
+        },
+        "standard": {
+          "percentage": 50,
+          "annualPrice": 3999,
+          "monthlyRecognizedRevenue": 222
+        },
+        "pro": {
+          "percentage": 20,
+          "annualPrice": 6999,
+          "monthlyRecognizedRevenue": 389
+        },
+        "premium": {
+          "percentage": 10,
+          "annualPrice": 9999,
+          "monthlyRecognizedRevenue": 556
+        }
+      }
+    },
+    "addOns": {
+      "note": "الإضافات قد تُعرض لكنها غير مفصلة حالياً في صفحة الهبوط",
+      "potentialServices": [
+        "إعادة استخدام المحتوى لوسائل التواصل الاجتماعي",
+        "تكامل التسويق عبر البريد الإلكتروني",
+        "إنتاج محتوى فيديو",
+        "تحسين قوائم المنتجات"
+      ]
+    },
+    "projections": {
+      "month0to2": {
+        "clients": "10-15",
+        "avgPrice": 600,
+        "mrr": "6,000-9,000",
+        "addOns": 1000,
+        "totalMRR": "7,000-10,000"
+      },
+      "month3": {
+        "clients": 30,
+        "avgPrice": 800,
+        "mrr": 24000,
+        "addOns": 3000,
+        "totalMRR": 27000
+      },
+      "month6": {
+        "clients": "80-100",
+        "avgPrice": 800,
+        "mrr": "64,000-80,000",
+        "addOns": 15000,
+        "totalMRR": "79,000-95,000"
+      },
+      "month12": {
+        "clients": 150,
+        "avgPrice": 4001,
+        "mrr": 600000,
+        "addOns": 90000,
+        "totalMRR": 690000
+      }
+    },
+    "characteristics": {
+      "recurringRevenue": "95% of revenue is monthly recurring subscriptions",
+      "predictableCashFlow": true,
+      "ltv": "10,000-15,000 per client",
+      "churnTarget": "<8% monthly",
+      "revenueMix": {
+        "subscription": 85,
+        "addOns": 15
+      },
+      "pricingStrategy": "Annual payment = 18 months of content (financial engineering)",
+      "upsellingOpportunities": [
+        "Tier upgrades (Starter → Growth → Scale)",
+        "Add-on purchases",
+        "Additional articles beyond plan",
+        "Custom features for enterprise"
+      ]
+    },
+    "financialMetrics": {
+      "ltv": {
+        "avgAnnualPrice": 4899,
+        "avgLifetime": "18 شهر (دورة اشتراك واحدة)",
+        "total": "4,899 ريال لكل عميل (دفعة سنوية لمرة واحدة)"
+      },
+      "cac": {
+        "target": "200-400 ريال لكل عميل",
+        "paybackPeriod": "1-2 شهر (الدفع السنوي مقدماً)",
+        "ltvCacRatio": "12:1 إلى 24:1",
+        "note": "بما أن العملاء يدفعون سنوياً مقدماً، استرداد CAC فوري"
+      },
+      "monthlyRecognizedRevenueGrowth": {
+        "months1to3": "20-30% شهر بعد شهر",
+        "months4to6": "15-25% شهر بعد شهر",
+        "months7to12": "10-15% شهر بعد شهر"
+      },
+      "churnRate": {
+        "target": "<8% monthly churn",
+        "industryBenchmark": "10-15%",
+        "retentionStrategy": "18-month package, results-focused"
+      },
+      "margins": {
+        "contentProduction": "40-50% margin",
+        "platformSaaS": "70-80% margin",
+        "blendedGross": "60-65%",
+        "netMonth12": "45%+ net margin",
+        "netYear2": "50-55% net margin"
+      }
+    }
+  },
+  "financialSummary": {
+    "title": "الملخص المالي",
+    "investment": {
+      "total": {
+        "min": 600000,
+        "max": 720000,
+        "currency": "SAR"
+      },
+      "breakdown": [
+        {
+          "phase": "رواتب السنة الأولى",
+          "amount": "600,000 (50,000/شهر × 12 شهر)"
+        },
+        {
+          "phase": "الأدوات والبنية التحتية (السنة الأولى)",
+          "amount": "~96,000 (8,000/شهر × 12 شهر)"
+        },
+        {
+          "phase": "التسويق والإطلاق",
+          "amount": "~24,000"
+        }
+      ]
+    },
+    "revenueProjections": [
+      {
+        "month": "0-2",
+        "clients": "10-15",
+        "avgPrice": 2250,
+        "subscriptionMRR": "22,500-33,750",
+        "addOnsMRR": 3750,
+        "totalMRR": "26,250-37,500",
+        "cumulativeRevenue": "52,500-75,000"
+      },
+      {
+        "month": 3,
+        "clients": 30,
+        "avgPrice": 3000,
+        "subscriptionMRR": 90000,
+        "addOnsMRR": 11250,
+        "totalMRR": 101250,
+        "cumulativeRevenue": 303750
+      },
+      {
+        "month": 6,
+        "clients": 90,
+        "avgPrice": 3000,
+        "subscriptionMRR": "270,000",
+        "addOnsMRR": 45000,
+        "totalMRR": 315000,
+        "cumulativeRevenue": 1575000
+      },
+      {
+        "month": 9,
+        "clients": 120,
+        "avgPrice": 3563,
+        "subscriptionMRR": 427500,
+        "addOnsMRR": 67500,
+        "totalMRR": 495000,
+        "cumulativeRevenue": 2700000
+      },
+      {
+        "month": 12,
+        "clients": 150,
+        "avgPrice": 4001,
+        "subscriptionMRR": 600000,
+        "addOnsMRR": 90000,
+        "totalMRR": 690000,
+        "cumulativeRevenue": 4125000
+      }
+    ],
+    "breakEven": {
+      "point": "الشهر 5-6",
+      "monthlyCosts": "~58,000",
+      "monthlyRecognizedRevenueNeeded": 58000,
+      "clientsNeeded": "~213 عميل @ 272 ريال/شهر متوسط إيرادات معترف بها",
+      "calculation": "58,000 ÷ 272 = 213 عميل",
+      "achievedBy": "الشهر 5-6"
+    },
+    "profitabilityTimeline": {
+      "months1to6": "Investment phase (negative cash flow)",
+      "months7to8": "Break-even",
+      "months9to12": "Profitability (growing margins)",
+      "year2": "Strong profitability (50%+ margins)"
+    }
+  },
+  "keyMetrics": {
+    "title": "المقاييس والمؤشرات الرئيسية",
+    "business": {
+      "growth": {
+        "monthlyRecognizedRevenueGrowth": "15-25% شهر بعد شهر (الهدف)",
+        "newClients": "5-10 per week (target)",
+        "clientCount": "150 by Month 12 (target)"
+      },
+      "financial": {
+        "cac": "$300-400 per client (target)",
+        "ltv": "$12,800-16,000 per client",
+        "ltvCacRatio": "32:1 to 40:1 (target)",
+        "grossMargin": "60-65%",
+        "netMargin": "45%+ by Month 12"
+      },
+      "retention": {
+        "monthlyChurnRate": "<8% (target)",
+        "annualRetentionRate": ">60%",
+        "avgClientLifetime": "12-15 months"
+      }
+    },
+    "operational": {
+      "content": {
+        "articlesPublished": "50-60 per week (at scale)",
+        "qualityScore": "90%+ client approval",
+        "seoRankings": "Top 10 for 20% of target keywords (client average)"
+      },
+      "product": {
+        "uptime": "99.9%",
+        "featureVelocity": "Bi-weekly releases",
+        "supportResponseTime": "<4 hours"
+      },
+      "team": {
+        "employeeSatisfaction": "80%+",
+        "turnover": "<10% annually",
+        "productivity": "Articles per writer per week: 8-12"
+      }
+    }
+  },
+  "competitiveAdvantages": {
+    "title": "المزايا التنافسية",
+    "uniqueValuePropositions": [
+      "Authority Blog System - Not just content creation, building a compounding asset",
+      "Dual Content Delivery - Master article + customized client version",
+      "18-Month Package - Financial engineering with upfront payment",
+      "Transparency - Real GTM/Analytics integration, not vague reports",
+      "Arabic-First - Native Arabic content for Arab e-commerce market",
+      "Cost Advantage - 90% cheaper than traditional agencies",
+      "Scalable System - Consistent quality at scale, not person-dependent"
+    ],
+    "moats": {
+      "technology": [
+        "Proprietary SaaS platform",
+        "Automated workflows",
+        "AI-powered keyword discovery",
+        "Predictive ROI calculator"
+      ],
+      "content": [
+        "Large content library (compound asset)",
+        "Authority Blog (growing DA)",
+        "Reusable frameworks and templates",
+        "Performance data and insights"
+      ],
+      "networkEffects": [
+        "More clients → Stronger Authority Blog → Better results for all clients",
+        "More content → More backlinks → Higher DA → Better rankings"
+      ],
+      "brand": [
+        "First-mover advantage in Arab e-commerce SEO SaaS",
+        "Strong case studies and testimonials",
+        "Trust and credibility in market"
+      ]
+    }
+  },
+  "growthStrategy": {
+    "title": "استراتيجية النمو",
+    "phases": [
+      {
+        "phase": 1,
+        "name": "الأساس",
+        "timeline": "الأشهر -6 إلى 0",
+        "goals": [
+          "بناء سلطة النطاق (DA 30-35)",
+          "تطوير منصة MVP",
+          "توظيف الفريق الأساسي",
+          "إنشاء أساس مكتبة المحتوى"
+        ]
+      },
+      {
+        "phase": 2,
+        "name": "الإطلاق",
+        "timeline": "الأشهر 1-3",
+        "goals": [
+          "برنامج تجريبي (10-15 عميل)",
+          "إطلاق عام (30-50 عميل)",
+          "التحقق من ملاءمة المنتج للسوق",
+          "إنشاء العمليات"
+        ]
+      },
+      {
+        "phase": 3,
+        "name": "التوسع",
+        "timeline": "الأشهر 4-6",
+        "goals": [
+          "تحسين العمليات",
+          "التوسع إلى 80-100 عميل",
+          "تحقيق التعادل",
+          "تحسين المنتج والعمليات"
+        ]
+      },
+      {
+        "phase": 4,
+        "name": "الربحية",
+        "timeline": "الأشهر 7-12",
+        "goals": [
+          "التوسع إلى 150 عميل",
+          "التوسع إلى 500 عميل",
+          "تحقيق 136K+ ريال إيرادات معترف بها شهرياً",
+          "إطلاق المستويات المتميزة",
+          "التوسع إلى أسواق جديدة (الإمارات، الكويت)"
+        ]
+      }
+    ],
+    "year2Vision": {
+      "clients": "400+",
+      "monthlyRecognizedRevenue": "272K+ ريال (4.9M ريال إيرادات سنوية مجمعة)",
+      "expansion": "Regional expansion",
+      "enterprise": "Enterprise tier launch",
+      "fundraising": "Series A fundraising (optional)"
+    }
+  },
+  "risks": {
+    "title": "المخاطر والتخفيف",
+    "risks": [
+      {
+        "id": 1,
+        "name": "سلطة نطاق منخفضة عند الإطلاق",
+        "risk": "العملاء لا يرون النتائج بسرعة",
+        "mitigation": "بناء DA قبل الإطلاق لمدة 6 أشهر، وضع توقعات واقعية (3-6 أشهر)"
+      },
+      {
+        "id": 2,
+        "name": "معدل انقطاع عالي",
+        "risk": "العملاء يلغون قبل رؤية النتائج",
+        "mitigation": "حزمة 18 شهراً (إغلاق مالي)، تتبع التقدم الشفاف، برنامج نجاح العملاء"
+      },
+      {
+        "id": 3,
+        "name": "تغييرات خوارزمية Google",
+        "risk": "انخفاض الترتيبات، انخفاض حركة المرور",
+        "mitigation": "SEO White-hat فقط، مصادر حركة مرور متنوعة، التركيز على الجودة"
+      },
+      {
+        "id": 4,
+        "name": "المنافسة",
+        "risk": "المنافسون يدخلون السوق",
+        "mitigation": "ميزات فريدة، علامة تجارية قوية، ولاء العملاء، الابتكار المستمر"
+      },
+      {
+        "id": 5,
+        "name": "مشاكل التدفق النقدي",
+        "risk": "نفاد الأموال قبل التعادل",
+        "mitigation": "دفعات سنوية مقدماً، حد أدنى 3 أشهر للمدرج، جمع تمويل قائم على المعالم"
+      },
+      {
+        "id": 6,
+        "name": "تحديات توسيع الفريق",
+        "risk": "عدم القدرة على توظيف أو الاحتفاظ بالمواهب",
+        "mitigation": "رواتب تنافسية، أسهم للقيادة، ثقافة قوية، نمو وظيفي"
+      },
+      {
+        "id": 7,
+        "name": "الجودة على نطاق واسع",
+        "risk": "جودة المحتوى تتراجع مع الحجم",
+        "mitigation": "عملية تحريرية قوية، مقاييس الجودة، حلقات ملاحظات العملاء"
+      }
+    ]
+  },
+  "conclusion": {
+    "title": "الخلاصة",
+    "description": "نموذج عمل Modonty مبني على نظام مدونة السلطة الفريد الذي يخلق قيمة مركبة لكل من الشركة وعملائها. يوفر نموذج SaaS القائم على الاشتراك إيرادات متكررة متوقعة مع اقتصاديات وحدة ممتازة (نسبة LTV:CAC من 32:1 إلى 40:1).",
+    "keyStrengths": [
+      "عرض قيمة فريد (نظام مدونة السلطة)",
+      "ملاءمة سوقية قوية (سوق التجارة الإلكترونية العربية المتنامية)",
+      "نموذج عمل قابل للتوسع",
+      "اقتصاديات وحدة ممتازة",
+      "تدفقات إيرادات متعددة",
+      "حواجز تنافسية"
+    ],
+    "successFactors": [
+      "تنفيذ بناء DA قبل الإطلاق",
+      "الحفاظ على جودة المحتوى على نطاق واسع",
+      "تحقيق معدل انقطاع <8%",
+      "التوسع بكفاءة إلى 500 عميل",
+      "إطلاق مستويات متميزة للهوامش الأعلى"
+    ],
+    "expectedOutcome": "مع التنفيذ المناسب، من المتوقع أن تحقق Modonty 600K+ ريال MRR بحلول الشهر 12، هوامش ربح 45%+، ونمو مستدام حتى السنة الثانية وما بعدها."
+  }
+}
