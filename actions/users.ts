@@ -23,6 +23,12 @@ export async function getAllUsers() {
       password: true,
       createdAt: true,
       updatedAt: true,
+      staff: {
+        select: {
+          id: true,
+          clockifyUserId: true,
+        },
+      },
     },
     orderBy: {
       createdAt: 'desc',
@@ -74,6 +80,38 @@ export async function createUser(
       role,
       name: name || null,
       isActive: true,
+    },
+  });
+
+  revalidatePath('/admin/users');
+}
+
+export async function updateUserClockifyId(
+  userId: string,
+  clockifyUserId: string | null
+) {
+  const session = await auth();
+
+  if (!session?.user || session.user.role !== UserRole.SUPER_ADMIN) {
+    throw new Error('Unauthorized');
+  }
+
+  // Find staff record linked to this user
+  const staff = await prisma.staff.findFirst({
+    where: { userId },
+    select: { id: true },
+  });
+
+  if (!staff) {
+    throw new Error('No staff record linked to this user');
+  }
+
+  await prisma.staff.update({
+    where: { id: staff.id },
+    data: {
+      clockifyUserId: clockifyUserId && clockifyUserId.trim()
+        ? clockifyUserId.trim()
+        : null,
     },
   });
 
@@ -340,6 +378,7 @@ export async function updateUserPassword(data: {
     };
   }
 }
+
 
 
 

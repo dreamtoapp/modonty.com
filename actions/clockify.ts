@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache';
 import {
   getUserTimeEntries,
   calculateTimeSummary,
+  getClockifyUsers,
   type TimeEntry,
   type TimeSummary,
 } from '@/lib/clockify';
@@ -32,6 +33,11 @@ export interface GetAllStaffTimeSummaryResult {
 export interface SyncClockifyUserResult {
   success: boolean;
   error?: string;
+}
+
+export interface TestClockifyIntegrationResult {
+  success: boolean;
+  message: string;
 }
 
 /**
@@ -117,6 +123,55 @@ export async function getStaffTimeEntries(
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to get time entries',
+    };
+  }
+}
+
+/**
+ * Simple health check for Clockify integration.
+ * - Verifies env vars
+ * - Tries to fetch workspace users
+ * - Logs detailed info on the server
+ */
+export async function testClockifyIntegration(): Promise<TestClockifyIntegrationResult> {
+  try {
+    const session = await auth();
+
+    if (
+      !session?.user ||
+      (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPER_ADMIN)
+    ) {
+      return {
+        success: false,
+        message: 'Unauthorized (admin only)',
+      };
+    }
+
+    const apiKeySet = !!process.env.CLOCKIFY_API_KEY;
+    const workspaceId = process.env.CLOCKIFY_WORKSPACE_ID;
+
+    if (!apiKeySet || !workspaceId) {
+      return {
+        success: false,
+        message: 'CLOCKIFY_API_KEY or CLOCKIFY_WORKSPACE_ID is not set in .env',
+      };
+    }
+
+    console.log('Clockify test: using workspace', workspaceId);
+
+    const users = await getClockifyUsers();
+
+    console.log('Clockify test: fetched users count =', users.length);
+
+    return {
+      success: true,
+      message: `OK. Workspace ${workspaceId}, users found: ${users.length}`,
+    };
+  } catch (error) {
+    console.error('Clockify test failed:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Unknown Clockify error',
     };
   }
 }
@@ -268,5 +323,6 @@ export async function syncClockifyUser(
     };
   }
 }
+
 
 

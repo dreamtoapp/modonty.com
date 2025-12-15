@@ -60,8 +60,15 @@ export interface TimeSummary {
 /**
  * Convert ISO 8601 duration to milliseconds
  * Examples: "PT2H30M15S" -> 9015000ms, "PT1H" -> 3600000ms
+ *
+ * Clockify can sometimes return null/empty duration for running or invalid entries,
+ * so we defensively handle falsy values.
  */
-function parseDurationToMs(duration: string): number {
+function parseDurationToMs(duration: string | null | undefined): number {
+  if (!duration) {
+    return 0;
+  }
+
   const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
   const matches = duration.match(regex);
 
@@ -268,5 +275,6 @@ export function calculateTimeSummary(
     dailyBreakdown,
   };
 }
+
 
 

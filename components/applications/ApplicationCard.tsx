@@ -334,3 +334,4 @@ export function ApplicationCard({ application, locale }: ApplicationCardProps) {
 
 
 
+

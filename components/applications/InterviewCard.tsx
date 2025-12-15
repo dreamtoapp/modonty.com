@@ -310,3 +310,4 @@ export function InterviewCard({ application, interviewResult, locale }: Intervie
 
 
 
+

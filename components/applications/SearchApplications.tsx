@@ -88,3 +88,4 @@ export function SearchApplications({ locale, currentSearch = '' }: SearchApplica
 
 
 
+

@@ -72,7 +72,7 @@ export async function StaffDashboard({
           />
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -107,6 +107,30 @@ export async function StaffDashboard({
               <Link href={`/${locale}/admin/tasks/my-tasks`}>
                 <Button className="w-full" variant="outline">
                   {isArabic ? 'عرض جميع المهام' : 'View All Tasks'}
+                  <ArrowRight className={`h-4 w-4 ${isArabic ? 'mr-2 rotate-180' : 'ml-2'}`} />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>{isArabic ? 'سجل الوقت' : 'My Time'}</CardTitle>
+                  <CardDescription>
+                    {isArabic
+                      ? 'عرض سجل ساعات عملك في Clockify'
+                      : 'View your Clockify time entries'}
+                  </CardDescription>
+                </div>
+                <Clock className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Link href={`/${locale}/admin/my-time`}>
+                <Button className="w-full" variant="outline">
+                  {isArabic ? 'عرض سجل الوقت' : 'View My Time'}
                   <ArrowRight className={`h-4 w-4 ${isArabic ? 'mr-2 rotate-180' : 'ml-2'}`} />
                 </Button>
               </Link>

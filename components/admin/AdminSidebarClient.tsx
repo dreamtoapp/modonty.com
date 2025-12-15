@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { FileText, Users, Network, Briefcase, CheckSquare, Calculator, UserCog, StickyNote, CreditCard, ListTodo, BarChart3, Settings, FileSignature, Mail, DollarSign, LayoutDashboard, Target, CalendarClock, ChevronDown, TrendingUp, Share2, Edit } from 'lucide-react';
+import { FileText, Users, Network, Briefcase, CheckSquare, Calculator, UserCog, StickyNote, CreditCard, ListTodo, BarChart3, Settings, FileSignature, Mail, DollarSign, LayoutDashboard, Target, CalendarClock, ChevronDown, TrendingUp, Share2, Edit, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
@@ -231,6 +231,12 @@ export function AdminSidebarClient({
           comingSoon: false,
         },
         {
+          href: `/${locale}/admin/my-time`,
+          label: locale === 'ar' ? 'سجل الوقت' : 'My Time',
+          icon: Clock,
+          comingSoon: false,
+        },
+        {
           href: `/${locale}/admin/notes`,
           label: translations.administrativeNotes,
           icon: StickyNote,
@@ -292,6 +298,11 @@ export function AdminSidebarClient({
           label: translations.settings,
           icon: Settings,
           comingSoon: true,
+        },
+        {
+          href: `/${locale}/admin/clockify-users`,
+          label: locale === 'ar' ? 'مستخدمو Clockify' : 'Clockify Users',
+          icon: UserCog,
         },
         ...(session?.user?.role === UserRole.SUPER_ADMIN
           ? [
@@ -456,6 +467,7 @@ export function AdminSidebarClient({
     </div>
   );
 }
+
 
 
 

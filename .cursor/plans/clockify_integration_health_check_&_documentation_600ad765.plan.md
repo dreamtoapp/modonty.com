@@ -105,7 +105,7 @@ Clockify API returns:
 Transformed to:
 
 ```typescript
-{
+
   id: string,
   start: Date,
   end: Date,

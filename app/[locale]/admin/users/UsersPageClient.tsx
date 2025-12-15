@@ -43,7 +43,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Plus, Edit, Trash2, Key, Loader2, Shield } from 'lucide-react';
-import { createUser, updateUser, deleteUser, resetPassword } from '@/actions/users';
+import { createUser, updateUser, deleteUser, resetPassword, updateUserClockifyId } from '@/actions/users';
 function formatDateTime(date: Date): string {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
@@ -64,6 +64,10 @@ interface User {
   password: string;
   createdAt: Date;
   updatedAt: Date;
+  staff?: {
+    id: string;
+    clockifyUserId: string | null;
+  } | null;
 }
 
 interface UsersPageClientProps {
@@ -102,10 +106,12 @@ export function UsersPageClient({ users, locale, currentUserId }: UsersPageClien
     name: string;
     role: UserRole;
     isActive: boolean;
+    clockifyUserId: string;
   }>({
     name: '',
     role: UserRole.STAFF,
     isActive: true,
+    clockifyUserId: '',
   });
 
   // Reset password form state
@@ -143,6 +149,14 @@ export function UsersPageClient({ users, locale, currentUserId }: UsersPageClien
         role: editForm.role,
         isActive: editForm.isActive,
       });
+
+      // Update linked staff Clockify ID if staff record exists
+      if (editingUser.staff) {
+        await updateUserClockifyId(
+          editingUser.id,
+          editForm.clockifyUserId.trim() || null
+        );
+      }
       setIsEditOpen(false);
       setEditingUser(null);
       router.refresh();
@@ -203,6 +217,7 @@ export function UsersPageClient({ users, locale, currentUserId }: UsersPageClien
       name: user.name || '',
       role: user.role,
       isActive: user.isActive,
+      clockifyUserId: user.staff?.clockifyUserId || '',
     });
     setIsEditOpen(true);
   };
@@ -457,6 +472,27 @@ export function UsersPageClient({ users, locale, currentUserId }: UsersPageClien
                   </SelectContent>
                 </Select>
               </div>
+              {editingUser.staff ? (
+                <div className="space-y-2">
+                  <Label htmlFor="edit-clockify-id">Clockify User ID (for time tracking)</Label>
+                  <Input
+                    id="edit-clockify-id"
+                    type="text"
+                    value={editForm.clockifyUserId}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, clockifyUserId: e.target.value })
+                    }
+                    placeholder="Paste Clockify user ID"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Copy the ID from the Clockify Users page and paste it here to link time tracking.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  This user is not linked to a staff record, so Clockify ID cannot be set here.
+                </p>
+              )}
               {error && (
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>

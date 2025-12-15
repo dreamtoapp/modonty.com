@@ -27,11 +27,13 @@ const ALL_ROUTES = [
   { route: '/admin/customers', label: 'customers' },
   { route: '/admin/tasks', label: 'tasks' },
   { route: '/admin/tasks/my-tasks', label: 'myTasks' },
+  { route: '/admin/my-time', label: 'myTasks' },
   { route: '/admin/notes', label: 'administrativeNotes' },
   { route: '/admin/contracts', label: 'contracts' },
   { route: '/admin/reports', label: 'reports' },
   { route: '/admin/settings', label: 'settings' },
   { route: '/admin/users', label: 'users' },
+  { route: '/admin/clockify-users', label: 'users' },
 ];
 
 export default async function UserPermissionsPage({

@@ -1,12 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Clock, Eye } from 'lucide-react';
-import { TimesheetDetail } from './TimesheetDetail';
-import { getStaffTimeEntries } from '@/actions/clockify';
-import type { TimeSummary } from '@/lib/clockify';
+import { testClockifyIntegration } from '@/actions/clockify';
 
 interface TimeTrackingSummary {
   staffId: string;
@@ -39,28 +38,27 @@ export function TimeTrackingSection({
   locale,
 }: TimeTrackingSectionProps) {
   const isArabic = locale === 'ar';
-  const [selectedStaffId, setSelectedStaffId] = useState<string | null>(null);
-  const [selectedSummary, setSelectedSummary] = useState<TimeSummary | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isTestingClockify, setIsTestingClockify] = useState(false);
+  const [testMessage, setTestMessage] = useState<string | null>(null);
 
-  const handleViewTimesheet = async (staffId: string, staffName: string) => {
-    setLoading(true);
-    setSelectedStaffId(staffId);
+  const handleTestClockify = async () => {
+    setIsTestingClockify(true);
+    setTestMessage(null);
     try {
-      const result = await getStaffTimeEntries(staffId, startDate, endDate);
-      if (result.success && result.summary) {
-        setSelectedSummary(result.summary);
-        setDialogOpen(true);
-      } else {
-        console.error('Failed to load timesheet:', result.error);
-        alert(result.error || 'Failed to load timesheet');
+      const result = await testClockifyIntegration();
+      setTestMessage(result.message);
+      if (!result.success) {
+        // eslint-disable-next-line no-alert
+        alert(result.message);
       }
     } catch (error) {
-      console.error('Error loading timesheet:', error);
-      alert('Error loading timesheet');
+      console.error('Clockify test error:', error);
+      const message = isArabic ? 'خطأ في اختبار Clockify' : 'Clockify test failed';
+      setTestMessage(message);
+      // eslint-disable-next-line no-alert
+      alert(message);
     } finally {
-      setLoading(false);
+      setIsTestingClockify(false);
     }
   };
 
@@ -72,14 +70,34 @@ export function TimeTrackingSection({
     <>
       <div className="space-y-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">
-            {isArabic ? 'تتبع الوقت' : 'Time Tracking'}
-          </h2>
-          <p className="text-muted-foreground mt-1">
-            {isArabic
-              ? 'عرض ساعات العمل لكل موظف'
-              : 'View worked hours for each staff member'}
-          </p>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">
+                {isArabic ? 'تتبع الوقت' : 'Time Tracking'}
+              </h2>
+              <p className="text-muted-foreground mt-1">
+                {isArabic
+                  ? 'عرض ساعات العمل لكل موظف'
+                  : 'View worked hours for each staff member'}
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleTestClockify}
+              disabled={isTestingClockify}
+            >
+              {isTestingClockify
+                ? isArabic ? 'جاري الاختبار...' : 'Testing...'
+                : isArabic ? 'اختبار Clockify' : 'Test Clockify'}
+            </Button>
+          </div>
+          {testMessage && (
+            <p className="text-xs text-muted-foreground mt-1">
+              {testMessage}
+            </p>
+          )}
         </div>
 
         {/* Total Hours Card */}
@@ -120,15 +138,15 @@ export function TimeTrackingSection({
                         {formatHours(summary.totalHours)}
                       </span>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleViewTimesheet(summary.staffId, summary.staffName)}
-                      disabled={loading && selectedStaffId === summary.staffId}
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      {isArabic ? 'عرض' : 'View'}
-                    </Button>
+                    <Link href={`/${locale}/admin/time-tracking/${summary.staffId}`}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        {isArabic ? 'عرض' : 'View'}
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -165,21 +183,9 @@ export function TimeTrackingSection({
           </Card>
         )}
       </div>
-
-      {/* Timesheet Detail Dialog */}
-      {selectedSummary && selectedStaffId && (
-        <TimesheetDetail
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          staffName={summaries.find((s) => s.staffId === selectedStaffId)?.staffName || 'Unknown'}
-          summary={selectedSummary}
-          startDate={startDate}
-          endDate={endDate}
-          locale={locale}
-        />
-      )}
     </>
   );
 }
+
 
 
