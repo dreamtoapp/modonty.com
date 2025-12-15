@@ -2,8 +2,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckSquare, AlertCircle, Clock, DollarSign, Users, Server, Globe, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { CollapsibleCard } from '@/components/CollapsibleCard';
-import { InteractiveStatusBadge } from '@/components/InteractiveStatusBadge';
+import { CollapsibleCard } from '@/components/common/CollapsibleCard';
+import { InteractiveStatusBadge } from '@/components/common/InteractiveStatusBadge';
 import { prisma } from '@/lib/prisma';
 
 export default async function Phase1RequirementsPage({ params }: { params: Promise<{ locale: string }> }) {

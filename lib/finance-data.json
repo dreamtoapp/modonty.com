@@ -3,7 +3,7 @@
   "period": "monthly",
   "lastUpdated": "2025-01",
   "version": "2.0",
-  
+
   "costs": {
     "fixed": {
       "leadership": {
@@ -274,9 +274,7 @@
       "marketing": {
         "key": "marketing",
         "label": "Marketing & Media",
-        "items": [
-          { "label": "Google + Meta Ads", "amount": 5000, "category": "media" }
-        ],
+        "items": [{ "label": "Google + Meta Ads", "amount": 5000, "category": "media" }],
         "note": "Marketing and advertising costs - Google + Meta Ads"
       }
     },
@@ -320,7 +318,7 @@
       }
     }
   },
-  
+
   "revenue": {
     "pricingPlans": [
       {
@@ -470,7 +468,7 @@
       "note": "15% of clients purchase add-ons"
     }
   },
-  
+
   "metrics": {
     "cac": {
       "target": 300,
@@ -522,7 +520,7 @@
       "clientCountMonth12": 500
     }
   },
-  
+
   "investment": {
     "total": {
       "min": 600000,
@@ -556,13 +554,13 @@
       "other": "1%"
     }
   },
-  
+
   "breakEven": {
     "point": "Month 8-9",
     "achievedBy": "Month 8-9",
     "note": "Break-even calculated dynamically: Monthly Costs ÷ Average Monthly Revenue Per Client. Updates automatically when any costs change."
   },
-  
+
   "profitability": {
     "timeline": [
       {
@@ -613,7 +611,7 @@
       }
     ]
   },
-  
+
   "cashFlow": {
     "model": "Annual Payment Upfront",
     "description": "Clients pay full annual fee upfront, providing immediate positive cash flow",
@@ -629,7 +627,7 @@
       "note": "Revenue recognized gradually over 18 months"
     }
   },
-  
+
   "notes": [
     "All figures in Saudi Riyal (SAR)",
     "Monthly costs stable in initial phase (32,350 SAR/month)",

@@ -1,5 +1,5 @@
-import { PlanTimeline } from '@/components/PlanTimeline';
-import { TimelineView } from '@/components/TimelineView';
+import { PlanTimeline } from '@/components/planning/PlanTimeline';
+import { TimelineView } from '@/components/planning/TimelineView';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Target, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';

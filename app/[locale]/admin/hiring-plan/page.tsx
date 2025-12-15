@@ -1,5 +1,5 @@
-import { PlanTimeline } from '@/components/PlanTimeline';
-import { BudgetTable } from '@/components/BudgetTable';
+import { PlanTimeline } from '@/components/planning/PlanTimeline';
+import { BudgetTable } from '@/components/accounting/BudgetTable';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';

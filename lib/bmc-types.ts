@@ -566,3 +566,6 @@ export interface BMCContent {
   uiLabels: UILabels;
 }
 
+// Lean Canvas types (exported from helper for consistency)
+export type { LeanCanvasData } from "@/helpers/leanCanvasMapper";
+

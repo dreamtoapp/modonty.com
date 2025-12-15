@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { InterviewCard } from '@/components/InterviewCard';
-import { InterviewsPageClient } from '@/components/InterviewsPageClient';
+import { InterviewCard } from '@/components/applications/InterviewCard';
+import { InterviewsPageClient } from '@/components/applications/InterviewsPageClient';
 import { CalendarClock, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 

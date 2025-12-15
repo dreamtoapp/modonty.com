@@ -5,6 +5,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { Tajawal } from 'next/font/google';
+import { SessionProviderWrapper } from '@/components/layout/SessionProviderWrapper';
 import '../globals.css';
 
 const tajawal = Tajawal({
@@ -65,7 +66,9 @@ export default async function LocaleLayout({
           />
         </noscript>
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <SessionProviderWrapper>
+            {children}
+          </SessionProviderWrapper>
         </NextIntlClientProvider>
       </body>
     </html>

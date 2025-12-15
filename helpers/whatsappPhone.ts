@@ -122,17 +122,6 @@ export function createWhatsAppUrl(
 }
 
 /**
- * Checks if a phone number is valid for WhatsApp sharing
- * Quick validation without detailed error messages
- * 
- * @param phoneNumber - Phone number to check
- * @returns true if valid, false otherwise
- */
-export function isValidWhatsAppPhone(phoneNumber: string | null | undefined): boolean {
-  return validateWhatsAppPhone(phoneNumber).valid;
-}
-
-/**
  * Detects country code based on phone number pattern
  * - Saudi Arabia: Numbers starting with 05 (mobile) or 01 (landline) after removing 0
  * - Egypt: Numbers starting with 01 (mobile) or 02 (landline) after removing 0
@@ -191,41 +180,6 @@ function detectCountryCode(phoneNumber: string): string | null {
 }
 
 /**
- * Attempts to fix common phone number format issues
- * - Removes leading 0 and adds appropriate country code (966 for Saudi, 20 for Egypt)
- * - Handles common formats like 0501234567 -> 966501234567 or 01012345678 -> 201012345678
- * 
- * @param phoneNumber - Phone number to fix
- * @param defaultCountryCode - Default country code to use if detection fails (default: 966)
- * @returns Fixed phone number or original if can't be fixed
- */
-export function fixPhoneNumberForWhatsApp(
-  phoneNumber: string | null | undefined,
-  defaultCountryCode: string = '966'
-): string {
-  if (!phoneNumber) return '';
-
-  const formatted = formatPhoneForWhatsApp(phoneNumber);
-
-  if (formatted.length === 0) return '';
-
-  // If number starts with 0, remove it and add detected country code
-  if (formatted.startsWith('0') && formatted.length > 1) {
-    const withoutZero = formatted.substring(1);
-    const countryCode = detectCountryCode(formatted) || defaultCountryCode;
-    
-    // Check if adding country code would make it valid (7-15 digits)
-    const fixedNumber = `${countryCode}${withoutZero}`;
-    if (fixedNumber.length >= 7 && fixedNumber.length <= 15) {
-      return fixedNumber;
-    }
-  }
-
-  // Return formatted number as-is if it doesn't need fixing
-  return formatted;
-}
-
-/**
  * Validates and attempts to fix phone number, returns best available option
  * Automatically detects country (Saudi Arabia 966 or Egypt 20) based on number pattern
  * 
@@ -251,11 +205,18 @@ export function validateAndFixWhatsAppPhone(
   // If invalid and starts with 0, try to fix it with auto-detected country code
   if (!validation.valid) {
     const digitsOnly = phoneNumber.replace(/\D/g, '');
-    if (digitsOnly.startsWith('0')) {
-      const fixed = fixPhoneNumberForWhatsApp(phoneNumber, defaultCountryCode);
-      if (fixed && fixed !== digitsOnly) {
-        // Validate the fixed number
-        validation = validateWhatsAppPhone(fixed);
+    if (digitsOnly.startsWith('0') && digitsOnly.length > 1) {
+      const formatted = formatPhoneForWhatsApp(phoneNumber);
+      if (formatted.length > 0) {
+        const withoutZero = formatted.substring(1);
+        const countryCode = detectCountryCode(formatted) || defaultCountryCode;
+        
+        // Check if adding country code would make it valid (7-15 digits)
+        const fixedNumber = `${countryCode}${withoutZero}`;
+        if (fixedNumber.length >= 7 && fixedNumber.length <= 15) {
+          // Validate the fixed number
+          validation = validateWhatsAppPhone(fixedNumber);
+        }
       }
     }
   }
@@ -263,51 +224,4 @@ export function validateAndFixWhatsAppPhone(
   return validation;
 }
 
-/**
- * Analyzes and fixes phone number based on specific rules:
- * - If starts with "05" → Saudi Arabia (966)
- * - If starts with "01" → Egypt (20)
- * Removes leading 0 and prepends appropriate country code
- * 
- * @param phoneNumber - Phone number to analyze and fix
- * @returns Fixed phone number in international format, or original if already valid
- */
-export function analyzeAndFixPhoneNumber(phoneNumber: string | null | undefined): string {
-  if (!phoneNumber) return '';
-
-  const digitsOnly = formatPhoneForWhatsApp(phoneNumber);
-  if (digitsOnly.length === 0) return phoneNumber || '';
-
-  // Check if already in international format (doesn't start with 0)
-  if (!digitsOnly.startsWith('0')) {
-    // Already in international format, return as-is
-    return digitsOnly;
-  }
-
-  // Remove leading 0
-  const withoutZero = digitsOnly.substring(1);
-  if (withoutZero.length === 0) return phoneNumber;
-
-  let countryCode: string;
-
-  // Apply specific rules: 05 → Saudi (966), 01 → Egypt (20)
-  if (digitsOnly.startsWith('05')) {
-    countryCode = '966'; // Saudi Arabia
-  } else if (digitsOnly.startsWith('01')) {
-    countryCode = '20'; // Egypt
-  } else {
-    // Default to Saudi if pattern doesn't match
-    countryCode = '966';
-  }
-
-  const fixedNumber = `${countryCode}${withoutZero}`;
-  
-  // Validate the fixed number meets WhatsApp requirements
-  if (fixedNumber.length >= 7 && fixedNumber.length <= 15) {
-    return fixedNumber;
-  }
-
-  // If fixed number doesn't meet requirements, return original
-  return phoneNumber;
-}
 

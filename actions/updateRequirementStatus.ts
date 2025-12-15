@@ -2,15 +2,14 @@
 
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { auth } from '@/lib/auth';
 
 export type RequirementStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
 
 export async function updateRequirementStatus(id: string, status: RequirementStatus) {
   try {
-    const cookieStore = await cookies();
-    const adminToken = cookieStore.get('adminToken');
-    if (!adminToken) {
+    const session = await auth();
+    if (!session?.user) {
       return { success: false, error: 'Unauthorized' };
     }
 

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { Navigation } from '@/components/Navigation';
-import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { Navigation } from '@/components/layout/Navigation';
+import { WhatsAppButton } from '@/components/layout/WhatsAppButton';
 
 export default async function PublicLayout({
   children,

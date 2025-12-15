@@ -77,3 +77,12 @@ export async function deleteCVFromCloudinary(publicId: string): Promise<void> {
   }
 }
 
+export async function deleteImageFromCloudinary(publicId: string): Promise<void> {
+  try {
+    await cloudinary.uploader.destroy(publicId, { resource_type: 'image' });
+  } catch (error) {
+    console.error('Error deleting image from Cloudinary:', error);
+    throw error;
+  }
+}
+

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { CostsDashboard } from "@/components/CostsDashboard";
+import { CostsDashboard } from "@/components/accounting/CostsDashboard";
+import { NoFinanceDataAlert } from "@/components/admin/NoFinanceDataAlert";
 import { getFinanceData } from "@/lib/finance-data";
 
 export const metadata: Metadata = {
@@ -13,7 +14,11 @@ export default async function CostsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const finance = await getFinanceData(locale);
+  const finance = await getFinanceData();
+
+  if (!finance) {
+    return <NoFinanceDataAlert />;
+  }
 
   return (
     <div className="min-h-screen bg-muted" dir="rtl">

@@ -114,47 +114,50 @@
     ],
     "costStructure": {
       "teamSalaries": "50K/mo",
-      "infrastructure": "8K/mo",
+      "contentProduction": "67.5-117K/mo",
+      "technicalTeam": "67.5-86.25K/mo",
+      "leadership": "37.5-52.5K/mo",
       "marketing": "2-8K/mo",
-      "overhead": "1.5-8K/mo",
+      "infrastructure": "8K/mo",
+      "officeOverhead": "1.5-8K/mo",
       "total": "~58K/month"
     },
     "revenueStreams": {
-      "pricingModel": "Annual subscription (pay 12 months, receive 18 months of content)",
-      "plans": [
-        {
-          "name": "Basic Plan",
-          "price": 2499,
-          "priceType": "annual",
-          "currency": "SAR",
-          "articlesPerMonth": 2,
-          "contentDuration": 18
+      "tier1": {
+        "name": "Basic Plan",
+        "priceRange": "2,499 SAR/year"
+      },
+      "tier2": {
+        "name": "Standard Plan",
+        "priceRange": "3,999 SAR/year"
+      },
+      "tier3": {
+        "name": "Pro Plan",
+        "priceRange": "6,999-9,999 SAR/year"
+      },
+      "addOns": [
+        "Social media content repurposing",
+        "Email marketing integration",
+        "Video content production"
+      ],
+      "targetMix": {
+        "tier1": {
+          "clients": 100,
+          "avgPrice": 2499,
+          "mrr": 13900
         },
-        {
-          "name": "Standard Plan",
-          "price": 3999,
-          "priceType": "annual",
-          "currency": "SAR",
-          "articlesPerMonth": 4,
-          "contentDuration": 18
+        "tier2": {
+          "clients": 250,
+          "avgPrice": 3999,
+          "mrr": 55500
         },
-        {
-          "name": "Pro Plan",
-          "price": 6999,
-          "priceType": "annual",
-          "currency": "SAR",
-          "articlesPerMonth": 8,
-          "contentDuration": 18
+        "tier3": {
+          "clients": 150,
+          "avgPrice": 8499,
+          "mrr": 66700
         },
-        {
-          "name": "Premium Plan",
-          "price": 9999,
-          "priceType": "annual",
-          "currency": "SAR",
-          "articlesPerMonth": 12,
-          "contentDuration": 18
-        }
-      ]
+        "totalMRR": 136085
+      }
     }
   },
   "keyPartners": {
@@ -775,11 +778,7 @@
         ],
         "solution": {
           "plan": "Basic or Standard Plan (2,499-3,999 SAR/year)",
-          "features": [
-            "Local SEO content",
-            "Service-focused articles",
-            "Authority Blog mentions"
-          ]
+          "features": ["Local SEO content", "Service-focused articles", "Authority Blog mentions"]
         },
         "examples": ["Moving companies", "Cleaning services", "Maintenance companies"]
       },
@@ -837,29 +836,17 @@
       "phase1": {
         "months": "0-3",
         "focus": "Small E-commerce Stores",
-        "reasons": [
-          "Easier to acquire",
-          "Lower price point = faster decisions",
-          "Volume play"
-        ]
+        "reasons": ["Easier to acquire", "Lower price point = faster decisions", "Volume play"]
       },
       "phase2": {
         "months": "4-6",
         "focus": "Medium Stores + Agencies",
-        "reasons": [
-          "Higher revenue per client",
-          "Better margins",
-          "Longer-term relationships"
-        ]
+        "reasons": ["Higher revenue per client", "Better margins", "Longer-term relationships"]
       },
       "phase3": {
         "months": "7-12",
         "focus": "Enterprise + Specialized Segments",
-        "reasons": [
-          "Maximum revenue per client",
-          "Strategic partnerships",
-          "Market leadership"
-        ]
+        "reasons": ["Maximum revenue per client", "Strategic partnerships", "Market leadership"]
       }
     }
   },
@@ -1469,4 +1456,3 @@
     "expectedOutcome": "With proper execution, Modonty is positioned to achieve 500 clients by Month 12, generating 136K+ SAR monthly recognized revenue (2.45M SAR annual revenue collected), 45%+ profit margins, and sustainable growth into Year 2 and beyond."
   }
 }
-

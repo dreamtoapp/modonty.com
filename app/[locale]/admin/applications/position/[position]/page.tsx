@@ -1,14 +1,14 @@
 import { prisma } from '@/lib/prisma';
 import { getApplicationStatsByPosition } from '@/lib/applications';
-import { ApplicationCard } from '@/components/ApplicationCard';
+import { ApplicationCard } from '@/components/applications/ApplicationCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowLeft, CalendarClock } from 'lucide-react';
 import Link from 'next/link';
 import { getCanonicalPositionTitle, getPositionAliases, getTeamPositions } from '@/helpers/extractMetrics';
-import { SortApplications } from '@/components/SortApplications';
-import { SearchApplications } from '@/components/SearchApplications';
-import { FilterInterviewDropdown } from '@/components/FilterInterviewDropdown';
+import { SortApplications } from '@/components/applications/SortApplications';
+import { SearchApplications } from '@/components/applications/SearchApplications';
+import { FilterInterviewDropdown } from '@/components/applications/FilterInterviewDropdown';
 
 export default async function PositionApplicationsPage(
   props: {

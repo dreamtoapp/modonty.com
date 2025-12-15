@@ -1,118 +1,84 @@
 export interface CostItem {
   label: string;
   amount: number;
+  description?: string;
   category?: string;
   details?: string;
-  note?: string;
-}
-
-export interface CostCategory {
-  key: string;
-  label: string;
-  items: CostItem[];
 }
 
 export interface CostsData {
-  currency: string;
-  period: string;
-  categories: CostCategory[];
-  notes?: string[];
-}
-
-export interface CostsTotals {
-  total: number;
-  byCategory: Record<string, number>;
-}
-
-export interface PricingPlan {
-  name: string;
-  annualPrice: number;
-  currency: string;
-  articlesPerMonth?: number;
+  fixed: {
+    leadership: { items: CostItem[] };
+    technical: { items: CostItem[] };
+    content: { items: CostItem[] };
+    marketingSales: { items: CostItem[] };
+    operations: { items: CostItem[] };
+    infrastructure: { items: CostItem[] };
+    overhead: { items: CostItem[] };
+  };
+  variable: {
+    marketing: { items: CostItem[] };
+  };
+  byPhase?: {
+    launch?: {
+      leadership?: number;
+      technical?: number;
+      content?: number;
+      marketingSales?: number;
+      operations?: number;
+      marketing?: number;
+      infrastructure?: number;
+      total?: number;
+      months?: string;
+    };
+    growth?: {
+      leadership?: number;
+      technical?: number;
+      content?: number;
+      marketingSales?: number;
+      operations?: number;
+      marketing?: number;
+      infrastructure?: number;
+      total?: number;
+      months?: string;
+    };
+    scale?: {
+      leadership?: number;
+      technical?: number;
+      content?: number;
+      marketingSales?: number;
+      operations?: number;
+      marketing?: number;
+      infrastructure?: number;
+      total?: number;
+      months?: string;
+    };
+  };
 }
 
 export interface FinanceData {
   currency: string;
   period: string;
-  lastUpdated?: string;
   version?: string;
-  costs: {
-    fixed: {
-      leadership: CostCategory & { total?: number; note?: string };
-      technical: CostCategory & { total?: number; note?: string };
-      content: CostCategory & { total?: number; note?: string };
-      marketingSales: CostCategory & { total?: number; note?: string };
-      operations: CostCategory & { total?: number; note?: string };
-      infrastructure: CostCategory & { total?: number; note?: string };
-      overhead: CostCategory & { total?: number; note?: string };
-    };
-    variable: {
-      marketing: CostCategory & { total?: number; note?: string };
-    };
-    totalMonthly: {
-      fixed: number;
-      variable: number;
-      base: number;
-      note?: string;
-    };
-    byPhase: {
-      launch: { 
-        months: string; 
-        leadership?: number; 
-        technical?: number; 
-        content?: number; 
-        marketingSales?: number; 
-        operations?: number; 
-        team?: number; 
-        marketingTeam?: number; 
-        infrastructure: number; 
-        marketing: number; 
-        overhead: number; 
-        total: number; 
-        note?: string 
-      };
-      growth: { 
-        months: string; 
-        leadership?: number; 
-        technical?: number; 
-        content?: number; 
-        marketingSales?: number; 
-        operations?: number; 
-        team?: number; 
-        marketingTeam?: number; 
-        infrastructure: number; 
-        marketing: number; 
-        overhead: number; 
-        total: number; 
-        note?: string 
-      };
-      scale: { 
-        months: string; 
-        leadership?: number; 
-        technical?: number; 
-        content?: number; 
-        marketingSales?: number; 
-        operations?: number; 
-        team?: number; 
-        marketingTeam?: number; 
-        infrastructure: number; 
-        marketing: number; 
-        overhead: number; 
-        total: number; 
-        note?: string 
-      };
-    };
-  };
+  costs: CostsData;
   revenue: {
-    pricingPlans: Array<PricingPlan & { contentDuration?: number; monthlyRecognizedRevenue?: number; description?: string }>;
+    pricingPlans: Array<{
+      name: string;
+      annualPrice: number;
+      currency: string;
+      articlesPerMonth: number;
+      contentDuration: number;
+      monthlyRecognizedRevenue?: number;
+      description?: string;
+    }>;
     clientDistribution: {
       basic: { percentage: number; annualPrice: number; monthlyRecognizedRevenue: number };
       standard: { percentage: number; annualPrice: number; monthlyRecognizedRevenue: number };
       pro: { percentage: number; annualPrice: number; monthlyRecognizedRevenue: number };
       premium: { percentage: number; annualPrice: number; monthlyRecognizedRevenue: number };
     };
-    averageMonthlyPerClient: number; // Recognized revenue (over 18 months)
-    averageMonthlyCashFlowPerClient?: number; // Cash flow (annual price ÷ 12 months)
+    averageMonthlyPerClient: number;
+    averageMonthlyCashFlowPerClient?: number;
     averageAnnualPrice: number;
     recognitionModel?: {
       paymentPeriod: number;
@@ -143,162 +109,344 @@ export interface FinanceData {
     };
   };
   metrics?: {
-    cac?: { target: number; range: [number, number]; currency?: string; paybackPeriod?: string; note?: string };
-    ltv?: { value: number; currency?: string; avgLifetime?: string; calculation?: string; note?: string };
-    ltvCacRatio?: { value: string; range?: string; calculation?: string; note?: string };
+    cac?: { target: number; range: [number, number]; note?: string };
+    ltv?: { value: number; note?: string };
+    costSavings?: { percentage?: string | number };
     margins?: {
-      gross?: { contentProduction?: string; platformSaaS?: string; blended?: string; note?: string };
-      net?: { month12?: string; year2?: string; note?: string };
+      gross?: {
+        blended?: string;
+      };
     };
-    churn?: { target?: string; monthly?: string; industryBenchmark?: string; retentionStrategy?: string; note?: string };
-    growth?: {
-      monthlyRecognizedRevenueGrowth?: { months1to3?: string; months4to6?: string; months7to12?: string };
-      newClientsPerWeek?: string;
-      clientCountMonth12?: number;
+    ltvCacRatio?: {
+      value?: string;
+      note?: string;
     };
   };
   investment?: {
-    total: { min: number; max: number; currency?: string };
-    breakdown: Array<{ phase: string; amount: number; description?: string; currency?: string }>;
-    useOfFunds?: Record<string, string>;
+    breakdown: Array<{
+      phase: string;
+      amount: number;
+      currency: string;
+      description?: string;
+    }>;
   };
-  breakEven?: {
-    monthlyCosts?: number; // Optional - calculated dynamically
-    avgRevenuePerClient?: number; // Optional - from revenue.averageMonthlyPerClient
-    clientsNeeded?: number; // Optional - calculated dynamically
-    calculation?: string; // Optional - for reference only
-    point?: string;
-    achievedBy?: string;
-    note?: string;
-  };
-  profitability?: {
-    timeline?: Array<{ phase: string; status: string; cashFlow: string; margins?: string; note?: string }>;
-    milestones?: Array<{ month: number; milestone: string; mrr: string; note?: string }>;
-  };
-  cashFlow?: {
-    model?: string;
-    description?: string;
-    advantages?: string[];
-    deferredRevenue?: { description?: string; recognitionRate?: string; note?: string };
-  };
-  notes?: string[];
 }
 
-export function calculateTotals(costs: CostsData): CostsTotals {
-  const byCategory: Record<string, number> = {};
-  let total = 0;
-
-  for (const category of costs.categories) {
-    const catTotal = category.items.reduce((sum, item) => sum + item.amount, 0);
-    byCategory[category.key] = catTotal;
-    total += catTotal;
-  }
-
-  return { total, byCategory };
-}
-
-export function formatCurrency(amount: number, currency: string): string {
-  // If currency is SAR (default), return formatted number without currency symbol
-  if (currency === "SAR") {
-    return new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  }
-  // For other currencies, include currency symbol
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
+export function formatCurrency(amount: number, currency: string = 'SAR'): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
-}
-
-export function calculateBreakEvenClients(
-  costs: CostsData,
-  averageMonthlyRevenuePerClient: number
-): number | null {
-  const { total } = calculateTotals(costs);
-  if (!averageMonthlyRevenuePerClient) return null;
-  return Math.ceil(total / averageMonthlyRevenuePerClient);
 }
 
 export function calculateCategoryTotal(items: Array<{ amount: number }>): number {
   return items.reduce((sum, item) => sum + (item.amount || 0), 0);
 }
 
-export function calculateFinanceTotals(finance: FinanceData): CostsTotals {
-  const byCategory: Record<string, number> = {};
-  let total = 0;
+export function calculateFinanceTotals(finance: FinanceData): {
+  total: number;
+  fixed: number;
+  variable: number;
+  byCategory: {
+    leadership: number;
+    technical: number;
+    content: number;
+    marketingSales: number;
+    operations: number;
+    infrastructure: number;
+    overhead: number;
+    marketing: number;
+  };
+} {
+  const fixed = calculateCategoryTotal(finance.costs.fixed.leadership.items) +
+    calculateCategoryTotal(finance.costs.fixed.technical.items) +
+    calculateCategoryTotal(finance.costs.fixed.content.items) +
+    calculateCategoryTotal(finance.costs.fixed.marketingSales.items) +
+    calculateCategoryTotal(finance.costs.fixed.operations.items) +
+    calculateCategoryTotal(finance.costs.fixed.infrastructure.items) +
+    calculateCategoryTotal(finance.costs.fixed.overhead.items);
 
-  // Calculate fixed costs - always from items, never from hardcoded total
-  const fixedCategories = [
-    { key: "leadership", data: finance.costs.fixed.leadership },
-    { key: "technical", data: finance.costs.fixed.technical },
-    { key: "content", data: finance.costs.fixed.content },
-    { key: "marketing-sales", data: finance.costs.fixed.marketingSales },
-    { key: "operations", data: finance.costs.fixed.operations },
-    { key: "infrastructure", data: finance.costs.fixed.infrastructure },
-    { key: "overhead", data: finance.costs.fixed.overhead },
-  ];
+  const variable = calculateCategoryTotal(finance.costs.variable.marketing.items);
 
-  for (const { key, data } of fixedCategories) {
-    // Always calculate from items dynamically
-    const catTotal = calculateCategoryTotal(data.items);
-    byCategory[key] = catTotal;
-    total += catTotal;
-  }
-
-  // Calculate variable costs (base amounts only, not percentage-based)
-  const variableCategories = [
-    { key: "marketing", data: finance.costs.variable.marketing },
-  ];
-
-  for (const { key, data } of variableCategories) {
-    // Always calculate from items dynamically
-    const catTotal = calculateCategoryTotal(data.items);
-    byCategory[key] = catTotal;
-    total += catTotal;
-  }
-
-  return { total, byCategory };
+  return {
+    total: fixed + variable,
+    fixed,
+    variable,
+    byCategory: {
+      leadership: calculateCategoryTotal(finance.costs.fixed.leadership.items),
+      technical: calculateCategoryTotal(finance.costs.fixed.technical.items),
+      content: calculateCategoryTotal(finance.costs.fixed.content.items),
+      marketingSales: calculateCategoryTotal(finance.costs.fixed.marketingSales.items),
+      operations: calculateCategoryTotal(finance.costs.fixed.operations.items),
+      infrastructure: calculateCategoryTotal(finance.costs.fixed.infrastructure.items),
+      overhead: calculateCategoryTotal(finance.costs.fixed.overhead.items),
+      marketing: calculateCategoryTotal(finance.costs.variable.marketing.items),
+    },
+  };
 }
 
-export function calculateBreakEvenFromFinance(finance: FinanceData): {
+export function calculateBreakEvenUnified(
+  finance: FinanceData,
+  annualPricePerClient: number
+): {
   clientsPerYear: number;
   clientsPerMonth: number;
   monthlyCosts: number;
   annualCosts: number;
   annualPricePerClient: number;
 } | null {
-  // Always calculate dynamically from actual costs (ignore hardcoded JSON values)
-  // Break-even calculation for ANNUAL subscription model:
-  // Clients pay annually upfront (3,999 SAR), so we calculate:
-  // 1. Annual expenses = Monthly expenses × 12
-  // 2. Clients needed per YEAR = Annual expenses ÷ Annual subscription price
-  // 3. Clients needed per MONTH (to acquire) = Clients per year ÷ 12
-  // Uses STANDARD plan price (3,999 SAR) for break-even calculation
   const totals = calculateFinanceTotals(finance);
-  const monthlyCosts = totals.total; // Total monthly costs (fixed + variable)
-  const annualCosts = monthlyCosts * 12; // Annual expenses
-  
-  // Use STANDARD plan price (3,999 SAR) - clients pay this annually upfront
-  const standardPlanPrice = finance.revenue.clientDistribution?.standard?.annualPrice || 3999;
-  
-  if (!standardPlanPrice || !monthlyCosts) return null;
-  
-  // Calculate: Annual Expenses ÷ Annual Subscription Price = Clients Needed Per Year
-  const clientsPerYear = Math.ceil(annualCosts / standardPlanPrice);
-  
-  // Clients needed per month (to acquire) = Clients per year ÷ 12
-  const clientsPerMonth = clientsPerYear / 12;
-  
+  const monthlyCosts = totals.total;
+  const annualCosts = monthlyCosts * 12;
+
+  if (!annualPricePerClient || annualPricePerClient <= 0 || !monthlyCosts) return null;
+
+  const clientsPerYear = Math.ceil(annualCosts / annualPricePerClient);
+  const clientsPerMonth = Math.ceil(clientsPerYear / 12);
+
   return {
     clientsPerYear,
     clientsPerMonth,
     monthlyCosts,
     annualCosts,
-    annualPricePerClient: standardPlanPrice,
+    annualPricePerClient,
   };
 }
 
+export function calculateBreakEvenFromFinance(
+  finance: FinanceData,
+  annualPricePerClient?: number
+): {
+  clientsPerYear: number;
+  clientsPerMonth: number;
+  monthlyCosts: number;
+  annualCosts: number;
+  annualPricePerClient: number;
+} | null {
+  const totals = calculateFinanceTotals(finance);
+  const monthlyCosts = totals.total;
+  const annualCosts = monthlyCosts * 12;
+
+  const price =
+    annualPricePerClient ||
+    finance.revenue?.clientDistribution?.standard?.annualPrice ||
+    3999;
+
+  if (!price || price <= 0 || !monthlyCosts) return null;
+
+  const clientsPerYear = Math.ceil(annualCosts / price);
+  const clientsPerMonth = Math.ceil(clientsPerYear / 12);
+
+  return {
+    clientsPerYear,
+    clientsPerMonth,
+    monthlyCosts,
+    annualCosts,
+    annualPricePerClient: price,
+  };
+}
+
+export function calculateAverageMonthlyRevenuePerClient(
+  finance: FinanceData,
+  standardMonthlyRevenue?: number
+): number {
+  if (standardMonthlyRevenue && standardMonthlyRevenue > 0) {
+    return standardMonthlyRevenue;
+  }
+
+  const standardRevenue =
+    finance.revenue?.clientDistribution?.standard?.monthlyRecognizedRevenue ||
+    finance.revenue?.pricingPlans?.find((p) =>
+      p.name.toLowerCase().includes("standard")
+    )?.monthlyRecognizedRevenue;
+
+  if (standardRevenue && standardRevenue > 0) {
+    return standardRevenue;
+  }
+
+  return finance.revenue.averageMonthlyPerClient || 0;
+}
+
+export function calculateInvestmentFromCosts(finance: FinanceData): {
+  min: number;
+  max: number;
+  currency: string;
+} {
+  const totals = calculateFinanceTotals(finance);
+  const monthlyCosts = totals.total;
+  const annualInvestment = monthlyCosts * 12;
+
+  return {
+    min: annualInvestment,
+    max: annualInvestment,
+    currency: finance.currency || 'SAR',
+  };
+}
+
+export function buildFinanceDataCostsStructure(costs: {
+  fixed: Record<string, Array<{ id: string; label: string; amount: number; description?: string; order?: number }>>;
+  variable: Record<string, Array<{ id: string; label: string; amount: number; description?: string; order?: number }>>;
+}): CostsData {
+  const categoryKeyMapping: Record<string, string> = {
+    'leadership': 'leadership',
+    'technical': 'technical',
+    'content': 'content',
+    'marketing-sales': 'marketingSales',
+    'operations': 'operations',
+    'infrastructure': 'infrastructure',
+    'overhead': 'overhead',
+    'marketing': 'marketing',
+  };
+
+  const fixed: CostsData['fixed'] = {
+    leadership: { items: [] },
+    technical: { items: [] },
+    content: { items: [] },
+    marketingSales: { items: [] },
+    operations: { items: [] },
+    infrastructure: { items: [] },
+    overhead: { items: [] },
+  };
+
+  const variable: CostsData['variable'] = {
+    marketing: { items: [] },
+  };
+
+  for (const [key, items] of Object.entries(costs.fixed)) {
+    const mappedKey = categoryKeyMapping[key] || key;
+    if (mappedKey in fixed) {
+      fixed[mappedKey as keyof typeof fixed] = {
+        items: items.map(item => ({
+          label: item.label,
+          amount: item.amount,
+          description: item.description,
+        })),
+      };
+    }
+  }
+
+  for (const [key, items] of Object.entries(costs.variable)) {
+    const mappedKey = categoryKeyMapping[key] || key;
+    if (mappedKey in variable) {
+      variable[mappedKey as keyof typeof variable] = {
+        items: items.map(item => ({
+          label: item.label,
+          amount: item.amount,
+          description: item.description,
+        })),
+      };
+    }
+  }
+
+  return { fixed, variable };
+}
+
+export function calculateBreakEvenClients(
+  finance: FinanceData,
+  monthlyRevenuePerClient?: number
+): {
+  clientsNeeded: number;
+  monthlyCosts: number;
+  monthlyRevenuePerClient: number;
+} | null {
+  const totals = calculateFinanceTotals(finance);
+  const monthlyCosts = totals.total;
+
+  const avgMonthlyRevenuePerClient = monthlyRevenuePerClient && monthlyRevenuePerClient > 0
+    ? monthlyRevenuePerClient
+    : calculateAverageMonthlyRevenuePerClient(finance, monthlyRevenuePerClient);
+
+  if (!monthlyCosts || !avgMonthlyRevenuePerClient || avgMonthlyRevenuePerClient <= 0) {
+    return null;
+  }
+
+  const clientsNeeded = Math.ceil(monthlyCosts / avgMonthlyRevenuePerClient);
+
+  return {
+    clientsNeeded,
+    monthlyCosts,
+    monthlyRevenuePerClient: avgMonthlyRevenuePerClient,
+  };
+}
+
+export function calculateBreakEvenMonth(
+  finance: FinanceData,
+  standardMonthlyRevenue?: number
+): {
+  month: number;
+  clientsNeeded: number;
+  monthlyCosts: number;
+  monthlyRevenuePerClient: number;
+} | null {
+  const breakEvenClients = calculateBreakEvenClients(finance, standardMonthlyRevenue);
+  if (!breakEvenClients) return null;
+
+  if (finance.revenue.projections && Array.isArray(finance.revenue.projections)) {
+    for (const projection of finance.revenue.projections) {
+      const month = typeof projection.month === 'string'
+        ? parseFloat(projection.month.split('-')[1] || projection.month.split('-')[0])
+        : projection.month;
+
+      const clientCount = typeof projection.clients === 'string'
+        ? parseFloat(projection.clients.replace(/[^\d.-]/g, '').split('-')[0])
+        : (typeof projection.clients === 'number' ? projection.clients : 0);
+
+      const monthlyRevenue = clientCount * breakEvenClients.monthlyRevenuePerClient;
+
+      if (monthlyRevenue >= breakEvenClients.monthlyCosts) {
+        return {
+          month: Math.ceil(month),
+          clientsNeeded: breakEvenClients.clientsNeeded,
+          monthlyCosts: breakEvenClients.monthlyCosts,
+          monthlyRevenuePerClient: breakEvenClients.monthlyRevenuePerClient,
+        };
+      }
+    }
+  }
+
+  if (finance.revenue.projections && finance.revenue.projections.length >= 2) {
+    const firstProjection = finance.revenue.projections[0];
+    const lastProjection = finance.revenue.projections[finance.revenue.projections.length - 1];
+
+    const firstMonth = typeof firstProjection.month === 'string'
+      ? parseFloat(firstProjection.month.split('-')[0])
+      : (typeof firstProjection.month === 'number' ? firstProjection.month : 0);
+    const lastMonth = typeof lastProjection.month === 'string'
+      ? parseFloat(lastProjection.month.split('-')[1] || lastProjection.month.split('-')[0])
+      : (typeof lastProjection.month === 'number' ? lastProjection.month : 12);
+
+    const firstClients = typeof firstProjection.clients === 'string'
+      ? parseFloat(firstProjection.clients.replace(/[^\d.-]/g, '').split('-')[0])
+      : (typeof firstProjection.clients === 'number' ? firstProjection.clients : 0);
+    const lastClients = typeof lastProjection.clients === 'string'
+      ? parseFloat(lastProjection.clients.replace(/[^\d.-]/g, '').split('-')[1] || lastProjection.clients.replace(/[^\d.-]/g, '').split('-')[0])
+      : (typeof lastProjection.clients === 'number' ? lastProjection.clients : 500);
+
+    const monthsDiff = lastMonth - firstMonth;
+    const clientsDiff = lastClients - firstClients;
+    const clientsPerMonth = monthsDiff > 0 ? clientsDiff / monthsDiff : 0;
+
+    if (clientsPerMonth > 0) {
+      const breakEvenMonth = Math.ceil(breakEvenClients.clientsNeeded / clientsPerMonth) + firstMonth;
+      return {
+        month: Math.min(Math.max(1, Math.ceil(breakEvenMonth)), 12),
+        clientsNeeded: breakEvenClients.clientsNeeded,
+        monthlyCosts: breakEvenClients.monthlyCosts,
+        monthlyRevenuePerClient: breakEvenClients.monthlyRevenuePerClient,
+      };
+    }
+  }
+
+  const targetClientsMonth12 = finance.revenue.year1Target?.clients || 500;
+  const clientsPerMonth = targetClientsMonth12 / 12;
+  const breakEvenMonth = clientsPerMonth > 0 ? Math.ceil(breakEvenClients.clientsNeeded / clientsPerMonth) : 12;
+
+  return {
+    month: Math.min(Math.max(1, breakEvenMonth), 12),
+    clientsNeeded: breakEvenClients.clientsNeeded,
+    monthlyCosts: breakEvenClients.monthlyCosts,
+    monthlyRevenuePerClient: breakEvenClients.monthlyRevenuePerClient,
+  };
+}

@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { auth } from '@/lib/auth';
 import { seedRequirements } from '@/lib/seedRequirements';
 
 export async function POST() {
   try {
-    const cookieStore = await cookies();
-    const adminToken = cookieStore.get('adminToken');
-    if (!adminToken) {
+    const session = await auth();
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

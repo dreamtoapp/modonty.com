@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
-import { CVUpload } from '@/components/CVUpload';
-import { ProfileImageUpload } from '@/components/ProfileImageUpload';
-import { SuccessDialog } from '@/components/SuccessDialog';
+import { CVUpload } from '@/components/forms/CVUpload';
+import { ProfileImageUpload } from '@/components/forms/ProfileImageUpload';
+import { SuccessDialog } from '@/components/common/SuccessDialog';
 import { submitApplication } from '@/actions/submitApplication';
 import { getTeamPositions } from '@/helpers/extractMetrics';
 import {

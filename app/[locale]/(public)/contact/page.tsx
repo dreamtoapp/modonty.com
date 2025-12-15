@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { ContactForm } from '@/components/ContactForm';
+import { ContactForm } from '@/components/forms/ContactForm';
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Mail, MapPin, Users } from 'lucide-react';
-import { WhatsAppIcon } from '@/components/WhatsAppButton';
+import { WhatsAppIcon } from '@/components/layout/WhatsAppButton';
 
 export default async function ContactPage({
   params,

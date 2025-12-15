@@ -1,10 +1,13 @@
 import { prisma } from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowRight, CalendarClock } from 'lucide-react';
+import { Briefcase, Users, Clock, CheckCircle2, XCircle, ArrowRight, CalendarClock, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { getCanonicalPositionTitle, getTeamPositions } from '@/helpers/extractMetrics';
-import { InterviewsModalClient } from '@/components/InterviewsModalClient';
+import { InterviewsSummaryCard } from '@/components/applications/InterviewsSummaryCard';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { FinalHireSection } from '@/components/applications/FinalHireSection';
 
 export default async function ApplicationsPage({
   params
@@ -91,6 +94,47 @@ export default async function ApplicationsPage({
     if (a.hasApplications && b.hasApplications) return b.total - a.total;
     return 0;
   });
+
+  // Fetch accepted applications with scheduled interviews
+  const acceptedApplications = await prisma.application.findMany({
+    where: {
+      status: 'ACCEPTED',
+      scheduledInterviewDate: { not: null },
+    },
+    select: {
+      id: true,
+      applicantName: true,
+      position: true,
+      email: true,
+      phone: true,
+      scheduledInterviewDate: true,
+      createdAt: true,
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // Get interview results for these applications
+  const acceptedApplicationIds = acceptedApplications.map((app) => app.id);
+  const interviewResults = await prisma.interviewResult.findMany({
+    where: {
+      applicationId: { in: acceptedApplicationIds },
+      result: 'PASSED',
+    },
+    select: {
+      applicationId: true,
+      result: true,
+    },
+  });
+
+  // Create a map of applicationId to interview result
+  const resultMap = new Map(
+    interviewResults.map((result) => [result.applicationId, result.result])
+  );
+
+  // Filter to only applications with PASSED interview result
+  const acceptedInterviewedApplications = acceptedApplications.filter(
+    (app) => resultMap.has(app.id)
+  );
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -184,7 +228,7 @@ export default async function ApplicationsPage({
           </CardContent>
         </Card>
 
-        <InterviewsModalClient
+        <InterviewsSummaryCard
           totalInterviews={totalInterviews}
           upcomingInterviews={upcomingInterviews}
           locale={locale}
@@ -290,6 +334,71 @@ export default async function ApplicationsPage({
           );
         })}
       </div>
+
+      {/* Accepted Interviewed Applications Table */}
+      {acceptedInterviewedApplications.length > 0 && (
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="text-2xl">
+              {locale === 'ar' ? 'المرشحون المقبولون' : 'Accepted Candidates'}
+            </CardTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              {locale === 'ar'
+                ? 'جميع المرشحين المقبولين الذين اجتازوا المقابلة بنجاح'
+                : 'All accepted candidates who passed the interview'}
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className={locale === 'ar' ? 'text-right' : 'text-left'}>
+                      {locale === 'ar' ? 'اسم المرشح' : 'Applicant Name'}
+                    </TableHead>
+                    <TableHead className={locale === 'ar' ? 'text-right' : 'text-left'}>
+                      {locale === 'ar' ? 'الوظيفة' : 'Position'}
+                    </TableHead>
+                    <TableHead className={locale === 'ar' ? 'text-right' : 'text-left'}>
+                      {locale === 'ar' ? 'الهاتف' : 'Phone'}
+                    </TableHead>
+                    <TableHead className={locale === 'ar' ? 'text-right' : 'text-left'}>
+                      {locale === 'ar' ? 'الإجراءات' : 'Actions'}
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {acceptedInterviewedApplications.map((application) => (
+                    <TableRow key={application.id}>
+                      <TableCell className="font-medium">
+                        {application.applicantName}
+                      </TableCell>
+                      <TableCell>{application.position}</TableCell>
+                      <TableCell>{application.phone}</TableCell>
+                      <TableCell>
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className={locale === 'ar' ? 'flex-row-reverse' : ''}
+                        >
+                          <Link href={`/${locale}/admin/applications/${application.id}`}>
+                            <Eye className={`h-4 w-4 ${locale === 'ar' ? 'ml-2' : 'mr-2'}`} />
+                            {locale === 'ar' ? 'عرض' : 'View'}
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Final Hire Section */}
+      <FinalHireSection locale={locale} />
     </div>
   );
 }

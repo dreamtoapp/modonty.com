@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Calculator } from 'lucide-react';
-import { AccountingClient } from '@/components/AccountingClient';
+import { AccountingClient } from '@/components/accounting/AccountingClient';
 import { getTransactions, getTrialBalance } from '@/actions/accounting';
 
 export default async function AccountingPage({

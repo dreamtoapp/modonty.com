@@ -15,7 +15,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from '@/components/ui/dialog';
-import { ApplicationStatusBadge } from '@/components/ApplicationStatusBadge';
+import { ApplicationStatusBadge } from '@/components/applications/ApplicationStatusBadge';
 import { updateApplicationStatus, updateApplicationNotes, updateApplicationPhone, updateScheduledInterviewDate } from '@/actions/updateApplicationStatus';
 import { deleteInterviewResponse } from '@/actions/deleteInterviewResponse';
 import { getInterviewResult } from '@/actions/interviewResult';
@@ -63,7 +63,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Application, ApplicationStatus } from '@prisma/client';
-import { validateAndFixWhatsAppPhone, analyzeAndFixPhoneNumber } from '@/helpers/whatsappPhone';
+import { validateAndFixWhatsAppPhone } from '@/helpers/whatsappPhone';
+import { PhoneFixButton } from '@/components/applications/PhoneFixButton';
 import { formatDateTimeWithArabicTime } from '@/helpers/formatDateTime';
 
 interface ApplicationDetailPageProps {
@@ -264,25 +265,6 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
     setSavingNotes(false);
   };
 
-  const handleAnalyzePhone = async () => {
-    if (!application) return;
-
-    setUpdatingPhone(true);
-    const fixedPhone = analyzeAndFixPhoneNumber(application.phone);
-
-    if (fixedPhone === application.phone) {
-      setUpdatingPhone(false);
-      return;
-    }
-
-    const result = await updateApplicationPhone(application.id, fixedPhone);
-
-    if (result.success) {
-      setApplication({ ...application, phone: fixedPhone });
-    }
-
-    setUpdatingPhone(false);
-  };
 
   const handleSaveSchedule = async () => {
     if (!application) return;
@@ -689,20 +671,20 @@ export default function ApplicationDetailPage({ params }: ApplicationDetailPageP
                     <a href={`tel:${application.phone}`} className="text-sm font-medium hover:underline">
                       {application.phone}
                     </a>
-                    <Button
-                      onClick={handleAnalyzePhone}
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0"
+                    <PhoneFixButton
+                      phone={application.phone}
+                      onPhoneUpdate={async (newPhone) => {
+                        setUpdatingPhone(true);
+                        const result = await updateApplicationPhone(application.id, newPhone);
+                        setUpdatingPhone(false);
+                        return result;
+                      }}
+                      onUpdateComplete={(newPhone) => {
+                        setApplication({ ...application, phone: newPhone });
+                      }}
+                      locale={locale}
                       disabled={updatingPhone}
-                      title={locale === 'ar' ? 'تحليل وتحديث رقم الهاتف' : 'Analyze and update phone number'}
-                    >
-                      {updatingPhone ? (
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                      ) : (
-                        <RefreshCw className="h-3 w-3" />
-                      )}
-                    </Button>
+                    />
                   </div>
                 </div>
               </div>

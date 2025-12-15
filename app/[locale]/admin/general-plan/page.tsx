@@ -1,4 +1,4 @@
-import { PlanTimeline } from '@/components/PlanTimeline';
+import { PlanTimeline } from '@/components/planning/PlanTimeline';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
