@@ -9,7 +9,8 @@ import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { UserRole } from '@prisma/client';
-import { normalizeRoute } from '@/lib/auth/utils';
+import { normalizeRoute, buildLocalizedPath } from '@/lib/auth/utils';
+import { ADMIN_ROUTES } from '@/lib/auth/adminRoutes';
 
 interface AdminSidebarClientProps {
   locale: string;
@@ -84,6 +85,11 @@ export function AdminSidebarClient({
   // Convert accessible routes array to Set for faster lookup
   const accessibleRoutesSet = new Set(accessibleRoutes);
 
+  const getAdminRoutePath = (route: string): string => {
+    const found = ADMIN_ROUTES.find((r) => r.route === route);
+    return found?.route ?? route;
+  };
+
   const canAccessRoute = (route: string): boolean => {
     // Remove locale from route for permission check
     const normalizedRoute = normalizeRoute(route);
@@ -101,44 +107,44 @@ export function AdminSidebarClient({
       },
       items: [
         {
-          href: `/${locale}/admin`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin'), locale),
           label: translations.dashboard,
           icon: LayoutDashboard,
           exact: true,
         },
         {
-          href: `/${locale}/admin/organizational-structure`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/organizational-structure'), locale),
           label: translations.organizationalStructure,
           icon: Network,
         },
         {
-          href: `/${locale}/admin/general-plan`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/general-plan'), locale),
           label: translations.generalPlan,
           icon: FileText,
         },
         {
-          href: `/${locale}/admin/contact-messages`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/contact-messages'), locale),
           label: translations.contactMessages,
           icon: Mail,
           count: contactMessageCount,
         },
         {
-          href: `/${locale}/admin/bmc`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/bmc'), locale),
           label: translations.bmc,
           icon: Target,
         },
         {
-          href: `/${locale}/admin/bmc/canvas`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/bmc/canvas'), locale),
           label: translations.bmcCanvas,
           icon: Share2,
         },
         {
-          href: `/${locale}/admin/bmc/canvas/edit`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/bmc/canvas/edit'), locale),
           label: translations.bmcCanvasEdit,
           icon: Edit,
         },
         {
-          href: `/${locale}/admin/modonty`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/modonty'), locale),
           label: translations.modonty,
           icon: FileText,
         },
@@ -152,23 +158,23 @@ export function AdminSidebarClient({
       },
       items: [
         {
-          href: `/${locale}/admin/applications`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/applications'), locale),
           label: translations.applications,
           icon: Briefcase,
           count: totalCount,
         },
         {
-          href: `/${locale}/admin/applications/interviews`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/applications/interviews'), locale),
           label: locale === 'ar' ? 'المقابلات' : 'Interviews',
           icon: CalendarClock,
         },
         {
-          href: `/${locale}/admin/staff`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/staff'), locale),
           label: translations.staff,
           icon: Users,
         },
         {
-          href: `/${locale}/admin/hiring-plan`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/hiring-plan'), locale),
           label: translations.hiringPlan,
           icon: FileText,
         },
@@ -190,22 +196,22 @@ export function AdminSidebarClient({
       },
       items: [
         {
-          href: `/${locale}/admin/phase-1-requirements`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/phase-1-requirements'), locale),
           label: translations.phase1Requirements,
           icon: CheckSquare,
         },
         {
-          href: `/${locale}/admin/accounting`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/accounting'), locale),
           label: translations.accounting,
           icon: Calculator,
         },
         {
-          href: `/${locale}/admin/costs`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/costs'), locale),
           label: translations.costs,
           icon: DollarSign,
         },
         {
-          href: `/${locale}/admin/source-of-income`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/source-of-income'), locale),
           label: translations.sourceOfIncome,
           icon: TrendingUp,
         },
@@ -219,31 +225,31 @@ export function AdminSidebarClient({
       },
       items: [
         {
-          href: `/${locale}/admin/tasks`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/tasks'), locale),
           label: translations.tasks,
           icon: ListTodo,
           comingSoon: false,
         },
         {
-          href: `/${locale}/admin/tasks/my-tasks`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/tasks/my-tasks'), locale),
           label: translations.tasks || (locale === 'ar' ? 'مهامي' : 'My Tasks'),
           icon: ListTodo,
           comingSoon: false,
         },
         {
-          href: `/${locale}/admin/my-time`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/my-time'), locale),
           label: locale === 'ar' ? 'سجل الوقت' : 'My Time',
           icon: Clock,
           comingSoon: false,
         },
         {
-          href: `/${locale}/admin/notes`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/notes'), locale),
           label: translations.administrativeNotes,
           icon: StickyNote,
           comingSoon: false,
         },
         {
-          href: `/${locale}/admin/contracts`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/contracts'), locale),
           label: translations.contracts,
           icon: FileSignature,
           comingSoon: true,
@@ -258,13 +264,13 @@ export function AdminSidebarClient({
       },
       items: [
         {
-          href: `/${locale}/admin/customers`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/customers'), locale),
           label: translations.customers,
           icon: Users,
           comingSoon: true,
         },
         {
-          href: `/${locale}/admin/subscriptions`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/subscriptions'), locale),
           label: translations.subscriptions,
           icon: CreditCard,
           comingSoon: true,
@@ -279,7 +285,7 @@ export function AdminSidebarClient({
       },
       items: [
         {
-          href: `/${locale}/admin/reports`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/reports'), locale),
           label: translations.reports,
           icon: BarChart3,
           comingSoon: true,
@@ -294,20 +300,20 @@ export function AdminSidebarClient({
       },
       items: [
         {
-          href: `/${locale}/admin/settings`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/settings'), locale),
           label: translations.settings,
           icon: Settings,
           comingSoon: true,
         },
         {
-          href: `/${locale}/admin/clockify-users`,
+          href: buildLocalizedPath(getAdminRoutePath('/admin/clockify-users'), locale),
           label: locale === 'ar' ? 'مستخدمو Clockify' : 'Clockify Users',
           icon: UserCog,
         },
         ...(session?.user?.role === UserRole.SUPER_ADMIN
           ? [
             {
-              href: `/${locale}/admin/users`,
+              href: buildLocalizedPath(getAdminRoutePath('/admin/users'), locale),
               label: translations.users,
               icon: Users,
             } as NavItem,

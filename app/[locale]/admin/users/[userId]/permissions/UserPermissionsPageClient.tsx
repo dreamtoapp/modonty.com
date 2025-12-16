@@ -37,12 +37,30 @@ const routeCategories = [
   {
     id: 'core',
     label: 'core',
-    routes: ['/admin', '/admin/organizational-structure', '/admin/general-plan', '/admin/phase-1-requirements', '/admin/hiring-plan', '/admin/modonty', '/admin/bmc'],
+    routes: [
+      '/admin',
+      '/admin/organizational-structure',
+      '/admin/general-plan',
+      '/admin/phase-1-requirements',
+      '/admin/hiring-plan',
+      '/admin/modonty',
+      '/admin/bmc',
+      '/admin/bmc/canvas',
+      '/admin/bmc/canvas/edit',
+    ],
   },
   {
     id: 'operations',
     label: 'operations',
-    routes: ['/admin/applications', '/admin/applications/interviews', '/admin/staff', '/admin/contact-messages', '/admin/tasks', '/admin/tasks/my-tasks'],
+    routes: [
+      '/admin/applications',
+      '/admin/applications/interviews',
+      '/admin/staff',
+      '/admin/contact-messages',
+      '/admin/tasks',
+      '/admin/tasks/my-tasks',
+      '/admin/my-time',
+    ],
   },
   {
     id: 'financial',
@@ -52,7 +70,14 @@ const routeCategories = [
   {
     id: 'management',
     label: 'management',
-    routes: ['/admin/notes', '/admin/contracts', '/admin/reports', '/admin/settings', '/admin/users'],
+    routes: [
+      '/admin/notes',
+      '/admin/contracts',
+      '/admin/reports',
+      '/admin/settings',
+      '/admin/users',
+      '/admin/clockify-users',
+    ],
   },
 ];
 

@@ -314,7 +314,8 @@
     "noRoutesAssigned": "No routes have been assigned to your account. Please contact an administrator to grant you access.",
     "accessibleRoutes": "Your accessible routes:",
     "interviews": "Interviews",
-    "myTasks": "My tasks"
+    "myTasks": "My tasks",
+    "myTime": "My time"
   },
   "applications": {
     "title": "Job Applications",

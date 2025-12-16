@@ -3,6 +3,7 @@
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { UserRole } from '@prisma/client';
+import { ADMIN_ROUTES } from '@/lib/auth/adminRoutes';
 
 /**
  * Get all routes that the current user has access to
@@ -18,38 +19,9 @@ export async function getAccessibleRoutes(): Promise<string[]> {
     const userId = session.user.id;
     const userRole = session.user.role as UserRole;
 
-    // All possible admin routes (used for SUPER_ADMIN or as reference)
-    const allRoutes = [
-      '/admin',
-      '/admin/organizational-structure',
-      '/admin/general-plan',
-      '/admin/phase-1-requirements',
-      '/admin/hiring-plan',
-      '/admin/applications',
-      '/admin/applications/interviews',
-      '/admin/staff',
-      '/admin/contact-messages',
-      '/admin/accounting',
-      '/admin/costs',
-      '/admin/source-of-income',
-      '/admin/modonty',
-      '/admin/bmc',
-      '/admin/bmc/canvas',
-      '/admin/bmc/canvas/edit',
-      '/admin/subscriptions',
-      '/admin/customers',
-      '/admin/tasks',
-      '/admin/tasks/my-tasks',
-      '/admin/notes',
-      '/admin/contracts',
-      '/admin/reports',
-      '/admin/settings',
-      '/admin/users',
-    ];
-
-    // SUPER_ADMIN has access to all routes
+    // SUPER_ADMIN has access to all configured admin routes
     if (userRole === UserRole.SUPER_ADMIN) {
-      return allRoutes;
+      return ADMIN_ROUTES.map((route) => route.route);
     }
 
     // Query user's specific route permissions directly (optimized)
